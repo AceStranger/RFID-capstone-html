@@ -1,0 +1,240 @@
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+.organization-data-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+.organization-data-content-top-part {
+    width: 95%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+h1.organization-data-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+.organization-data-content-btn {
+    margin-inline: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 24px;
+}
+.organization-data-btn-edit {
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid black;
+    text-transform: uppercase;
+}
+
+
+
+
+.organization-data-content-organization-data-account-content {
+    width: 95%;
+    min-height: calc(100vh - 150px);
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding-inline: 16px;
+}
+
+/* Form container */
+.organization-data-content-info-form-content {
+    margin-block: 20px;
+    padding-block: 10px;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.organization-data-content-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+/* Form rows */
+.organization-data-content-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Labels */
+.organization-data-content-info-row label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Inputs */
+.organization-data-content-info-row input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    font-size: 16px;
+    color: #000000;
+    flex: 1;
+    box-shadow: 0 0 0px 0px rgb(0 0 0 / 30%);
+}
+
+/* Buttons */
+#update-organization, #cancel-edit, #edit-organization, #delete-organization {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 10px 0px rgb(0 0 0 / 30%);
+}
+
+/* Button colors */
+#update-organization {
+    background-color: #007bff;
+    color: white;
+}
+
+#update-organization:hover {
+    background-color: #0056b3;
+}
+
+#cancel-edit, #delete-organization {
+    background-color: #ff6f61;
+    color: white;
+}
+
+#cancel-edit:hover, #delete-organization:hover {
+    background-color: #ff3d2e;
+}
+
+#edit-organization {
+    background-color: #ffba3a;
+    color: white;
+}
+
+#edit-organization:hover {
+    background-color: #cc942c;
+}
+
+/* Main content */
+.organization-data-content-main-content {
+    height: calc(100% - 350px);
+    width: 100%;
+}
+
+.organization-data-content-table-content {
+    height: calc(100vh - 350px);
+    width: 100%;
+    overflow-y: auto;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+table.organization-data-content-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.organization-data-content-head th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #3a77ff;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.organization-data-content-body {
+    overflow-y: auto;
+    width: 100%;
+    max-height: calc(70vh - 40px);
+}
+
+.organization-data-content-row {
+    min-height: 50px;
+    height: 50px;
+}
+
+.organization-data-content-row:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+.organization-data-content-row:hover {
+    background-color: #e6f3ff;
+}
+
+.organization-data-content-row td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.organization-data-content-officer-name {
+    width: 30%;
+}
+
+.organization-data-content-officer-position {
+    width: 20%;
+}
+
+.organization-data-content-officer-duty {
+    width: 20%;
+}
+
+.organization-data-content-officer-responsibility {
+    width: 20%;
+}
+
+.organization-data-content-btn-actions {
+    width: 10%;
+}
+
+

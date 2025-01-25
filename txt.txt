@@ -1,0 +1,111 @@
+
+<div class="event-content">
+        <div class="event-content-record">
+            <div class="event-content-record-EN-WH">
+                <div class="event-content-record-event-name">Event Name</div>
+                <div class="event-content-record-when">When</div>
+                <div class="event-content-record-where">Where</div>
+                <div class="event-content-record-ud-btn" id="event-content-record-ud-btn" onclick="toggleRecords('event-content-record-1-event');">▼</div>
+            </div>
+            <div class="event-content-record-list" id="event-content-record-1-event">
+                <div class="event-content-record-table-header">
+                    <div class="event-content-record-row-content record-row-content-num"> No.</div>
+                    <div class="event-content-record-row-content record-row-content-name">Name</div>
+                    <div class="event-content-record-row-content record-row-content-department">Department</div>
+                    <div class="event-content-record-row-content record-row-content-year">Year</div>
+                    <div class="event-content-record-row-content record-row-content-section">Section</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 1</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 2</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 2</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 2</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 3</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 3</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 3</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 4</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 4</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 4</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 5</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 5</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 5</div>
+                </div>
+            </div>
+        </div>
+        <div class="event-content-record">
+            <div class="event-content-record-EN-WH">
+                <div class="event-content-record-event-name">Event Name</div>
+                <div class="event-content-record-when">When</div>
+                <div class="event-content-record-where">Where</div>
+                <div class="event-content-record-ud-btn" id="event-content-record-ud-btn" onclick="toggleRecords('event-content-record-2-event');">▼</div>
+            </div>
+            <div class="event-content-record-list" id="event-content-record-2-event">
+                <div class="event-content-record-table-header">
+                    <div class="event-content-record-row-content record-row-content-num"> No.</div>
+                    <div class="event-content-record-row-content record-row-content-name">Name</div>
+                    <div class="event-content-record-row-content record-row-content-department">Department</div>
+                    <div class="event-content-record-row-content record-row-content-year">Year</div>
+                    <div class="event-content-record-row-content record-row-content-section">Section</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 1</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 2</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 2</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 2</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 3</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 3</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 3</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 4</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 4</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 4</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 5</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">Time In - 5</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">Time Out - 5</div>
+                </div>
+                <div class="event-content-record-table-data event-content-record-table-data-odd">
+                    <div class="event-content-record-row-content record-row-content-num"> 1</div>
+                    <div class="event-content-record-row-content record-row-content-name"> Klein Morette</div>
+                    <div class="event-content-record-row-content record-row-content-department">BSIT</div>
+                    <div class="event-content-record-row-content record-row-content-year">3</div>
+                    <div class="event-content-record-row-content record-row-content-section">A</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">00:00:00</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">00:00:00</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi repudiandae impedit asperiores, ipsa praesentium earum, dolore ratione pariatur harum deleniti et natus, eaque quisquam incidunt rerum ab reiciendis aliquid ea.</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                </div>
+                <div class="event-content-record-table-data event-content-record-table-data-even">
+                    <div class="event-content-record-row-content record-row-content-num"> 2</div>
+                    <div class="event-content-record-row-content record-row-content-name"> Klein Morette</div>
+                    <div class="event-content-record-row-content record-row-content-department">BSIT</div>
+                    <div class="event-content-record-row-content record-row-content-year">3</div>
+                    <div class="event-content-record-row-content record-row-content-section">A</div>
+                    <div class="event-content-record-row-content record-row-content-activity">Activity Name - 1</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">00:00:00</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">00:00:00</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                    <div class="event-content-record-row-content record-row-content-activity">~</div>
+                    <div class="event-content-record-row-content record-row-content-tIn">~</div>
+                    <div class="event-content-record-row-content record-row-content-tOut">~</div>
+                </div>
+            </div>
+        </div>
+    </div>

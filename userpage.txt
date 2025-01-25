@@ -1,0 +1,357 @@
+<?php
+session_start();
+include "dbh.php";
+$user_ID = $_SESSION['user_ID'];
+$query = "SELECT * FROM user WHERE user_id = $user_ID";
+$result = mysqli_query($conn, $query);
+$userInfo = $result->fetch_assoc();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/body.css">
+    <link rel="stylesheet" href="css/adminBody.css">
+    <link rel="stylesheet" href="css/adminSidebar.css">
+    <link rel="stylesheet" href="css/adminUser.css">
+    <script src="js\adminSidebar.js"></script>
+    <script src="js\adminUser.js"></script>
+</head>
+<body>
+    <div class="main-content-container">
+        <?php include_once"adminSidebar.php";?>
+        <div class="main-content">
+            <div class="user-content">
+                <div class="user-content-top-part">
+                    <h1 class="user-content-head-text">USER</h1>
+                    <div class="user-content-btn">
+                        <button type="button" class="btn-add-new-user">Add New</button>
+                    </div>
+                </div>
+                <div class="user-content-users-account-content">
+                    <div class="users-account-content-top-part">
+                        <div class="users-account-content-search-input-container">
+                            <select name="users-account-content-filter-select" id="users-account-content-filter-select">
+                                <option value="" disabled selected>Role</option>
+                                <option value="">None</option>
+                                <option value="">Student</option>
+                                <option value="">Officer</option>
+                                <option value="">Dean</option>
+                            </select>
+                            <input type="text" name="" id="users-account-content-search-input" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div class="users-account-content-main-content">
+                        <div class="users-account-content-head-data">
+                            <div class="users-account-content-data-col-school-id">School ID</div>
+                            <div class="users-account-content-data-col-fname">First Name</div>
+                            <div class="users-account-content-data-col-mname">Middle Name</div>
+                            <div class="users-account-content-data-col-lname">Last Name</div>
+                            <div class="users-account-content-data-col-suffix">Suffix Name</div>
+                            <div class="users-account-content-data-col-pnumber">Phone Number</div>
+                            <div class="users-account-content-data-col-role">Role</div>
+                            <div class="users-account-content-data-col-change"></div>
+                            
+                        </div>
+                        <div class="users-account-content-table-data">
+                            <div class="users-account-content-data-col-school-id">2022002020</div>
+                            <div class="users-account-content-data-col-fname">Klein</div>
+                            <div class="users-account-content-data-col-mname">~</div>
+                            <div class="users-account-content-data-col-lname">Moretti</div>
+                            <div class="users-account-content-data-col-suffix">Suffix</div>
+                            <div class="users-account-content-data-col-pnumber">09xxxxxxxxx</div>
+                            <div class="users-account-content-data-col-role">~</div>
+                            <div class="users-account-content-data-col-change">
+                                <button type="button" class="user-account-profile">PROFILE</button>
+                                <button type="button" class="user-account-edit">EDIT</button>
+                                <button type="button" class="user-account-remove">REMOVE</button>
+                            </div>
+                            
+                            <div class="users-account-content-data-view-user-content">
+                                <div class="view-user-content-container">
+                                    <button type="button" class="btn-view-user-close" id="btn-view-user-close"></button>
+                                    <div class="user-content-personal-info">
+                                        <div class="personal-info-pfp-pic"><img src="css\pic\pfp.jpg" alt=""></div>
+                                        <div class="personal-info-content">
+                                            <div class="personal-info-name">
+                                                <div class="label-name">Name:</div>
+                                                <span id="name">Klein Moretti</span>
+                                            </div>
+                                            <div class="personal-info-pnumber">
+                                                <div class="label-pnumber">Number:</div>
+                                                <span id="pnumber">09xxxxxxxxx</span>
+                                            </div>
+                                            <div class="personal-info-mail">
+                                                <div class="label-mail">Email:</div>
+                                                <span id="mail">kleinmoretti@gmail.com</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="user-content-general-info">
+                                        <div class="general-info-role">
+                                            <div class="label-role">Role:</div>
+                                            <span id="role">~</span>
+                                        </div>
+                                        <div class="general-info-other"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-account-content-data-edit-user-content">      
+                                <form action="" method="post" class="edit-user-content" id="edit-user">
+                                    <button type="button" class="btn-edit-user-close" id="btn-edit-user-close"></button>
+                                    <div class="edit-user-content-head-text">
+                                        <h1>Edit User</h1>
+                                    </div>
+                                    <div class="edit-user-content-input-field-col">
+                                        <div class="edit-user-content-input-field-row">
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-username">
+                                                <label for="username">Username:</label>
+                                                <input type="text" id="username" name="username" required>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-password">
+                                                <label for="edit-password">Password:</label>
+                                                <input type="password" id="edit-password" name="edit-password" required>
+                                                <div class="edit-user-content-input-field-pw edit-password-hide"></div>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-pnumber">
+                                                <label for="pnumber">Phone Number:</label>
+                                                <input type="tel" id="pnumber" name="pnumber" required>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-role">
+                                                <label for="role">Role:</label>
+                                                <input type="text" id="role" name="role" required>
+                                            </div>
+                                        </div>
+                                        <div class="edit-user-content-input-field-row">
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-fname">
+                                                <label for="fname">First Name:</label>
+                                                <input type="text" id="fname" name="fname" required>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-mname">
+                                                <label for="mname">Middle Name:</label>
+                                                <input type="text" id="mname" name="mname" required>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-lname">
+                                                <label for="lname">Last Name:</label>
+                                                <input type="text" id="lname" name="lname" required>
+                                            </div>
+                                            <div class="edit-user-content-input-field edit-user-content-input-field-pfp-pic">
+                                                <label for="edit-pfpPic">Profile Picture</label>
+                                                <input type="file" id="edit-pfpPic" name="edit-pfpPic" accept="image/*" required>
+                                                <span class="edit-pfpPic-name">← Click here...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="edit-user-content-show-pfp-pic">
+                                        <button type="submit" class="edit-user-btn">Update</button>
+                                        <img src="" alt="" id="edit-pfp-pic-img" class="edit-pfp-pic-img">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="users-account-content-table-data">
+                        <div class="users-account-content-data-col-school-id">2022002020</div>
+                            <div class="users-account-content-data-col-fname">Benson</div>
+                            <div class="users-account-content-data-col-mname">~</div>
+                            <div class="users-account-content-data-col-lname">Moretti</div>
+                            <div class="users-account-content-data-col-suffix">Suffix</div>
+                            <div class="users-account-content-data-col-pnumber">09xxxxxxxxx</div>
+                            <div class="users-account-content-data-col-role">Student</div>
+                            <div class="users-account-content-data-col-change">
+                                <button type="button" class="user-account-profile">PROFILE</button>
+                                <button type="button" class="user-account-edit">EDIT</button>
+                                <button type="button" class="user-account-remove">REMOVE</button>
+                            </div>
+                        </div>
+                        <div class="users-account-content-table-data">
+                            <div class="users-account-content-data-col-school-id">2022002020</div>
+                            <div class="users-account-content-data-col-fname">Dunn</div>
+                            <div class="users-account-content-data-col-mname">~</div>
+                            <div class="users-account-content-data-col-lname">Smith</div>
+                            <div class="users-account-content-data-col-suffix">Suffix</div>
+                            <div class="users-account-content-data-col-pnumber">09xxxxxxxxx</div>
+                            <div class="users-account-content-data-col-role">Officer</div>
+                            <div class="users-account-content-data-col-change">
+                                <button type="button" class="user-account-profile">PROFILE</button>
+                                <button type="button" class="user-account-edit">EDIT</button>
+                                <button type="button" class="user-account-remove">REMOVE</button>
+                            </div>
+                        </div>
+                        <div class="users-account-content-table-data">
+                            <div class="users-account-content-data-col-school-id">2022002020</div>
+                            <div class="users-account-content-data-col-fname">Rosselle</div>
+                            <div class="users-account-content-data-col-mname">~</div>
+                            <div class="users-account-content-data-col-lname">Gustav</div>
+                            <div class="users-account-content-data-col-suffix">Suffix</div>
+                            <div class="users-account-content-data-col-pnumber">09xxxxxxxxx</div>
+                            <div class="users-account-content-data-col-role">Student</div>
+                            <div class="users-account-content-data-col-change">
+                                <button type="button" class="user-account-profile">PROFILE</button>
+                                <button type="button" class="user-account-edit">EDIT</button>
+                                <button type="button" class="user-account-remove">REMOVE</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </div>  
+        
+        <div class="form-content-container">
+            <form action="" method="post" class="form-content" id="add-new-user">
+                <button type="button" class="btn-add-new-user-close" id="btn-add-new-user-close"></button>
+                <div class="form-content-head-text">
+                    <h1>Add New User</h1>
+                </div>
+                <div class="form-content-input-field-col">
+                    <div class="form-content-input-field-row">
+                        <div class="form-content-input-field form-content-input-field-username">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-password">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required>
+                            <div class="form-content-input-field-pw password-hide"></div>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-pnumber">
+                            <label for="pnumber">Phone Number:</label>
+                            <input type="tel" id="pnumber" name="pnumber" required>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-role">
+                            <label for="role">Role:</label>
+                            <input type="text" id="role" name="role" required>
+                        </div>
+                    </div>
+                    <div class="form-content-input-field-row">
+                        <div class="form-content-input-field form-content-input-field-fname">
+                            <label for="fname">First Name:</label>
+                            <input type="text" id="fname" name="fname" required>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-mname">
+                            <label for="mname">Middle Name:</label>
+                            <input type="text" id="mname" name="mname" required>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-lname">
+                            <label for="lname">Last Name:</label>
+                            <input type="text" id="lname" name="lname" required>
+                        </div>
+                        <div class="form-content-input-field form-content-input-field-pfp-pic">
+                            <label for="pfpPic">Profile Picture</label>
+                            <input type="file" id="pfpPic" name="pfpPic" accept="image/*" required>
+                            <span class="pfpPic-name">← Click here...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-content-show-pfp-pic">
+                    <button type="submit" class="add-new-user-btn">Add New User</button>
+                    <img src="" alt="" id="pfp-pic-img" class="pfp-pic-img">
+                </div>
+            </form>
+        </div> 
+    </div>
+
+    <script>
+        const pfppic = document.getElementById('pfpPic'); // image input
+        const pfppicoutput = document.getElementById('pfp-pic-img'); // image output
+        const pfppicname = document.querySelector('span.pfpPic-name');
+        const editpfppic = document.getElementById('edit-pfpPic'); // image input
+        const editpfppicoutput = document.getElementById('edit-pfp-pic-img'); // image output
+        const editpfppicname = document.querySelector('span.edit-pfpPic-name');
+        //add user
+        const btnOpen = document.querySelector('.btn-add-new-user');
+        const btnClose = document.getElementById('btn-add-new-user-close');
+        const formContainer = document.querySelector('.form-content-container');
+        //add user -- password show/hide toggle
+        const PWtype = document.querySelector('.form-content-input-field-pw');
+        const PWinput = document.getElementById('password');
+        //edit user -- password show/hide toggle
+        const editUserPWtype = document.querySelector('.edit-user-content-input-field-pw');
+        const editUserPWinput = document.getElementById('edit-password');
+        
+        //view profile
+        const userProfileOpen = document.querySelector('.user-account-profile');
+        const userProfileClose = document.querySelector('.btn-view-user-close');
+        const viewUserAcc = document.querySelector('.users-account-content-data-view-user-content');
+        //edit profile
+        const userEditOpen = document.querySelector('.user-account-edit');
+        const userEditClose = document.querySelector('.btn-edit-user-close');
+        const editUserAcc = document.querySelector('.users-account-content-data-edit-user-content');
+        
+
+        btnOpen.addEventListener('click', function () {
+            formContainer.style.display = 'flex';
+        });
+        btnClose.addEventListener('click', function () {
+            formContainer.style.display = 'none';
+        });
+        userProfileOpen.addEventListener('click', function () {
+            viewUserAcc.style.display = 'flex';
+        });
+        userProfileClose.addEventListener('click', function () {
+            viewUserAcc.style.display = 'none';
+        });
+        userEditOpen.addEventListener('click', function () {
+            editUserAcc.style.display = 'flex';
+        });
+        userEditClose.addEventListener('click', function () {
+            editUserAcc.style.display = 'none';
+        });
+
+        pfppic.addEventListener('change', function() {
+            pfppicoutput.style.display = 'flex';
+            const file = pfppic.files[0]; // Get the selected file
+            const fileName = file.name; // Extract the file name
+            const fileReader = new FileReader();
+
+            fileReader.onload = function() {
+                pfppicoutput.src = fileReader.result; // Display the image
+            };
+
+            fileReader.readAsDataURL(file);
+            pfppicname.innerHTML = fileName;
+        });
+        editpfppic.addEventListener('change', function() {
+            editpfppicoutput.style.display = 'flex';
+            const file = editpfppic.files[0]; // Get the selected file
+            const fileName = file.name; // Extract the file name
+            const fileReader = new FileReader();
+
+            fileReader.onload = function() {
+                editpfppicoutput.src = fileReader.result; // Display the image
+                editpfppicname.innerHTML = fileName;
+            };
+
+            fileReader.readAsDataURL(file);
+        });
+        
+        PWtype.addEventListener('click', function () {
+            if (PWinput.type === 'password') {
+                PWtype.classList.remove('password-hide');
+                PWtype.classList.add('password-show');
+                PWinput.type = 'text';
+            } else {
+                PWtype.classList.add('password-hide');
+                PWtype.classList.remove('password-show');
+                PWinput.type = 'password';
+            }
+        });
+        editUserPWtype.addEventListener('click', function () {
+            if (editUserPWinput.type === 'password') {
+                editUserPWtype.classList.remove('edit-password-hide');
+                editUserPWtype.classList.add('edit-password-show');
+                editUserPWinput.type = 'text';
+            } else {
+                editUserPWtype.classList.add('edit-password-hide');
+                editUserPWtype.classList.remove('edit-password-show');
+                editUserPWinput.type = 'password';
+            }
+        });
+    </script>
+</body>
+</html>

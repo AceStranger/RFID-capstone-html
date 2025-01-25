@@ -1,0 +1,39 @@
+:root {
+    ---light-primary-bg-color : #007819;
+    ---light-secondary-bg-color : #005e14;
+    ---light-third-bg-color : #3a77ff;
+    ---light-fourth-bg-color : #2a5fcd;
+    ---light-fifth-bg-color : #f7f9fc;
+    ---light-sixth-bg-color : #e6f3ff;
+    ---light-seventh-bg-color : #ff6f61;
+    ---light-eight-bg-color : #ff3d2e;
+    ---light-text-shadow: 0 0 2px black;
+
+    ---main-font-family: monospace;
+
+    ---header1-title-font-size: 24px;
+    ---header2-title-font-size: 20px;
+
+    ---table-head-font-size: 16px;
+    ---table-b0dy-font-size: 14px;
+
+    
+}
+/***
+Custom Chrome scrollbar
+***/
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background-color: #edf6ff;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #065fbd;
+    border-radius: 3px;
+}

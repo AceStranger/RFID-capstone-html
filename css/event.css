@@ -1,0 +1,298 @@
+
+
+/* General Styles */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Light Grey background */
+}
+.event-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    font-size: 14pt;
+}
+/* Event Content */
+.event-content {
+    /* padding-inline: 20px; */
+    border-radius: 5px;
+    /* background-color: #fff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.event-content-title {
+    width: 70%;
+    height: 10%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color:black; /* Blue title */
+    margin-bottom: 10px;
+}
+
+/* Organization Event Content */
+.organization-event-content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    max-width: 80%;
+    height: auto;
+    width: 900px;
+    gap: 50px;
+}
+.organization-event-content {
+    width: 100%;
+    max-height: 500px;
+    height: auto;
+    min-height: 100px;
+}
+/* General Table Styling */
+.organization-event-content-table-content {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+/* Table Header Styling */
+.organization-event-content-table-head {
+    background-color: #4CAF50; /* Green header */
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.organization-event-content-table-row th {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+
+.organization-event-content-organization-name {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #2E7D32; /* Darker green for the organization name */
+    color: white;
+    text-align: left;
+    padding: 10px;
+}
+
+.organization-event-content-event-btn {
+    background-color: #FF5722; /* Orange for the dropdown */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* AM/PM Time Styling */
+.organization-event-content-event-AM,
+.organization-event-content-event-PM {
+    background-color: #388E3C; /* Medium green for AM/PM */
+    color: white;
+    font-size: 14px;
+}
+
+/* Table Body Styling */
+.organization-event-content-table-body {
+    background-color: white;
+}
+
+.organization-event-content-table-body tr {
+    transition: background-color 0.2s ease-in-out;
+}
+
+.organization-event-content-table-body tr:hover {
+    background-color: #f9f9f9; /* Light hover effect */
+}
+
+.organization-event-content-table-body td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+}
+.close {
+    display: none;
+}
+/* Penalty Column */
+.organization-event-content-event-Penalty {
+    font-weight: bold;
+    color: #E64A19; /* Red for penalties */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .organization-event-content-table-content {
+        font-size: 12px;
+    }
+
+    .organization-event-content-table-head th,
+    .organization-event-content-table-body td {
+        padding: 8px 10px;
+    }
+
+    .organization-event-content-organization-name {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .organization-event-content-event-btn {
+        font-size: 14px;
+    }
+}
+
+
+.event-content-record   {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50px;
+    width: 900px;
+    background-color: #8EDBBF;
+    border-radius: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #8EDBBF;
+}
+.event-content-record-EN-WH{
+    display: flex;
+    flex-direction: row;
+    width: calc(900px - 100px);
+    height: 50px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.event-content-record-event-name{
+    width: 300px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.event-content-record-when{
+    width: 100px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.event-content-record-where{
+    width: 100px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.event-content-record-ud-btn{
+    display: flex;
+    justify-content:flex-end;
+    width: 100px;
+    height: inherit;
+    align-items: center;
+    cursor: pointer;
+}
+.event-content-record-list{
+    display: none;
+    flex-direction: column;
+    height: auto;
+    width: inherit;
+    background-color: #67C7A4;
+    border-radius: 0px 0px 10px 10px;
+}
+.event-content-record-head-row{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 60px;
+    width: inherit;
+    background-color: #D9D9D9;
+}
+.event-content-record-item-row{
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    width: inherit;
+    background-color: #D9D9D9;
+}
+.event-content-record-item-row:nth-child(even){
+    background-color: #e6e6e6;
+}
+.event-content-record-row-content{
+    display: flex;
+    align-items: center;
+}
+/* .record-row-content-num{
+    width: 30px;
+} */
+.record-row-content-name{
+    margin-left: 20px;
+    width: 300px;
+}
+.record-row-content-program{
+    width: 80px;
+}
+.record-row-content-year{
+    width: 40px;
+}
+.record-row-content-section{
+    width: 60px;
+}
+.record-row-content-morning {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+.record-row-content-morning-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 30px;
+    width: 100%;
+}
+.record-row-content-morning-row > .record-row-content-amtIn,
+.record-row-content-morning-row > .record-row-content-amtOut {
+    height: 30px;
+    width: 50%;
+}
+.record-row-content-amtIn{
+    width: 80px;
+}
+.record-row-content-amtOut{
+    width: 80px;
+}
+.record-row-content-afternoon {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+.record-row-content-afternoon-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 30px;
+    width: 100%;
+}
+.record-row-content-afternoon-row > .record-row-content-amtIn,
+.record-row-content-afternoon-row > .record-row-content-amtOut {
+    height: 30px;
+    width: 50%;
+}
+.record-row-content-pmtIn{
+    width: 80px;
+}
+.record-row-content-pmtOut{
+    width: 80px;
+}

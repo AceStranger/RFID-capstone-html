@@ -1,0 +1,209 @@
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+.rfid-data-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+.rfid-data-content-top-part {
+    width: 95%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+h1.rfid-data-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+.rfid-data-content-btn {
+    margin-inline: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.rfid-data-btn-add {
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+
+
+
+
+
+.rfid-data-content-main-content {
+    width: 95%;
+    min-height: 500px;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding-inline: 16px;
+    overflow-y: hidden;
+}
+.rfid-data-content-form {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.rfid-data-content-filter-content {
+    width: 100%;
+    height: 90px;
+    padding-top: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.rfid-data-content-search-input-container {}
+
+select#rfid-data-content-filter-select-col {
+    width: 150px;
+    height: 40px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    padding-inline: 5px;
+}
+#rfid-data-content-search-input {
+    width: 300px;
+    padding-inline: 10px;
+    padding-block: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    border: 1px solid black;
+}
+#filterSubmit {
+    cursor: pointer;
+    padding-inline: 10px;
+    padding-block: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    border: 1px solid black;
+}
+
+
+
+
+
+
+
+
+
+.rfid-data-content-info-content {
+    width: 100%;
+    height: 450px;
+    padding-top: 16px;
+    overflow: auto;
+
+}
+table.rfid-data-content-table {
+    width: 100%;
+    height: auto;
+    border-spacing: 0px;
+    position: relative;
+}
+thead.rfid-data-content-head {
+    width: 100%;
+    height: auto;
+}
+tbody.rfid-data-content-body {
+    width: 100%;
+    height: auto;
+}
+thead.rfid-data-content-head > tr.rfid-data-content-row {
+    position: sticky;
+    top: 0px;
+    background-color: #00811fe6;
+    /* width: auto; */
+    width: 100%;
+    height: 50px;
+    color: rgb(244, 244, 244);
+}
+tbody.rfid-data-content-body > tr.rfid-data-content-row {
+    background-color: #85e49c7f;
+    width: 100%;
+    height: 30px;
+}
+tbody.rfid-data-content-body > tr.rfid-data-content-row:nth-child(odd) {
+    background-color: #c7ffd457;
+}
+tr.rfid-data-content-row > th {
+    font-size: 16px;
+}
+tr.rfid-data-content-row > td {
+    padding-block: 3px;
+    padding-inline: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(150, 150, 150, 0.8);
+    border-block: 10px solid transparent;
+}
+
+
+.rfid-data-content-school-id {
+    width: 20%;
+}
+.rfid-data-content-name {
+    width: 30%;
+}
+.rfid-data-content-rfid-code {
+    width: 20%;
+}
+.rfid-data-content-date-added {
+    width: 10%;
+}
+#dateadded {
+    padding-inline: 10px;
+    padding-block: 5px;
+    border: none;
+    background-color: transparent;
+}
+.event-content-data-btn-edit {
+    width: 10%;
+}
+.event-content-data-btn-delete {
+    width: 10%;
+}

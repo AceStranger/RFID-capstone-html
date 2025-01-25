@@ -1,0 +1,146 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+body {
+    max-width: 100%;
+    max-height: 100%;
+    width: 1365px;
+    height: 679px;
+}
+
+.form-content-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* width: 1365px;
+    height: 679px; */
+    background-color: rgba(0, 0, 0, 0.438);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.form-content {
+    position: absolute;
+    width: 800px;
+    height: 500px;
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 5px;
+}
+.btn-add-new-user-close {
+    font: normal 1em/1 Arial, sans-serif;
+    display: inline-block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    color: black;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    top: 0px;
+    right: 0px;
+}
+.btn-add-new-user-close::before {
+    content: "\2716";
+}
+.btn-add-new-user-close:hover {
+    color: grey;
+}
+.btn-add-new-user-close:active {
+    color: red;
+}
+.form-content-head-text {
+    font-size: 16px;
+    width: 700px;
+    height: 80px;
+    padding-inline: 20px;
+    padding-block: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.form-content-input-field-col {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.form-content-input-field-row {
+    width: 340px;
+    padding-inline: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.form-content-input-field {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.form-content-input-field > label {
+    width: 100px;
+}
+.form-content-input-field > input {
+    width: 200px;
+    height: 30px;
+    padding-inline: 10px;
+    padding-block: 5px;
+}
+
+.form-content-input-field > input#password {
+    width: 180px;
+    height: 30px;
+    padding-inline: 10px;
+    padding-right: 30px;
+    padding-block: 5px;
+}
+.form-content-input-field-password-show {
+    position: absolute;
+    content: url(pic/view.png);
+    height: 20px;
+    width: 20px;
+    right: 5px;
+    filter: opacity(80%);
+}
+.form-content-input-field-password-hide {
+    position: absolute;
+    content: url(pic/hide.png);
+    height: 20px;
+    width: 20px;
+    right: 5px;
+    filter: opacity(80%);
+}
+
+.form-content-show-pfp-pic {
+    width: 700px;
+    height: 150px;
+    padding-inline: 20px; 
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.pfp-pic-img {
+    width: 150px;
+    height: 150px;
+    border: 1px solid black;
+    background-color: aliceblue;
+    display: none;
+}

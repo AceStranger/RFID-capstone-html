@@ -1,0 +1,412 @@
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+.department-content {
+    width: 100%;    
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+/* @media screen and (max-width: 450px) {
+    .department-content{
+        margin-left: 0px;
+    }
+} */
+.department-content-top-part {
+    width: 95%;
+    min-height: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+
+.department-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+.department-content-btn {
+    margin-inline: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-new-department-btn-show {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    box-shadow: 0px 4px 10px 0px black;
+}
+
+.add-new-department-btn-show:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+.add-department-container {
+    display: none;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px black;
+    max-width: 400px;
+    margin: 20px auto;
+    position: absolute;
+    width: 500px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    z-index: 19;
+    -webkit-transform: translate(50%, -50%);
+    -moz-transform: translate(50%, -50%);
+    -ms-transform: translate(50%, -50%);
+    -o-transform: translate(50%, -50%);
+}
+
+.add-department-form .form-group {
+    margin-bottom: 15px;
+}
+
+.add-department-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.add-department-form input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.add-department-btn {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-department-btn:hover {
+    background-color: #218838;
+}
+
+.form-group button {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.form-group button:hover {
+    background: #0056b3;
+}
+.close-add-department-btn {
+    width: 40px !important;
+    background-color: transparent !important;
+    border: none !important;
+    color: #ccc !important;
+    cursor: pointer !important;
+    font-size: 1.5rem !important;
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.close-add-department-btn:hover {
+    color: #ea0f0f !important;
+}
+
+
+
+
+
+
+
+
+
+.department-content-department-content {
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;  
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding: 16px;
+    overflow: hidden;
+    gap: 16px;
+}
+.department-content-top-part-filter {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.department-content-search-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+.department-content-top-part-filter {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.department-content-search-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+#department-content-search-input, .filter-select {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+    box-shadow: 0px 4px 10px 0px black;
+}
+
+.filter-button {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: white;
+    background-color: #3a77ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px 0px black;
+}
+
+.filter-button:hover {
+    background-color: #2a5fcd;
+}
+
+
+.department-content-main-content-container{
+    height: 100% ;
+    width: 100%;
+    overflow: hidden; /* Prevent overflow outside the table container */
+    margin: auto; /* Center the table container */
+}
+/* Set a fixed height for the table container */
+.department-content-table-content-container {
+    height: 100% ;
+    width: 100%;
+    overflow: auto;
+    border-radius: 10px; /* Optional: Maintain rounded corners */
+    border: 1px solid #ccc; /* Optional: Border around the container */
+    background: #ffffff;
+    margin: auto; /* Center the table container */
+}
+
+/* Ensure the table takes full width and height */
+.department-content-table-content {
+    width: 100%;
+    height: 100%; /* Make table fill the container */
+    border-collapse: collapse;
+    /* table-layout: fixed; */
+}
+
+/* Sticky header for the thead */
+.department-content-table-head th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #3a77ff; /* Sticky background to prevent transparency */
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+.department-content-table-head th, 
+.department-content-table-body td {
+    width: 10px;
+}
+
+/* Set tbody to scroll with auto overflow */
+.department-content-table-body {
+    display: table-row-group; /* Reset tbody to default table layout */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%; /* Ensure it fills the table width */
+    max-height: calc(70vh - 40px); /* Adjust based on header height */
+}
+
+
+.department-content-table-row {
+    min-height: 50px; /* Ensure rows have a minimum height */
+    height: 50px; /* Optionally, set a fixed height */
+}
+
+
+.department-content-table-row:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+.department-content-table-row:hover {
+    background-color: #e6f3ff;
+}
+
+.department-content-table-row td {
+    padding: 10px 10px ;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    word-break: break-word;
+}
+td.department-content-data-department-name {
+    min-width: 50%;
+    width: 400px;
+}
+
+td.department-content-data-responsibility {
+    min-width: 30%;
+    width: 300px;
+}
+
+td.department-content-data-btn-actions {
+    min-width: 20%;
+    width: 200px;
+}
+
+
+
+.user-edit, .user-delete {
+    padding: 5px 10px;
+    font-size: 12px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.user-edit {
+    background-color: #3a77ff;
+}
+
+.user-edit:hover {
+    background-color: #2a5fcd;
+}
+
+.user-delete {
+    background-color: #ff6f61;
+}
+
+.user-delete:hover {
+    background-color: #ff3d2e;
+}
+
+
+
+.edit-department-container {
+    position: absolute;
+    width: 500px;
+    height: auto;
+    top: 50%;
+    right: 50%;
+    z-index: 19;
+    background-color: #fff;
+    transform: translate(50%, -50%);
+    padding: 5px 10px;
+    border: 1px solid #333;
+    box-shadow: 0px 0px 10px #333;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    -webkit-transform: translate(50%, -50%);
+    -moz-transform: translate(50%, -50%);
+    -ms-transform: translate(50%, -50%);
+    -o-transform: translate(50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-department-form {
+    padding: 10px 20px;
+    width: 90%;
+    height: auto;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+.form-group > input,
+.form-group > textarea {
+    width: 50%;
+    max-width: 80%;
+    height: auto;
+    max-height: 100px;
+    font-size: 14px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}

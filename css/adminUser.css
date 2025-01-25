@@ -1,0 +1,304 @@
+input:focus {
+    outline: 1px solid rgb(142, 142, 142); 
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+div {
+    /* user-select: none; */
+}
+.user-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100%;
+    /* background-color: rgb(242, 242, 242); */
+    /* background-color: #fbfbfb; */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.user-content-top-part {
+    width: 95%;
+    min-height: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+
+
+.user-content-top-part {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.btn-add-new-user {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    box-shadow: 0px 4px 10px 0px black;
+}
+
+.btn-add-new-user:hover {
+    background-color: #0056b3;
+}
+
+.user-content-users-account-content {
+    width: 95%;
+    min-height: calc(100vh - 150px);
+    height: 95%;
+    display: flex;
+    flex-direction: column;  
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding-inline: 16px;
+}
+
+/* Container for the filter form */
+.users-account-content-form {
+    margin-block: 20px;
+    padding-block: 10px;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+/* Styling for the top part of the form */
+.users-account-content-top-part {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Container for search and select elements */
+.users-account-content-search-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Styling for filter labels */
+.filter-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Styling for select dropdowns */
+#users-account-content-filter-select-role,
+#users-account-content-filter-select-col {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    color: #495057;
+    box-shadow: 0 2px 10px 0px rgb(0 0 0 / 30%);
+}
+
+/* Styling for the search input field */
+#users-account-content-search-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    color: #495057;
+    flex: 1;
+    box-shadow: 0 2px 10px 0px rgb(0 0 0 / 30%);
+}
+
+/* Styling for the submit button */
+#filterSubmit {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 10px 0px rgb(0 0 0 / 30%);
+}
+
+#filterSubmit:hover {
+    background-color: #0056b3;
+}
+
+
+
+.users-account-content-main-content {
+    height: calc(100% - 250px); /* Reduced height limit for tbody */
+    width: 100%;
+}
+
+.users-account-content-table-content {
+    height: calc(100vh - 250px); /* Set a height limit for the table container */
+    width: 100%;
+    overflow-y: auto; /* Enable scrolling within the table content */
+    border-radius: 10px; /* Optional: Maintain rounded corners */
+    background: #ffffff;
+}
+.users-account-content-table-content::-webkit-scrollbar {
+    /* padding-block: 10px; */
+}
+
+table.users-account-content-table {
+    width: 100%;
+    height: 100%; /* Make table fill the container */
+    border-collapse: collapse;
+    /* table-layout: fixed; */
+}
+
+.users-account-content-table-head th {
+    position: sticky;
+    top: 0;
+    z-index: 2; /* Ensure it's above other elements */
+    background: #3a77ff; /* Sticky background to prevent transparency */
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.users-account-content-table-body {
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%; /* Ensure it fills the table width */
+    max-height: calc(70vh - 40px); /* Adjust based on header height */
+}
+
+.users-account-content-table-row {
+    min-height: 50px; /* Ensure rows have a minimum height */
+    height: 50px; /* Optionally, set a fixed height */
+}
+
+.users-account-content-table-row:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+.users-account-content-table-row:hover {
+    background-color: #e6f3ff;
+}
+
+tr.users-account-content-table-row td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.users-account-content-data-school-id {
+    width: 10%;
+}
+.users-account-content-data-fname {
+    width: 14%;
+}
+.users-account-content-data-mname {
+    width: 12%;
+}
+.users-account-content-data-lname {
+    width: 14%;
+}
+.users-account-content-data-suffix {
+    width: 8%;
+}
+.users-account-content-data-pnumber {
+    width: 12%;
+}
+.users-account-content-data-role {
+    width: 9%;
+}
+.users-account-content-data-btn-actions {
+    width: 10%;
+}
+
+.users-account-content-data-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+
+.user-account-profile, .user-account-edit, .user-account-delete {
+    padding: 5px 10px;
+    font-size: 12px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+
+.user-account-profile {
+    background-color: #3a77ff;
+}
+
+.user-account-profile:hover {
+    background-color: #2a5fcd;
+}
+.user-account-edit {
+    background-color: #ffba3a;
+}
+
+.user-account-edit:hover {
+    background-color: #cc942c;
+}
+
+.user-account-delete {
+    background-color: #ff6f61;
+}
+
+.user-account-delete:hover {
+    background-color: #ff3d2e;
+}

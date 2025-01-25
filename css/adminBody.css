@@ -1,0 +1,220 @@
+html {
+    background-color: #005e14;
+}
+* {
+    padding: 0;
+    margin: 0;
+}
+body {  
+    width: 100%;
+    height: 100%;
+    position: relative;
+    font-family: monospace;
+    /* background-color: #EAEAEA; */
+    background-color: #dadada;
+    font-size: 1rem;
+}
+.main-content-container {
+    height: 100vh;
+    width: 100%; 
+    display: grid;
+    grid-template-areas: "sidebar main";
+    grid-template-columns: 300px 1fr;  /* Default width for the sidebar */
+    grid-template-rows: 1fr;
+    position: relative;
+}
+
+/* Optional: Add transition for smooth adjustment */
+.main-content-container {
+    transition: grid-template-columns 0.3s ease;
+}
+
+
+/***
+
+    sidebar
+***/
+.main-sidebar-content{
+    height: 100%;
+    width: 350px;
+    background-color: #005e14;
+    position: relative;
+    transition: width 0.3s ease;
+    font-family: monospace;
+    color: white;
+    overflow-y: auto;
+    -webkit-transition: width 0.3s ease;
+    -moz-transition: width 0.3s ease;
+    -ms-transition: width 0.3s ease;
+    -o-transition: width 0.3s ease;
+}
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    font-size: 30px;
+    font-family: monospace;
+    background-color: #00490f;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px black;
+    border-radius: 0px 5px 5px 0px;
+    -webkit-border-radius: 0px 5px 5px 0px;
+    -moz-border-radius: 0px 5px 5px 0px;
+    -ms-border-radius: 0px 5px 5px 0px;
+    -o-border-radius: 0px 5px 5px 0px;
+    transition: top 0.3s ease;
+    -webkit-transition: top  0.3s ease;;
+    -moz-transition: top  0.3s ease;;
+    -ms-transition: top  0.3s ease;;
+    -o-transition: top  0.3s ease;;
+}
+.sidebar-toggle-btn:hover {
+    color: #333;
+}
+
+
+/* Sidebar Styles */
+.main-sidebar-content {
+    height: 100%;
+    width: 300px;  /* Default width */
+    background-color: #005e14;
+    position: relative;
+    transition: width 0.3s ease;
+    font-family: monospace;
+    color: white;
+    overflow-y: auto;
+}
+
+
+
+/* Rest of your sidebar content and styling... */
+
+.sidebar-content{
+    width: 100%;
+    height: 100%;
+}
+.sidebar-content-header{
+    width: 100%;
+    height: 100px;
+    background-color: rgb(58, 135, 115);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo-container {
+    width:70px; /* Adjust to the size you want */
+    height: 70px; /* Ensure width and height are equal for a perfect circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white; /* White background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visual effect */
+}
+
+.logo-container .logo {
+    width: auto; /* Adjust the logo size relative to the circle */
+    height: 100%; /* Maintain aspect ratio */
+}
+
+.sidebar-content-user{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.sidebar-user-avatar{
+    width: 50px;
+    height: 50px;
+    background-color: aliceblue;
+    border-radius: 50%;
+    margin-left: 16px;
+}
+.sidebar-user-avatar > img {
+    height: 100%;
+    width: auto;
+    border-radius: 50%;
+}
+.sidebar-user-info{
+    width: 250px;
+    height: 100%;  
+    margin-left: 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.sidebar-content-btn {
+    height: calc(100vh - 200px); /* Adjust for your header or any fixed sections */
+    overflow-y: auto;
+}
+
+
+.sidebar-content-item-list {
+    width: 100%;
+    height: auto; /* Match the height of the parent container */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    overflow: auto;
+    scrollbar-width: thin; /* Optional: Customize scrollbar appearance */
+}
+
+.sidebar-user-name{
+    font-size: 24px;
+}
+.sidebar-user-role{
+    font-size: 18px;
+    text-transform: capitalize;
+}
+
+.sidebar-content-item {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.sidebar-content-item:hover {
+    background-color: #ffffff30;
+}
+.sidebar-link-text{
+    font-size: 20px;
+    margin-left: 16px;
+}
+
+
+@media screen and (max-width: 450px) {
+    .dashboard-sidebar-content{
+        left: -350px;
+    }
+}
+
+
+
+
+
+.main-content{
+    height: 100%;
+    width: 100%; 
+    /* background-color: #f6f6f6; */
+    background-color: #007819;
+/* 
+    display: flex;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template: 'main';
+    position: relative;
+}
+a{
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+}

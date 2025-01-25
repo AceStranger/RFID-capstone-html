@@ -1,0 +1,120 @@
+
+.header-content{
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0;
+    height: 112px;
+    width: 100%;
+    background-color: #4EA96B;
+    align-items: center;
+    justify-content: space-between;
+}
+.header-content-logo{
+    width: 15%;
+    height: 80px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+.logo-container {
+    width:70px; /* Adjust to the size you want */
+    height: 70px; /* Ensure width and height are equal for a perfect circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white; /* White background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visual effect */
+}
+
+.logo-container .logo {
+    width: auto; /* Adjust the logo size relative to the circle */
+    height: 100%; /* Maintain aspect ratio */
+}
+.header-content-menu-item > a {
+    color: #fff;
+    text-shadow: 0px 0px 2px black;
+}
+.header-content-menu{
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    height: inherit;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.side-profile-content{
+    width: 765px;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    position: relative;
+    font-size: 16pt;
+}
+.side-profile-content-name{
+    color: #fff;
+    text-shadow: 0px 0px 2px black;
+    margin-right: 25px;
+    cursor: pointer;
+    user-select: none;
+}
+.side-profile-content-avatar{
+    width: 50px;
+    height: 50px;
+    background-color: beige;
+    border-radius: 50%;
+    margin-right: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+.side-profile-content-avatar > img{
+    width: 100%;
+    height: auto;
+}
+.side-profile-content-user-menu-list-container {
+    z-index: 1099;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 100px;
+    background-color: aliceblue;
+    position: absolute;
+    bottom: -90px;
+    right: 80px;
+    border: 1px solid rgb(119, 119, 119);
+    border-radius: 5px;
+    box-shadow: 0px 1px 9px 0px rgb(103 103 103);
+}
+.user-menu-list-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.user-menu-list-content > a{
+    padding-inline: 20px;
+    font-size: 16pt;
+    width: 150px;
+}
+.user-menu-list-content > form {
+    width: 100%;
+    width: 200px;
+    padding-inline: 20px;
+}
+#viewProfilebtn {
+    background-color: transparent;
+    border: none;
+    font-size: 16pt;
+    width: 200px;
+    text-align: left;
+}

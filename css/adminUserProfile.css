@@ -1,0 +1,368 @@
+
+input:focus {
+    outline: 1px solid rgb(142, 142, 142); 
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+div {
+    /* user-select: none; */
+}
+.user-profile-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100%;
+    /* background-color: rgb(242, 242, 242); */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    
+    position: relative;
+
+    
+}
+.user-profile-content-form {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding-block: 10px;
+}
+.user-profile-content-top-part {
+    width: 95%;
+    min-height: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+.user-profile-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+.user-profile-content-btn {
+    margin-inline: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.user-profile-btn-action-btn {
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin-inline: 10px;
+}
+.user-profile-content-info {
+    max-height: calc(100vh - 180px);
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding-inline: 16px;
+    padding-block: 16px;
+    overflow-y: hidden;
+}
+.user-profile-content-info-content {
+    width: 100%;
+    height: auto;
+    overflow-y: auto;
+}
+.user-profile-content-user-info {
+    width: 100%;
+    height: auto;
+}
+.user-info-content-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+.user-info-content-col-1 {
+    width: 45%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.user-info-content-col-2 {
+    width: 45%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.user-info-content-info-field {
+    width: 100%;
+    height: auto;
+    padding-block: 5px;
+}
+.user-info-content-info-field > label {
+    padding-block: 16px;
+    padding-inline: 10px;
+}
+.user-info-content-info-field > label#label-user-picture {
+    border: none;
+    border-bottom: 1px solid black;
+}
+.user-info-content-info-field > label, 
+.user-info-content-info-field > input {
+    font-size: 16px;
+    
+}
+.user-info-content-info-field > input {
+    width: 50%;
+    height: 40px;
+    padding-block: 3px;
+    padding-inline: 10px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.user-info-content-info-field > select {
+    width: 50%;
+    height: 40px;
+    padding-block: 3px;
+    padding-inline: 10px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+select:disabled {
+    opacity: 1;
+}
+.user-info-content-info-field > textarea {
+    font-size: 16px;
+    max-width: 50%;
+    width: 50%;
+    max-height: 80px;
+    height: 40px;
+    padding-block: 5px;
+    padding-inline: 10px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.user-info-content-info-field > input:enabled {
+    color: black;
+    border: 1px solid black;
+    background-color: #ffffff;
+}
+.user-info-content-info-field > select:enabled {
+    color: black;
+    border: 1px solid black;
+    background-color: #ffffff;
+}
+.user-info-content-info-field > textarea:enabled {
+    color: black;
+    border: 1px solid black;
+    background-color: #ffffff;
+}
+.user-info-content-info-field > input#user-picture {
+    /* display: none; */
+}
+.user-info-content-info-field > input#user-role {
+    text-transform: capitalize;
+}
+.user-profile-info-content-picture {
+    width: 200px;
+    min-height: 40px;
+    height: auto;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.user-info-content-info-field {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-profile-content-user-info {
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.user-profile-content-student-info {
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.user-profile-content-officer-info {
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.user-profile-content-dean-info {
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.user-profile-content-admin-info {
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.user-profile-content-attendance-history-info{
+    width: 100%;
+    height: auto;
+    margin-block: 16px;
+}
+.attendance-history-content {
+    width: 100%;
+    height: auto;
+}
+.attendance-history-content-head-text {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.attendance-history-content-head-text > h3 {
+    font-size: 18px;
+}
+
+table, tr, td {
+    border-inline: 1px solid rgba(150, 150, 150, 0.8);
+    border-block: 10px solid transparent;
+    border-inline-width: 1px;
+    
+}
+table.attendance-history-table {
+    border-collapse: collapse;
+    width: 100%;
+    height: auto;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+thead > tr.attendance-history-row {
+    border-inline: none;
+    background-color: #00811fe6;
+    color: rgb(244, 244, 244);
+}
+tbody > tr.attendance-history-row {
+    background-color: #85e49c7f;
+    border-left-width: 0px;
+    border-right-width: 0px;
+}
+tbody > tr.attendance-history-row:nth-child(even) {
+    background-color: #c7ffd457;
+}
+tr.attendance-history-row {
+    width: 100%;
+    min-height: 50px;
+    max-height: 100px;
+    height: 30px;
+    background-color: #ffffff;
+}
+tr.attendance-history-row > td, tr.attendance-history-row > th {
+    padding-block: 3px;
+    padding-inline: 10px;
+    font-size: 16px;
+
+}
+tr.attendance-history-row > td {
+    align-content: baseline;
+}
+.attendance-history-content-event-name {
+    max-width: 35%;
+    width: 350px;
+    word-wrap: break-word;
+    border-left-width: 0px;
+}
+.attendance-history-content-event-date {
+    width: 20%;
+}
+.attendance-history-content-event-organizer {
+    width: 15%;
+}
+.attendance-history-content-event-am-tin {
+    width: 7%;
+}
+.attendance-history-content-event-am-tout {
+    width: 7%;
+}
+.attendance-history-content-event-pm-tin {
+    width: 7%;
+}
+.attendance-history-content-event-pm-tout {
+    width: 7%;
+    border-right-width: 0px;
+}
+
+
+

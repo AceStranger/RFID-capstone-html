@@ -1,0 +1,444 @@
+
+input:focus {
+    outline: 1px solid rgb(142, 142, 142); 
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+div {
+    /* user-select: none; */
+}
+.user-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100%;
+    /* background-color: rgb(242, 242, 242); */
+    /* background-color: #fbfbfb; */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+}
+
+.user-content-top-part {
+    width: 95%;
+    min-height: 100px;
+    height: 10%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    /* margin-block-start: 16px; */
+    padding-inline: 16px;
+}
+
+.user-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+.user-content-btn {
+    margin-inline: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.create-users-account-content {
+    width: 95%;
+    min-height: 500px;
+    height: 80%;
+    display: flex;
+    flex-direction: column;  
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    /* margin-block-end: 16px; */
+    padding-inline: 1rem;
+    overflow: hidden;
+}
+
+.form-content-container {
+    width: 100%;
+    max-width: 80%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;  
+    justify-content: flex-start;
+    align-items: center;
+    overflow: auto;
+    padding: 16px;
+}
+
+/* General Form Styles */
+
+.form-content {
+    width: 100%;
+    height: auto;
+    /* background: linear-gradient(to bottom right, #ffffff, #f9f9f9); */
+    border-radius: 12px;
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
+    /* padding-block: 16px;
+    padding-inline: 16px; */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Close Button */
+.btn-add-new-user-close {
+    font-size: 24px;
+    color: #555;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    transition: color 0.3s;
+}
+
+.btn-add-new-user-close:hover {
+    color: #000;
+}
+
+/* Form Title */
+.form-content-head-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Input Fields */
+.form-content-input-field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.form-content-input-field label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+.upload-label {
+    background-color: #007BFF;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 16px !important;
+    color: white !important;
+    text-shadow: 0px 0px 1px #000;
+
+}
+.upload-label:hover {
+    background-color: #0056b3;
+}
+.form-content-input-field input {
+    width: 90%;
+    height: 30px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-content-input-field input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+.form-content-input-field select {
+    width: 90%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-content-input-field select:hover {
+    border-color: #ccc;
+}
+
+.form-content-input-field select:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+
+
+.scan-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button#rfid-scan-btn {
+    
+    width: 50%;
+    height: 50%;
+}
+
+.form-content-input-field-pw {
+    height: 20px;
+    width: 100%;
+    float: right;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    cursor: pointer;
+}
+.form-content-input-field-pw > label{
+    margin: 0;
+    cursor: pointer;
+}
+
+/* Image styles for visibility toggle */
+.password-show, .password-hide {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Profile Picture Input */
+.form-content-input-field-pfp-pic label {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-content-input-field-pfp-pic label:hover {
+    background-color: #0056b3;
+}
+/* Profile Picture Section */
+.form-content-input-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* margin-bottom: 20px; */
+}
+
+/* Label for file input */
+.upload-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.upload-label:hover {
+    color: #007bff;
+}
+
+/* File input field styling */
+input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
+/* Span for file name */
+.pfpPic-name {
+    margin-left: 12px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.pfpPic-name:hover {
+    color: #007bff;
+}
+
+/* Profile Picture Preview Image */
+.pfp-pic-img {
+    width: 150px;
+    height: 150px;
+    border: 3px solid #ddd;
+    margin-top: 12px;
+    display: none;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.pfp-pic-img:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+
+/* Submit Button */
+.add-new-user-btn {
+    width: 100%;
+    max-width: 200px;
+    height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+    align-self: center;
+    text-shadow: 0px 0px 1px #000;
+}
+
+.add-new-user-btn:hover {
+    background-color: #218838;
+}
+
+.add-new-user-btn:active {
+    transform: scale(0.98);
+}
+
+/* Input Field Rows */
+.form-content-input-field-row {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    padding-block: 10px;
+}
+
+.form-content-input-field-row > .form-content-input-field {
+    flex: 1;
+}
+
+/* Media Query for Responsive Design */
+@media (max-width: 768px) {
+    .form-content-input-field-row {
+        flex-direction: column;
+    }
+
+    .add-new-user-btn {
+        width: 100%;
+    }
+}
+
+
+
+/* General styling */
+.form-content-input-field {
+    margin: 20px 0;
+}
+
+.role-selector-container {
+    position: relative;
+}
+
+button#show-role-list-btn {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 0px 0px 1px #000;
+}
+
+button#show-role-list-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Hidden container */
+.hidden {
+    display: none;
+}
+
+/* Role list styling */
+.role-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+    position: absolute;
+    z-index: 1000;
+}
+
+.role-list li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.role-list li:hover {
+    background-color: #e9ecef;
+}
+
+/* Selected role box */
+#selected-role-container {
+    margin-top: 10px;
+}
+
+.selected-role {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin-right: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.selected-role .remove-role {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.selected-role .remove-role:hover {
+    background-color: #e60000;
+}
+

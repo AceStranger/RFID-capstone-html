@@ -1,0 +1,66 @@
+input {
+    border: 1px solid rgb(142, 142, 142); 
+    font-size: 16px;
+}
+button {
+    cursor: pointer;
+    background-color: rgb(250, 250, 250);
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 3px;
+    border: 1px solid rgb(59, 59, 59);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: rgb(230, 230, 230);
+}
+button:active {
+    transform: scale(1.1);
+    background-color: rgb(220, 220, 220);
+}
+.event-paticipant-attendance-data-content{
+    /* margin-left: 350px; */
+    width: 100%;    
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+.event-paticipant-attendance-data-content-top-part {
+    width: 95%;
+    min-height: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-start: 16px;
+    padding-inline: 16px;
+}
+
+.event-paticipant-attendance-data-content-head-text {
+    margin-inline: 20px;
+    font-size: 20px;
+}
+
+
+.event-paticipant-attendance-data-content-main-content {
+    width: 95%;
+    min-height: calc(100vh - 170px);
+    height: 95%;
+    display: flex;
+    flex-direction: column;  
+    align-items: flex-start;
+    background-color: #ffffffe6;
+    border-radius: 10px;
+    margin-block-end: 16px;
+    padding: 16px;
+    overflow: hidden;
+    gap: 16px;
+}

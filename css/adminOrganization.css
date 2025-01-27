@@ -189,6 +189,70 @@ button:active {
     /* background: #218838; */
 }
 
+.custom-dropdown {
+    position: relative;
+}
+.dropdown-toggle {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    text-align: left;
+    cursor: pointer;
+}
+.dropdown-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    z-index: 100;
+}
+.dropdown-option {
+    padding: 10px;
+    cursor: pointer;
+}
+.dropdown-option:hover {
+    background-color: #f0f0f0;
+}
+.dropdown-group {
+    padding: 5px 0;
+}
+.dropdown-group-label {
+    font-weight: bold;
+    padding: 5px;
+    background-color: #f7f7f7;
+}
+.selected-options {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.selected-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+.selected-option button {
+    margin-left: 5px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: #2a5fcd;
+    padding: 5px 10px;
+    width: auto;
+}
+.selected-option button:hover {
+    color: #ff0000;
+}   
 
 
 

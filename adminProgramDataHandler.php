@@ -2,14 +2,18 @@
 session_start();
 include "dbh.php";
 
-// Verify if user is authenticated
+header('Content-Type: application/json');
+
+// Check if user is authenticated
 if (!isset($_SESSION['user_ID'])) {
-    header("Location: LogInPage.html");
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
 
-if (isset($_POST['dSubmit'])) {
-    $program_id = filter_input(INPUT_POST, 'program-id', FILTER_SANITIZE_NUMBER_INT);
+// Handle delete request
+$data = json_decode(file_get_contents("php://input"), true);
+if (isset($data['program_id'])) {
+    $program_id = filter_var($data['program_id'], FILTER_SANITIZE_NUMBER_INT);
 
     if ($program_id) {
         $deleteQuery = "DELETE FROM program WHERE program_id = ?";
@@ -17,12 +21,14 @@ if (isset($_POST['dSubmit'])) {
         $stmt->bind_param("i", $program_id);
 
         if ($stmt->execute()) {
-            header("Location: adminPrograms.php?message=deleted");
+            echo json_encode(['success' => true, 'message' => 'Program deleted successfully']);
         } else {
-            header("Location: adminPrograms.php?message=error");
+            echo json_encode(['success' => false, 'message' => 'Failed to delete program']);
         }
     } else {
-        header("Location: adminPrograms.php?message=invalid");
+        echo json_encode(['success' => false, 'message' => 'Invalid program ID']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Program ID not provided']);
 }
 ?>

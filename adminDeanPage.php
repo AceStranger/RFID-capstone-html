@@ -63,7 +63,6 @@ $userInfo = $result->fetch_assoc();
                                 <!-- Name Filter -->
                                 <label for="dean-account-content-search-input">Filter By Name:</label>
                                 <input type="text" name="dean-account-content-search-input" id="dean-account-content-search-input" placeholder="Search...">
-                                <button type="button" id="filterSubmit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -156,34 +155,7 @@ $userInfo = $result->fetch_assoc();
     
     </div>
     <script>
-        
-        // Buttons for opening and closing the form
-        const btnOpen = document.querySelector('.btn-add-new-dean');
-        
-        
-        // Form container and select user container
-        const formContainer = document.querySelector('.add-new-dean-form-content-container');
-
-        const fName = document.getElementById('fname');
-        const mName = document.getElementById('mname');
-        const lName = document.getElementById('lname');
-        const department = document.getElementById('department'); // New field for department
-
-        // Function to clear inputs
-        function clearInput(FN, MN, LN, PFP, Dept) {
-            FN.value = '';
-            MN.value = '';
-            LN.value = '';
-            PFP.value = '';
-            Dept.value = ''; // Clear department field
-        }
-
-        // Show the form when the "Add New Dean" button is clicked
-        btnOpen.addEventListener('click', function () {
-            formContainer.style.display = 'flex';
-            clearInput(fName, mName, lName, pfppic, department);
-        });
-
+    
 
 
     </script>

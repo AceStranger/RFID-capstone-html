@@ -9,6 +9,17 @@ $user_ID = @$_SESSION['user_ID'];
 $query = "SELECT * FROM user WHERE user_id = $user_ID";
 $result = mysqli_query($conn, $query);
 $userInfo = $result->fetch_assoc();
+
+
+// Retrieve department data
+$departmentQuery = "SELECT department_id, department_name FROM department";
+$departmentResult = mysqli_query($conn, $departmentQuery);
+
+if (mysqli_num_rows($departmentResult) > 0) {
+    $departmentRow = mysqli_fetch_assoc($departmentResult);
+} else {
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,19 +57,39 @@ $userInfo = $result->fetch_assoc();
                         </div>
                         <div class="form-group">
                             <label for="department-name">Department Name</label>
-                            <input type="text" name="department_name" id="department-name" required placeholder="Enter department name">
+                            <select name="department" id="department-name" required>
+                                <option value="" disabled selected>Select Department</option>
+                                <?php
+                                // Retrieve department data
+                                $departmentQuery = "SELECT department_id, department_name FROM department";
+                                $departmentResult = mysqli_query($conn, $departmentQuery);
+
+                                if (mysqli_num_rows($departmentResult) > 0) {
+                                    while ($departmentRow = mysqli_fetch_assoc($departmentResult)) {
+                                        echo "<option value='" . htmlspecialchars($departmentRow['department_id']) . "'>" . htmlspecialchars($departmentRow['department_name']) . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value='' disabled>" . "The Department is empty." . "</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="program-level">Program Level</label>
-                            <input type="text" name="program_level" id="program-level" required placeholder="Enter program level">
+                            <select name="program_level" id="program_level" placeholder="Enter program level" required>
+                                <option value="" disabled>Select Program Level</option>
+                                <option value="Primary">Primary</option>
+                                <option value="Secondary">Secondary</option>
+                                <option value="College">College</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="year-grade-level">Year's/Grade's Level</label>
-                            <input type="text" name="year_grade_level" id="year-grade-level" required placeholder="Enter year/grade level">
+                            <textarea name="year_grade_level" id="year_grade_level" required placeholder="Enter year/grade level, Separate them by comma `,`. (E.g. `1st YEAR, 2nd YEAR`)"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="section">Section</label>
-                            <input type="text" name="section" id="section" required placeholder="Enter sections">
+                            <textarea name="section" id="section" required placeholder="Enter sections, Separate them by comma `,`. (E.g. `1st YEAR, 2nd YEAR`)"></textarea>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="add-program-btn">Add Program</button>
@@ -110,17 +141,14 @@ $userInfo = $result->fetch_assoc();
                 </script>
                 <div class="program-content-program-content">
                     <div class="program-content-top-part-filter">
-                        <form action="" method="get" enctype="multipart/form-data" class="program-content-form" id="program-content-form">
-                            <div class="program-content-search-input-container">
-                                <select name="program-content-filter-select-col" id="program-content-filter-select-col" class="filter-select">
-                                    <option value="" disabled selected>Filter By</option>
-                                    <option value="program_name">Program Name</option>
-                                    <option value="department_name">Department Name</option>
-                                </select>
-                                <input type="text" name="program-content-search-input" id="program-content-search-input" placeholder="Search...">
-                                <button type="submit" id="filterSubmit" class="filter-button">Search</button>
-                            </div>
-                        </form>
+                        <div class="program-content-search-input-container">
+                            <label for="program-content-filter-select-col">Filter By</label>
+                            <select name="program-content-filter-select-col" id="program-content-filter-select-col" class="filter-select">
+                                <option value="program_name" selected>Program Name</option>
+                                <option value="department_name">Department Name</option>
+                            </select>
+                            <input type="text" name="program-content-search-input" id="program-content-search-input" placeholder="Search...">
+                        </div>
                     </div>
 
                     <div class="program-content-main-content-container">
@@ -137,131 +165,208 @@ $userInfo = $result->fetch_assoc();
                                     </tr>
                                 </thead>
                                 <tbody class="program-content-table-body">
-                                    <?php
-                                        // Query to fetch program data along with department name
-                                        $programQuery = "SELECT 
-                                                        program.program_id, 
-                                                        program.program_name, 
-                                                        program.program_level, 
-                                                        program.program_year_grade_level, 
-                                                        program.section, 
-                                                        CASE 
-                                                            WHEN program.department_id = 0 THEN NULL
-                                                            ELSE department.department_name
-                                                        END AS department_name
-                                                        FROM program 
-                                                        LEFT JOIN department 
-                                                        ON program.department_id = department.department_id
-                                                        ORDER BY program.department_id ASC";
-                                            
-
-                                        $result = mysqli_query($conn, $programQuery);
-
-                                        // Check if there are results
-                                        if (mysqli_num_rows($result) > 0) {
-                                            while ($row = mysqli_fetch_assoc($result)) {
-                                                echo '
-                                                    <tr class="program-content-table-row">
-                                                        <form action="adminProgramDataHandler.php" method="post">
-                                                            <input type="hidden" name="program-id" value="' . $row['program_id'] . '">
-                                                            <td class="program-content-data-department-name">' . htmlspecialchars($row['department_name']) . '</td>
-                                                            <td class="program-content-data-program-name">' . htmlspecialchars($row['program_name']) . '</td>
-                                                            <td class="program-content-data-program-level">' . htmlspecialchars($row['program_level']) . '</td>
-                                                            <td class="program-content-data-program-year-grade-level">' . htmlspecialchars($row['program_year_grade_level']) . '</td>
-                                                            <td class="program-content-data-section">' . htmlspecialchars($row['section']) . '</td>
-                                                            <td class="program-content-data-btn">
-                                                                <button type="submit" name="eSubmit" class="user-edit">EDIT</button>
-                                                                <button type="submit" name="dSubmit" class="user-delete">DELETE</button>
-                                                            </td>
-                                                        </form>
-                                                    </tr>';
-                                            }
-                                        } else {
-                                            echo '<tr><td colspan="7">No records found.</td></tr>';
-                                        }
-                                    ?>
+                                    
                                 </tbody>
                             </table>
                             <!-- Edit Program Modal -->
-<div class="edit-program-container" style="display: none;">
-    <h2>Edit Program</h2>
-    <form id="edit-program-form" class="edit-program-form">
-        <input type="hidden" name="program_id" id="edit-program-id">
-        <div class="form-group">
-            <label for="edit-program-name">Program Name</label>
-            <input type="text" name="program_name" id="edit-program-name" required>
-        </div>
-        <div class="form-group">
-            <label for="edit-department-name">Department Name</label>
-            <input type="text" name="department_name" id="edit-department-name" required>
-        </div>
-        <div class="form-group">
-            <label for="edit-program-level">Program Level</label>
-            <input type="text" name="program_level" id="edit-program-level" required>
-        </div>
-        <div class="form-group">
-            <label for="edit-year-grade-level">Year's/Grade's Level</label>
-            <textarea name="year_grade_level" id="edit-year-grade-level" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="edit-section">Section</label>
-            <textarea name="section" id="edit-section" required></textarea>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="edit-program-btn">Save Changes</button>
-            <button type="button" id="close-edit-program-btn" class="close-edit-program-btn">Cancel</button>
-        </div>
-    </form>
-    <div id="edit-program-message"></div>
-</div>
+                            <div class="edit-program-container" style="display: none;">
+                                <h2>Edit Program</h2>
+                                <form id="edit-program-form" class="edit-program-form">
+                                    <input type="hidden" name="program_id" id="edit-program-id">
+                                    <div class="form-group">
+                                        <label for="edit-program-name">Program Name</label>
+                                        <input type="text" name="program_name" id="edit-program-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-department-name">Department Name</label>
+                                        <select name="department" id="edit-department-name" required>
+                                            <option value="" disabled selected>Select Department</option>
+                                            <?php
+                                            // Retrieve department data
+                                            $departmentQuery = "SELECT department_id, department_name FROM department";
+                                            $departmentResult = mysqli_query($conn, $departmentQuery);
 
-<script>
-    // Show Edit Program Form
-    document.querySelectorAll('.user-edit').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            const row = this.closest('tr');
-            document.querySelector('.edit-program-container').style.display = 'flex';
-            document.getElementById('edit-program-id').value = row.querySelector('[name="program-id"]').value;
-            document.getElementById('edit-program-name').value = row.querySelector('.program-content-data-program-name').textContent.trim();
-            document.getElementById('edit-department-name').value = row.querySelector('.program-content-data-department-name').textContent.trim();
-            document.getElementById('edit-program-level').value = row.querySelector('.program-content-data-program-level').textContent.trim();
-            document.getElementById('edit-year-grade-level').value = row.querySelector('.program-content-data-program-year-grade-level').textContent.trim();
-            document.getElementById('edit-section').value = row.querySelector('.program-content-data-section').textContent.trim();
-        });
-    });
+                                            if (mysqli_num_rows($departmentResult) > 0) {
+                                                while ($departmentRow = mysqli_fetch_assoc($departmentResult)) {
+                                                    echo "<option value='" . htmlspecialchars($departmentRow['department_id']) . "'>" . htmlspecialchars($departmentRow['department_name']) . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option value='' disabled>" . "The Department is empty." . "</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-program-level">Program Level</label>
+                                        <input type="text" name="program_level" id="edit-program-level" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-year-grade-level">Year's/Grade's Level</label>
+                                        <textarea name="year_grade_level" id="edit-year-grade-level" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-section">Section</label>
+                                        <textarea name="section" id="edit-section" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="edit-program-btn">Save Changes</button>
+                                        <button type="button" id="close-edit-program-btn" class="close-edit-program-btn">Cancel</button>
+                                    </div>
+                                </form>
+                                <div id="edit-program-message"></div>
+                            </div>
 
-    // Close Edit Program Form
-    document.getElementById('close-edit-program-btn').addEventListener('click', function () {
-        document.querySelector('.edit-program-container').style.display = 'none';
-    });
+                            <script>
+                                // Function to fetch and display program data
+                                async function fetchProgramData(filterColumn = '', searchInput = '') {
+                                   
+                                    try {
+                                        const response = await fetch('filterPrograms.php', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ filterColumn, searchInput })
+                                        });
 
-    // Handle Edit Program Form Submission
-    document.getElementById('edit-program-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
+                                        const data = await response.json();
 
-        const formData = new FormData(this);
+                                        const tbody = document.querySelector('.program-content-table-body');
+                                        tbody.innerHTML = ''; // Clear existing rows
 
-        try {
-            const response = await fetch('adminProgramUpdateHandler.php', {
-                method: 'POST',
-                body: formData
-            });
+                                        if (data.length > 0) {
+                                            data.forEach(row => {
+                                                const tr = document.createElement('tr');
+                                                tr.className = 'program-content-table-row';
+                                                tr.setAttribute('data-program-id', row.program_id);
 
-            const data = await response.json();
+                                                tr.innerHTML = `
+                                                    <td class="program-content-data-department-name">${row.department_name || ''}</td>
+                                                    <td class="program-content-data-program-name">${row.program_name}</td>
+                                                    <td class="program-content-data-program-level">${row.program_level}</td>
+                                                    <td class="program-content-data-program-year-grade-level">${row.program_year_grade_level}</td>
+                                                    <td class="program-content-data-section">${row.section}</td>
+                                                    <td class="program-content-data-btn">
+                                                        <button type="submit" name="eSubmit" class="user-edit">EDIT</button>
+                                                        <button type="button" class="user-delete">DELETE</button>
+                                                    </td>
+                                                `;
+                                                tbody.appendChild(tr);
+                                            });
+                                        } else {
+                                            tbody.innerHTML = '<tr><td colspan="7">No records found.</td></tr>';
+                                        }
+                                    } catch (error) {
+                                        console.error('Error fetching data:', error);
+                                    }
+                                }
 
-            if (data.success) {
-                document.getElementById('edit-program-message').textContent = 'Program updated successfully!';
-                setTimeout(() => location.reload(), 2000);
-            } else {
-                document.getElementById('edit-program-message').textContent = 'Failed to update program: ' + data.message;
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('edit-program-message').textContent = 'An error occurred. Please try again.';
-        }
-    });
-</script>
+                                // Trigger fetchProgramData on page load
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    fetchProgramData(); // Fetch all data without filters
+
+                                    // Add event listeners for input changes
+                                    const filterSelect = document.getElementById('program-content-filter-select-col');
+                                    const searchInput = document.getElementById('program-content-search-input');
+
+                                    filterSelect.addEventListener('change', function () {
+                                        const filterColumn = filterSelect.value;
+                                        const searchValue = searchInput.value.trim();
+                                        fetchProgramData(filterColumn, searchValue);
+                                    });
+
+                                    searchInput.addEventListener('input', function () {
+                                        const filterColumn = filterSelect.value;
+                                        const searchValue = searchInput.value.trim();
+                                        fetchProgramData(filterColumn, searchValue);
+                                    });
+                                });
+
+
+
+
+
+
+
+
+                                // Show Edit Program Form
+                                document.querySelectorAll('.user-edit').forEach(button => {
+                                    button.addEventListener('click', function (event) {
+                                        event.preventDefault();
+                                        const row = this.closest('tr');
+                                        document.querySelector('.edit-program-container').style.display = 'flex';
+                                        document.getElementById('edit-program-id').value = row.getAttribute('data-program-id');
+                                        document.getElementById('edit-program-name').value = row.querySelector('.program-content-data-program-name').textContent.trim();
+                                        document.getElementById('edit-program-level').value = row.querySelector('.program-content-data-program-level').textContent.trim();
+                                        document.getElementById('edit-year-grade-level').value = row.querySelector('.program-content-data-program-year-grade-level').textContent.trim();
+                                        document.getElementById('edit-section').value = row.querySelector('.program-content-data-section').textContent.trim();
+                                    });
+                                });
+
+                                // Close Edit Program Form
+                                document.getElementById('close-edit-program-btn').addEventListener('click', function () {
+                                    document.querySelector('.edit-program-container').style.display = 'none';
+                                });
+
+                                // Handle Edit Program Form Submission
+                                document.getElementById('edit-program-form').addEventListener('submit', async function (event) {
+                                    event.preventDefault();
+
+                                    const formData = new FormData(this);
+                                    console.log("formData", document.getElementById('edit-program-id').value);
+                                    console.log("formData", document.getElementById('edit-program-name').value);
+                                    console.log("formData", document.getElementById('edit-program-level').value);
+                                    console.log("formData", document.getElementById('edit-year-grade-level').value);
+                                    console.log("formData", document.getElementById('edit-section').value);
+                                    
+                                    try {
+                                        const response = await fetch('adminProgramUpdateHandler.php', {
+                                            method: 'POST',
+                                            body: formData
+                                        });
+
+                                        const data = await response.json();
+
+                                        if (data.success) {
+                                            document.getElementById('edit-program-message').textContent = 'Program updated successfully!';
+                                            setTimeout(() => location.reload(), 2000);
+                                        } else {
+                                            document.getElementById('edit-program-message').textContent = 'Failed to update program: ' + data.message;
+                                        }
+                                    } catch (error) {
+                                        console.error('Error:', error);
+                                        document.getElementById('edit-program-message').textContent = 'An error occurred. Please try again.';
+                                    }
+                                });
+
+                                document.querySelectorAll('.user-delete-btn').forEach(button => {
+                                    button.addEventListener('click', async function () {
+                                        const row = this.closest('tr');
+                                        const programId = row.getAttribute('data-program-id');
+
+                                        if (confirm('Are you sure you want to delete this program?')) {
+                                            try {
+                                                const response = await fetch('deleteProgramHandler.php', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ program_id: programId })
+                                                });
+
+                                                const result = await response.json();
+                                                if (result.success) {
+                                                    alert('Program deleted successfully!');
+                                                    row.remove(); // Remove row from the table
+                                                } else {
+                                                    alert('Failed to delete program: ' + result.message);
+                                                }
+                                            } catch (error) {
+                                                console.error('Error:', error);
+                                                alert('An error occurred while deleting the program.');
+                                            }
+                                        }
+                                    });
+                                });
+
+
+                            </script>
 
                         </div>
                     </div>

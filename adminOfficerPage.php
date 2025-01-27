@@ -163,30 +163,7 @@ $userInfo = $result->fetch_assoc();
                 e.preventDefault(); // Prevent form submission if cancelled
             }
         }
-        // Buttons for opening and closing the form
-        const btnOpen = document.querySelector('.btn-add-new-officer');
         
-        
-        // Form container and select user container
-        const formContainer = document.querySelector('.add-new-officer-form-content-container');
-
-        const fName = document.getElementById('fname');
-        const mName = document.getElementById('mname');
-        const lName = document.getElementById('lname');
-        const organization = document.getElementById('organization');
-
-        function clearInput(FN, MN, LN, Org) {
-            FN.value = '';
-            MN.value = '';
-            LN.value = '';
-            Org.value = ''; 
-        }
-
-        btnOpen.addEventListener('click', function () {
-            formContainer.style.display = 'flex';
-            clearInput(fName, mName, lName, organization);
-        });
-
 
     </script>
 </body>

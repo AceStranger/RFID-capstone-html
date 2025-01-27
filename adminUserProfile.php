@@ -25,7 +25,6 @@ $userInfo = $result->fetch_assoc();
     <link rel="stylesheet" href="css/adminUserProfile.css">
     <script src="js\adminSidebar.js"></script>
     <script src="js\adminUser.js"></script>
-    <script defer src="js/usermenu.js"></script> 
 </head>
 <body>
     <div class="main-content-container">
@@ -47,8 +46,6 @@ $userInfo = $result->fetch_assoc();
                     $useraccountid = isset($_SESSION['user-account-id']) ? $_SESSION['user-account-id'] : null;
                     $request = isset($_SESSION['request']) ? $_SESSION['request'] : null;
                     
-
-
                     $inputAvailability = "";
                     $btn = "";
 
@@ -106,11 +103,12 @@ $userInfo = $result->fetch_assoc();
                             ';
                     }
                     $useraccountid = mysqli_real_escape_string($conn, $useraccountid);
-                    $userAccQuery = "SELECT * FROM user WHERE user_id = $useraccountid";
+                    $userAccQuery = "SELECT * FROM user WHERE user_id = $useraccountid LIMIT 1";
                     $userAccQueryResult = mysqli_query($conn, $userAccQuery);
-                    if (mysqli_num_rows($userAccQueryResult) > 0) { 
-                        while($row = mysqli_fetch_assoc($userAccQueryResult)) {
-
+                ?>
+                <?php if (mysqli_num_rows($userAccQueryResult) > 0):?> 
+                    <?php while($row = mysqli_fetch_assoc($userAccQueryResult)):?>
+                        <?php 
                             $usersSchoolID = $row['user_school_id'];
                             $usersFname = $row['user_firstname'];
                             $usersMname = $row['user_middlename'];
@@ -125,11 +123,9 @@ $userInfo = $result->fetch_assoc();
                             $usersLastLoginDate = $row['user_last_login_date'];
                             $usersCreatedAt = $row['user_creation_date'];
 
-
                             if (!str_contains($userInfo['user_role'], "admin")){
                                 $btn = "";
                             }
-
 
                             //  Student Info
                             $studentInfo = '';
@@ -143,7 +139,6 @@ $userInfo = $result->fetch_assoc();
                             $departmentName = '';
                             $programOptions = "";
 
-
                             //  Officer Info
                             $officerInfo = '';
                             $officerID = '';
@@ -152,22 +147,12 @@ $userInfo = $result->fetch_assoc();
                             $organizationName = '';
                             $organizationName = '';
 
-                            
-
                             //  Dean Info
                             $deanInfo = '';
                             $deanID = '';
                             $deanDepartmentID = '';
                             $departmentName = '';
                             
-                            
-
-                            //  Admin Info
-                            $adminInfo = "";
-                            $adminAuthorityLevel = "";
-                            $adminDateAdded = "";
-
-
                             // Check if there is a comma in the string
                             if (strpos($usersRole, ",") !== false) {
                                 // If there's a comma, split the string into an array
@@ -226,7 +211,15 @@ $userInfo = $result->fetch_assoc();
                         
                                     }
                                 }
-                        
+                                $studentUpdateCheckbox = "";
+                                if (str_contains($userInfo['user_role'], "admin") && 
+                                $request === "edit-profile"){
+                                    $studentUpdateCheckbox = "
+                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                            <input $inputAvailability type='checkbox' id='update-student-role' name='update-student-role' value='1'>
+                                            <label for='update-student-role'>Include Student Information in Update</label>
+                                        </div>";
+                                }
                                 $studentInfo = "
                                     <div class='user-profile-content-student-info'>
                                         <div class='user-info-content-container'>
@@ -252,6 +245,7 @@ $userInfo = $result->fetch_assoc();
                                                     <label for='student-section'>Section:</label>
                                                     <input $inputAvailability type='text' id='student-section' name='student-section' value='$studentSection'>
                                                 </div>
+                                                ". $studentUpdateCheckbox ."
                                             </div>
                                         </div>
                                     </div>
@@ -286,8 +280,16 @@ $userInfo = $result->fetch_assoc();
                                         }
                                     }
                                 }
+                                $officerUpdateCheckbox = "";
+                                if (str_contains($userInfo['user_role'], "admin") && 
+                                $request === "edit-profile"){
+                                    $officerUpdateCheckbox = "
+                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                            <input $inputAvailability type='checkbox' id='update-officer-role' name='update-officer-role' value='1'>
+                                            <label for='update-officer-role'>Include Officer Information in Update</label>
+                                        </div>";
+                                }
                                 $officerInfo = "
-                                
                                         <div class='user-profile-content-officer-info'>
                                             <div class='user-info-content-container'>
                                                 <div class='user-info-content-col-1'>
@@ -304,6 +306,7 @@ $userInfo = $result->fetch_assoc();
                                                         <label for='officer-position'>Officer's Position:</label>
                                                         <input $inputAvailability type='text' id='officer-position' name='officer-position' value='$officerPosition'>
                                                     </div>
+                                                    ". $officerUpdateCheckbox ."
                                                 </div>
                                             </div>
                                         </div>
@@ -350,6 +353,15 @@ $userInfo = $result->fetch_assoc();
                                         }
                                     }
                                 }
+                                $deanUpdateCheckbox = "";
+                                if (str_contains($userInfo['user_role'], "admin") && 
+                                $request === "edit-profile"){
+                                    $deanUpdateCheckbox = "
+                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                            <input $inputAvailability type='checkbox' id='update-dean-role' name='update-dean-role' value='1'>
+                                            <label for='update-dean-role'>Include Dean Information in Update</label>
+                                        </div>";
+                                }
                                 $deanInfo = "
                                     <div class='user-profile-content-dean-info'>
                                         <div class='user-info-content-container'>
@@ -362,312 +374,316 @@ $userInfo = $result->fetch_assoc();
                                                 </div>
                                             </div>
                                             <div class='user-info-content-col-2'>
+                                                ". $deanUpdateCheckbox . "
                                             </div>
                                         </div>
                                     </div>
-                                
                                 ";
 
 
 
                             } 
-                            if (str_contains($usersRole , "admin")) {
-                                $userAdminQuery = "SELECT * FROM `admin` WHERE user_id = $useraccountid";
-                                $userAdminQueryResult = mysqli_query($conn, $userAdminQuery);
-                                if (mysqli_num_rows($userAdminQueryResult) > 0) {
-                                    while($adminRow = mysqli_fetch_assoc($userAdminQueryResult)) {
-                                        $adminID = $adminRow['admin_id'];
-                                        $adminAuthorityLevel = $adminRow['admin_authority'];
-                                        $adminDateAdded = $adminRow['date_added'];
-                                        
-                                    }
-                                }
-                                $adminInfo = "
-                                
-                                        <div class='user-profile-content-admin-info'>
-                                            <div class='user-info-content-container'>
-                                                <div class='user-info-content-col-1'>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='admin-authority-level'>Administrator Level:</label>
-                                                        <input $inputAvailability type='text' id='admin-authority-level' name='admin-authority-level' value='$adminAuthorityLevel'>
+                        ?>
+
+                        <form action='adminUserAccount.php' method='post' class='user-profile-content-form' enctype='multipart/form-data'>
+
+                            <?php if (str_contains($userInfo['user_role'], "admin") ||
+                                str_contains($userInfo['user_role'], "officer") ||
+                                str_contains($userInfo['user_role'], "dean")):?>
+                                    <div class='user-profile-content-top-part'>
+                                        <h1 class='user-profile-content-head-text'>PROFILE</h1>
+                                        <div class='user-profile-content-btn'>
+                                            <input type='hidden' name='user-id' id='user-id' value='<?php echo $useraccountid;?>'>
+                                            <?php echo $btn;?>
+                                        </div>
+                                    </div>
+                            <?php else: ?>
+                                include_once"header.php";
+                            <?php endif;?>
+                            <div class='user-profile-content-info'>
+                                <div class='user-profile-content-info-content'>
+                                    <div class='user-profile-content-user-info'>
+                                        <div class='user-info-content-container'>
+                                            <div class='user-info-content-col-1'>
+                                                <div class="user-info-content-info-field user-info-content-input-field">
+                                                    <label for="user-name">Username:</label>
+                                                    <input <?php echo $inputAvailability;?> type="text" name="user-name" id="user-name" value="<?php echo $userInfo["user_name"];?>">
+                                                </div>
+                                                <div class="user-info-content-info-field user-info-content-input-field">
+                                                    <label for="password">Password:</label>
+                                                    <input <?php echo $inputAvailability;?> type="text" name="password" id="password" value="">
+                                                    <?php if(str_contains($userInfo['user_role'], "admin") && 
+                                                        $request === "edit-profile"):?>
+                                                        <button type="button" id="reset-password-btn">Generate Password</button>
+                                                    <?php endif;?>
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <input type='hidden' name='userpfpfilepath' value='<?php echo $usersPFP;?>'>
+                                                    <input <?php echo $inputAvailability;?> type='file' accept='image/jpeg, image/png, image/gif ' id='user-picture' name='user-picture' placehole='Choose Image'>
+
+                                                    <img src='<?php echo $usersPFP;?> ' alt='' id='user-profile-info-content-picture' class='user-profile-info-content-picture'>
+                                                </div>
+                                                <script>
+                                                    const userPictureInput = document.getElementById('user-picture');
+                                                    const userProfilePicture = document.getElementById('user-profile-info-content-picture');
+                                                    userPictureInput.addEventListener('change', (event) => {
+                                                        const file = event.target.files[0];
+                                                        if (file) {
+                                                            const reader = new FileReader();
+                                                            reader.onload = (e) => {
+                                                            userProfilePicture.src = e.target.result;
+                                                            };
+                                                            reader.readAsDataURL(file);
+                                                        }
+                                                    });
+                                                </script>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-gender'>Gender:</label>
+                                                    <select <?= $inputAvailability ?> name="user-gender" id="user-gender">
+                                                        <?php foreach (["male" => "Male", "female" => "Female"] as $value => $text): ?>
+                                                            <option value="<?= $value ?>" <?= $usersGender === $text ? 'selected' : ''; ?>><?= $text ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                        
+
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-address'>Address:</label>
+                                                    <textarea <?php echo $inputAvailability;?> name='user-address' id='user-address'><?php echo $usersAddress;?> </textarea>
+                                                </div>
+                                            </div>
+                                            <div class='user-info-content-col-2'>
+                                                <?php if(str_contains($userInfo['user_role'], "admin") && 
+                                                    $request === "edit-profile"):?>
+                                                    <div class="user-info-content-info-field">
+                                                        <input <?php echo $inputAvailability;?> type="checkbox" id="include-user-credentials" name="include-user-credentials" value="1">
+                                                        <label for="include-user-credentials">Include Username and Password in Update</label>
                                                     </div>
+                                                <?php endif;?>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-first-name'>First Name:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-first-name' name='user-first-name' value='<?php echo $usersFname;?> '>
                                                 </div>
-                                                <div class='user-info-content-col-2'>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-middle-name'>Middle Name:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-middle-name' name='user-middle-name' value='<?php echo $usersMname;?> '>
                                                 </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-last-name'>Last Name:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-last-name' name='user-last-name' value='<?php echo $usersLname;?> '>
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-suffix'>Suffix Name:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-suffix' name='user-suffix' value='<?php echo $usersSname;?> '>
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-pnumber'>Phone Number:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-pnumber' name='user-pnumber' value='<?php echo $usersPNumber;?> '>
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-school-id'>School ID:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' id='user-school-id' name='user-school-id' value='<?php echo $usersSchoolID;?> '>
+                                                </div>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='user-role'>Role:</label>
+                                                    <input <?php echo $inputAvailability;?> type='text' list='role-list' id='user-role' name='user-role' value='<?php echo $usersRole;?> '>
+
+                                                    <datalist id='role-list'>
+                                                        <option value='student'>
+                                                        <option value='officer'>
+                                                        <option value='dean'>
+                                                        <option value='admin'>
+                                                    </datalist>
+                                                </div>
+                                                <?php if(str_contains($userInfo['user_role'], "admin") && 
+                                                    $request === "edit-profile"):?>
+                                                    <div class="user-info-content-info-field">
+                                                        <input <?php echo $inputAvailability;?> type="checkbox" id="include-user-info" name="include-user-info" value="1">
+                                                        <label for="include-user-info">Include User Information in Update</label>
+                                                    </div>
+                                                <?php endif;?>
+
+
                                             </div>
                                         </div>
-                                
-                                ";
-                            } 
+                                    </div>
 
-
-                            echo "
-                            
-                            <form action='adminUserAccount.php' method='post' class='user-profile-content-form' enctype='multipart/form-data'>
-                                ";
-
-                                if (str_contains($userInfo['user_role'], "admin") ||
-                                    str_contains($userInfo['user_role'], "officer") ||
-                                    str_contains($userInfo['user_role'], "dean")){
-                                    echo "
-                                        <div class='user-profile-content-top-part'>
-                                            <h1 class='user-profile-content-head-text'>PROFILE</h1>
-                                            <div class='user-profile-content-btn'>
-                                                <input type='hidden' name='user-id' id='user-id' value='$useraccountid'>
-                                                ";
-                                                echo $btn;
-                                                echo "
-                                            </div>
-                                        </div>";
-                                } else {
-                                    include_once"header.php";
-                                }
-
-                                echo "
-                                <div class='user-profile-content-info'>
-                                    <div class='user-profile-content-info-content'>
-                                        <div class='user-profile-content-user-info'>
-                                            <div class='user-info-content-container'>
-                                                <div class='user-info-content-col-1'>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <input type='hidden' name='userpfpfilepath' value='". $usersPFP ."'>
-                                                        <input $inputAvailability type='file' accept='image/jpeg, image/png, image/gif ' id='user-picture' name='user-picture' placehole='Choose Image'>
-
-                                                        <img src='". $usersPFP ."' alt='' id='user-profile-info-content-picture' class='user-profile-info-content-picture'>
-                                                    </div>
-                                                    <script>
-                                                        const userPictureInput = document.getElementById('user-picture');
-                                                        const userProfilePicture = document.getElementById('user-profile-info-content-picture');
-                                                        userPictureInput.addEventListener('change', (event) => {
-                                                            const file = event.target.files[0];
-                                                            if (file) {
-                                                                const reader = new FileReader();
-                                                                reader.onload = (e) => {
-                                                                userProfilePicture.src = e.target.result;
-                                                                };
-                                                                reader.readAsDataURL(file);
-                                                            }
-                                                        });
-                                                    </script>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-gender'>Gender:</label>
-                                                        <input $inputAvailability type='text' id='user-gender' name='user-gender' value='$usersGender'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-address'>Address:</label>
-                                                        <textarea $inputAvailability name='user-address' id='user-address'>$usersAddress</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class='user-info-content-col-2'>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-first-name'>First Name:</label>
-                                                        <input $inputAvailability type='text' id='user-first-name' name='user-first-name' value='$usersFname'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-middle-name'>Middle Name:</label>
-                                                        <input $inputAvailability type='text' id='user-middle-name' name='user-middle-name' value='$usersMname'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-last-name'>Last Name:</label>
-                                                        <input $inputAvailability type='text' id='user-last-name' name='user-last-name' value='$usersLname'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-suffix'>Suffix Name:</label>
-                                                        <input $inputAvailability type='text' id='user-suffix' name='user-suffix' value='$usersSname'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-pnumber'>Phone Number:</label>
-                                                        <input $inputAvailability type='text' id='user-pnumber' name='user-pnumber' value='$usersPNumber'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-school-id'>School ID:</label>
-                                                        <input $inputAvailability type='text' id='user-school-id' name='user-school-id' value='$usersSchoolID'>
-                                                    </div>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='user-role'>Role:</label>
-                                                        <input disabled type='text' list='role-list' id='user-role' name='user-role' value='$usersRole'>
-
-                                                        <datalist id='role-list'>
-                                                            <option value='student'>
-                                                            <option value='officer'>
-                                                            <option value='dean'>
-                                                            <option value='admin'>
-                                                        </datalist>
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        ";
-                                        
+                                    <?php
                                         echo $studentInfo;
                                         echo $officerInfo;
                                         echo $deanInfo;
-                                        echo $adminInfo;
                                         
-                                        echo "
+                                    ?>
 
-
-                                            <div class='user-profile-content-user-account-info'>
-                                                <div class='user-info-content-container'>
-                                                    <div class='user-info-content-col-1'>
-                                                        <div class='user-info-content-info-field user-info-content-input-field'>
-                                                            <label for='dean-last-login'>Last Login Date:</label>
-                                                            <input disabled type='datetime' id='dean-last-login' name='dean-last-login' value='$usersLastLoginDate'>
-                                                        </div>
-                                                    </div>
-                                                    <div class='user-info-content-col-2'>
-                                                        <div class='user-info-content-info-field user-info-content-input-field'>
-                                                            <label for='dean-date-created'>Date created at:</label>
-                                                            <input disabled type='datetime' id='dean-date-created' name='dean-date-created' value='$usersCreatedAt'>
-                                                        </div>
-                                                    </div>
+                                    <div class='user-profile-content-user-account-info'>
+                                        <div class='user-info-content-container'>
+                                            <div class='user-info-content-col-1'>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='dean-last-login'>Last Login Date:</label>
+                                                    <input disabled type='datetime' id='dean-last-login' name='dean-last-login' value='<?php echo $usersLastLoginDate;?>'>
                                                 </div>
                                             </div>
-
-
-                                            <div class='user-profile-content-attendance-history-info'>
-                                                <div class='attendance-history-content'>
-                                                    <div class='attendance-history-content-head-text'>
-                                                        <h3>Event Attendance History</h3>
-                                                    </div>
-                                                    <table class='attendance-history-table'>
-                                                        <thead>
-                                                            <tr class='attendance-history-row'>
-                                                                <th class='attendance-history-content-event-name' rowspan='2'>Event Name</th>
-                                                                <th class='attendance-history-content-event-date' rowspan='2'>Event Date</th>
-                                                                <th class='attendance-history-content-event-organizer' rowspan='2'>Event Organizer</th>
-                                                                <th class='attendance-history-content-event-am' colspan='2'>AM</th>
-                                                                <th class='attendance-history-content-event-pm' colspan='2'>PM</th>
-                                                            </tr>
-                                                            <tr class='attendance-history-row'>
-                                                                <th class='attendance-history-content-event-am-tin'>Time In</th>
-                                                                <th class='attendance-history-content-event-am-tout'>Time Out</th>
-                                                                <th class='attendance-history-content-event-pm-tin'>Time In</th>
-                                                                <th class='attendance-history-content-event-pm-tout'>Time Out</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody> ";
-                                                        
-
-$userAccQuery = "
-    SELECT 
-        e.event_name,
-        e.event_date,
-        e.event_organizer,
-        o.organization_name,
-        a.attendance_am_time_in,
-        a.attendance_am_time_out,
-        a.attendance_pm_time_in,
-        a.attendance_pm_time_out,
-        e.event_time_duration,
-        e.attendance_duration_am_time_in_start,
-        e.attendance_duration_am_time_in_end,
-        e.attendance_duration_am_time_out_start,
-        e.attendance_duration_am_time_out_end,
-        e.attendance_duration_pm_time_in_start,
-        e.attendance_duration_pm_time_in_end,
-        e.attendance_duration_pm_time_out_start,
-        e.attendance_duration_pm_time_out_end
-    FROM attendance a
-    JOIN event e ON a.event_id = e.event_id
-    JOIN organization o ON e.event_organizer = o.organization_id
-    WHERE a.user_id = $useraccountid
-    ORDER BY e.event_date DESC
-";
-
-$result = $conn->query($userAccQuery);
-                                                        
-                                                     
-while ($row = $result->fetch_assoc()) {
-    // Extract event details
-    $event_name = $row['event_name'];
-    $event_date = $row['event_date'];
-    $event_organizer = $row['organization_name'];
-    $attendance_am_time_in = $row['attendance_am_time_in'];
-    $attendance_am_time_out = $row['attendance_am_time_out'];
-    $attendance_pm_time_in = $row['attendance_pm_time_in'];
-    $attendance_pm_time_out = $row['attendance_pm_time_out'];
-    $event_time_duration = $row['event_time_duration'];
-    
-    // Set placeholders for time
-    $am_time_in = "~";
-    $am_time_out = "~";
-    $pm_time_in = "~";
-    $pm_time_out = "~";
-
-    // Check AM Time In and Out
-    if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
-        if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
-            $am_time_in = $attendance_am_time_in;
-        }
-        if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
-            $am_time_out = $attendance_am_time_out;
-        }
-    }
-    // Check PM Time In and Out
-    if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
-        if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
-            $pm_time_in = $attendance_pm_time_in;
-        }
-        if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
-            $pm_time_out = $attendance_pm_time_out;
-        }
-    }
-
-    // For "Half Day" events:
-    if ($event_time_duration == "Half Day - AM Time In & AM Time Out") {
-        if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
-            $am_time_in = $attendance_am_time_in;
-        }
-        if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
-            $am_time_out = $attendance_am_time_out;
-        }
-    }
-
-    if ($event_time_duration == "Half Day - PM Time In & PM Time Out") {
-        if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
-            $pm_time_in = $attendance_pm_time_in;
-        }
-        if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
-            $pm_time_out = $attendance_pm_time_out;
-        }
-    }
-
-    // Display the row in the table
-    echo "
-    <tr class='attendance-history-row'>
-        <td class='attendance-history-content-event-name'>$event_name</td>
-        <td class='attendance-history-content-event-date'>$event_date</td>
-        <td class='attendance-history-content-event-organizer'>$event_organizer</td>
-        <td class='attendance-history-content-event-am-tin'>$am_time_in</td>
-        <td class='attendance-history-content-event-am-tout'>$am_time_out</td>
-        <td class='attendance-history-content-event-pm-tin'>$pm_time_in</td>
-        <td class='attendance-history-content-event-pm-tout'>$pm_time_out</td>
-    </tr>";
-}   
-    echo "
-                                                        </tbody>
-                                                    </table>
+                                            <div class='user-info-content-col-2'>
+                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                    <label for='dean-date-created'>Date created at:</label>
+                                                    <input disabled type='datetime' id='dean-date-created' name='dean-date-created' value='<?php echo $usersCreatedAt;?>'>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            
-                            ";
-                        }
-                    } else {
-                        echo "User not found!";
-                    }
-                    
-                ?>
-                
+
+                                    <div class='user-profile-content-attendance-history-info'>
+                                        <div class='attendance-history-content'>
+                                            <div class='attendance-history-content-head-text'>
+                                                <h3>Event Attendance History</h3>
+                                            </div>
+                                            <table class='attendance-history-table'>
+                                                <thead>
+                                                    <tr class='attendance-history-row'>
+                                                        <th class='attendance-history-content-event-name' rowspan='2'>Event Name</th>
+                                                        <th class='attendance-history-content-event-date' rowspan='2'>Event Date</th>
+                                                        <th class='attendance-history-content-event-organizer' rowspan='2'>Event Organizer</th>
+                                                        <th class='attendance-history-content-event-am' colspan='2'>AM</th>
+                                                        <th class='attendance-history-content-event-pm' colspan='2'>PM</th>
+                                                    </tr>
+                                                    <tr class='attendance-history-row'>
+                                                        <th class='attendance-history-content-event-am-tin'>Time In</th>
+                                                        <th class='attendance-history-content-event-am-tout'>Time Out</th>
+                                                        <th class='attendance-history-content-event-pm-tin'>Time In</th>
+                                                        <th class='attendance-history-content-event-pm-tout'>Time Out</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody> 
+                                                    <?php
+                                                        $userAccQuery = "
+                                                            SELECT 
+                                                                e.event_name,
+                                                                e.event_date,
+                                                                e.event_organizer,
+                                                                o.organization_name,
+                                                                a.attendance_am_time_in,
+                                                                a.attendance_am_time_out,
+                                                                a.attendance_pm_time_in,
+                                                                a.attendance_pm_time_out,
+                                                                e.event_time_duration,
+                                                                e.attendance_duration_am_time_in_start,
+                                                                e.attendance_duration_am_time_in_end,
+                                                                e.attendance_duration_am_time_out_start,
+                                                                e.attendance_duration_am_time_out_end,
+                                                                e.attendance_duration_pm_time_in_start,
+                                                                e.attendance_duration_pm_time_in_end,
+                                                                e.attendance_duration_pm_time_out_start,
+                                                                e.attendance_duration_pm_time_out_end
+                                                            FROM attendance a
+                                                            JOIN event e ON a.event_id = e.event_id
+                                                            JOIN organization o ON e.event_organizer = o.organization_id
+                                                            WHERE a.user_id = $useraccountid
+                                                            ORDER BY e.event_date DESC
+                                                        ";
+
+                                                        $result = $conn->query($userAccQuery);
+                                                                                                                
+                                                                                                            
+                                                        while ($row = $result->fetch_assoc()) {
+                                                            // Extract event details
+                                                            $event_name = $row['event_name'];
+                                                            $event_date = $row['event_date'];
+                                                            $event_organizer = $row['organization_name'];
+                                                            $attendance_am_time_in = $row['attendance_am_time_in'];
+                                                            $attendance_am_time_out = $row['attendance_am_time_out'];
+                                                            $attendance_pm_time_in = $row['attendance_pm_time_in'];
+                                                            $attendance_pm_time_out = $row['attendance_pm_time_out'];
+                                                            $event_time_duration = $row['event_time_duration'];
+                                                            
+                                                            // Set placeholders for time
+                                                            $am_time_in = "~";
+                                                            $am_time_out = "~";
+                                                            $pm_time_in = "~";
+                                                            $pm_time_out = "~";
+
+                                                            // Check AM Time In and Out
+                                                            if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
+                                                                if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
+                                                                    $am_time_in = $attendance_am_time_in;
+                                                                }
+                                                                if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
+                                                                    $am_time_out = $attendance_am_time_out;
+                                                                }
+                                                            }
+                                                            // Check PM Time In and Out
+                                                            if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
+                                                                if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
+                                                                    $pm_time_in = $attendance_pm_time_in;
+                                                                }
+                                                                if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
+                                                                    $pm_time_out = $attendance_pm_time_out;
+                                                                }
+                                                            }
+
+                                                            // For "Half Day" events:
+                                                            if ($event_time_duration == "Half Day - AM Time In & AM Time Out") {
+                                                                if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
+                                                                    $am_time_in = $attendance_am_time_in;
+                                                                }
+                                                                if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
+                                                                    $am_time_out = $attendance_am_time_out;
+                                                                }
+                                                            }
+
+                                                            if ($event_time_duration == "Half Day - PM Time In & PM Time Out") {
+                                                                if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
+                                                                    $pm_time_in = $attendance_pm_time_in;
+                                                                }
+                                                                if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
+                                                                    $pm_time_out = $attendance_pm_time_out;
+                                                                }
+                                                            }
+
+                                                            // Display the row in the table
+                                                            echo "
+                                                            <tr class='attendance-history-row'>
+                                                                <td class='attendance-history-content-event-name'>$event_name</td>
+                                                                <td class='attendance-history-content-event-date'>$event_date</td>
+                                                                <td class='attendance-history-content-event-organizer'>$event_organizer</td>
+                                                                <td class='attendance-history-content-event-am-tin'>$am_time_in</td>
+                                                                <td class='attendance-history-content-event-am-tout'>$am_time_out</td>
+                                                                <td class='attendance-history-content-event-pm-tin'>$pm_time_in</td>
+                                                                <td class='attendance-history-content-event-pm-tout'>$pm_time_out</td>
+                                                            </tr>";
+                                                        }   
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    <?php endwhile;?>
+                <?php else:?>
+                    User not found!
+                <?php endif;?>
             </div>
         </div>  
     </div>
     
+    <script>
+        const resetPasswordBtn = document.getElementById("reset-password-btn");
+        const passwordInput = document.getElementById("password");
+
+        resetPasswordBtn.addEventListener("click", () => {
+            const newPassword = generatePassword(10);
+            passwordInput.value = newPassword;
+        });
+
+        function generatePassword(length) {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let result = "";
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+    </script>
 </body>
 </html>

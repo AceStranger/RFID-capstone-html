@@ -42,65 +42,63 @@ $userInfo = $result->fetch_assoc();
                             <label for="organization-name">Organization Name</label>
                             <input type="text" name="organization_name" id="organization-name" required placeholder="Enter organization name">
                         </div>
+
                         <div class="form-group">
                             <label for="organization-responsibility">Responsibility</label>
-                            <select name="organization_responsibility" id="organization-responsibility" required>
-                                <option value="" disabled selected>Select Responsibility</option>
-                                <?php
-                                    // Fetch programs grouped by level, program, year, and section from the database
-                                    $allProgramsQuery = "SELECT program_name, program_level, program_year_grade_level, section FROM program ORDER BY program_level, program_name";
-                                    $allProgramsQueryResult = mysqli_query($conn, $allProgramsQuery);
+                            <input type="hidden" name="organization_responsibility" id="organization-responsibility" required>
+                            <div class="custom-dropdown">
+                                <button type="button" id="dropdown-toggle" class="dropdown-toggle">Select Responsibility</button>
+                                <div id="dropdown-options" class="dropdown-options">
+                                    <!-- PHP options here -->
+                                    <?php
+                                        // Fetch programs grouped by level, program, year, and section from the database
+                                        $allProgramsQuery = "SELECT program_name, program_level, program_year_grade_level, section FROM program ORDER BY program_level, program_name";
+                                        $allProgramsQueryResult = mysqli_query($conn, $allProgramsQuery);
 
-                                    $programData = [];
-                                    if (mysqli_num_rows($allProgramsQueryResult) > 0) {
-                                        while ($programRow = mysqli_fetch_assoc($allProgramsQueryResult)) {
-                                            $programLevel = $programRow['program_level'];
-                                            $programName = $programRow['program_name'];
-                                            $programYears = $programRow['program_year_grade_level']
-                                                            ? explode(", ", $programRow['program_year_grade_level'])
-                                                            : ['All Levels'];
-                                            $programSections = $programRow['section']
-                                                                ? explode(", ", $programRow['section'])
-                                                                : ['All Sections'];
+                                        $programData = [];
+                                        if (mysqli_num_rows($allProgramsQueryResult) > 0) {
+                                            while ($programRow = mysqli_fetch_assoc($allProgramsQueryResult)) {
+                                                $programLevel = $programRow['program_level'];
+                                                $programName = $programRow['program_name'];
+                                                $programYears = $programRow['program_year_grade_level']
+                                                                ? explode(", ", $programRow['program_year_grade_level'])
+                                                                : ['All Levels'];
+                                                $programSections = $programRow['section']
+                                                                    ? explode(", ", $programRow['section'])
+                                                                    : ['All Sections'];
 
-                                            // Group programs by level, then by program name, then by year and section
-                                            $programData[$programLevel][$programName] = [
-                                                'years' => $programYears,
-                                                'sections' => $programSections
-                                            ];
-                                        }
-                                    }
-
-                                    // Generate options grouped by program level
-                                    foreach ($programData as $level => $programs) {
-                                        // Add "All - [Level]" option
-                                        echo "<optgroup label='" . htmlspecialchars($level) . "'>";
-                                        echo "<option value='All - " . htmlspecialchars($level) . "'>All - " . htmlspecialchars($level) . " Students</option>";
-
-                                        // Add options for each program
-                                        foreach ($programs as $programName => $details) {
-                                            echo "<optgroup label='" . htmlspecialchars($programName) . "'>";
-                                            // Add "All - [Program]" option
-                                            echo "<option value='All - " . htmlspecialchars($programName) . "'>All - " . htmlspecialchars($programName) . " Students</option>";
-
-                                            // Add options for each year/grade
-                                            foreach ($details['years'] as $year) {
-                                                echo "<optgroup label='" . htmlspecialchars($programName . " - " . $year) . "'>";
-                                                echo "<option value='All - " . htmlspecialchars($programName . " - " . $year) . "'> All - " . htmlspecialchars($programName . " - " . $year) . " Students</option>";
-
-                                                // Add options for each section
-                                                foreach ($details['sections'] as $section) {
-                                                    echo "<option value='" . htmlspecialchars($programName . " - " . $year . " - " . $section) . "'>" . htmlspecialchars($programName . " - " . $year . " - " . $section) . " Students</option>";
-                                                }
-                                                echo "</optgroup>";
+                                                // Group programs by level, then by program name, then by year and section
+                                                $programData[$programLevel][$programName] = [
+                                                    'years' => $programYears,
+                                                    'sections' => $programSections
+                                                ];
                                             }
-                                            echo "</optgroup>";
                                         }
-                                        echo "</optgroup>";
-                                    }
-
-                                ?>
-                            </select>
+                                        foreach ($programData as $level => $programs) {
+                                            echo "<div class='dropdown-group'>";
+                                            echo "<div class='dropdown-group-label'>" . htmlspecialchars($level) . "</div>";
+                                            echo "<div class='dropdown-option' data-value='All - " . htmlspecialchars($level) . "'>All - " . htmlspecialchars($level) . " Students</div>";
+                                            foreach ($programs as $programName => $details) {
+                                                echo "<div class='dropdown-group'>";
+                                                echo "<div class='dropdown-group-label'>" . htmlspecialchars($programName) . "</div>";
+                                                echo "<div class='dropdown-option' data-value='All - " . htmlspecialchars($programName) . "'>All - " . htmlspecialchars($programName) . " Students</div>";
+                                                foreach ($details['years'] as $year) {
+                                                    echo "<div class='dropdown-group'>";
+                                                    echo "<div class='dropdown-group-label'>" . htmlspecialchars($programName . ' - ' . $year) . "</div>";
+                                                    echo "<div class='dropdown-option' data-value='All - " . htmlspecialchars($programName . ' - ' . $year) . "'>All - " . htmlspecialchars($programName . ' - ' . $year) . " Students</div>";
+                                                    foreach ($details['sections'] as $section) {
+                                                        echo "<div class='dropdown-option' data-value='" . htmlspecialchars($programName . ' - ' . $year . ' - ' . $section) . "'>" . htmlspecialchars($programName . ' - ' . $year . ' - ' . $section) . " Students</div>";
+                                                    }
+                                                    echo "</div>";
+                                                }
+                                                echo "</div>";
+                                            }
+                                            echo "</div>";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <div id="selected-options" class="selected-options"></div>
                         </div>
 
 
@@ -120,6 +118,56 @@ $userInfo = $result->fetch_assoc();
                 </div>
 
                 <script>
+
+                    const dropdownToggle = document.getElementById('dropdown-toggle');
+                    const dropdownOptions = document.getElementById('dropdown-options');
+                    const selectedOptionsContainer = document.getElementById('selected-options');
+                    const hiddenInput = document.getElementById('organization-responsibility');
+
+                    // Toggle dropdown visibility
+                    dropdownToggle.addEventListener('click', () => {
+                        dropdownOptions.style.display = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+                    });
+
+                    // Add option to selected list
+                    dropdownOptions.addEventListener('click', (event) => {
+                        if (event.target.classList.contains('dropdown-option')) {
+                            const value = event.target.getAttribute('data-value');
+
+                            // Avoid duplicates
+                            if (hiddenInput.value.split(',').includes(value)) return;
+
+                            // Add to hidden input
+                            hiddenInput.value = hiddenInput.value ? `${hiddenInput.value},${value}` : value;
+                            console.log("hiddenInput.value", hiddenInput.value);
+                            
+                            // Add to UI
+                            const selectedOption = document.createElement('div');
+                            selectedOption.className = 'selected-option';
+                            selectedOption.textContent = value;
+                            const removeButton = document.createElement('button');
+                            removeButton.textContent = '×';
+                            removeButton.addEventListener('click', () => {
+                                // Remove from hidden input
+                                hiddenInput.value = hiddenInput.value
+                                    .split(',')
+                                    .filter(item => item !== value)
+                                    .join(',');
+
+                                // Remove from UI
+                                selectedOption.remove();
+                            });
+                            selectedOption.appendChild(removeButton);
+                            selectedOptionsContainer.appendChild(selectedOption);
+                        }
+                    });
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', (event) => {
+                        if (!event.target.closest('.custom-dropdown')) {
+                            dropdownOptions.style.display = 'none';
+                        }
+                    });
                     document.getElementById("close-add-organization-btn").addEventListener("click", function() {
                         const addOrganizationContainer = document.querySelector(".add-organization-container");
                         addOrganizationContainer.style.display = "none";

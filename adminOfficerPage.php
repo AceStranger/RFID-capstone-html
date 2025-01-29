@@ -61,7 +61,6 @@ $userInfo = $result->fetch_assoc();
                                 </select>
 
                                 <input type="text" name="officer-account-content-search-input" id="officer-account-content-search-input" placeholder="Search...">
-                                <button type="button" id="filterSubmit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -87,67 +86,109 @@ $userInfo = $result->fetch_assoc();
                     const selectOrganization = document.getElementById('officer-account-content-filter-select');
                     const selectColumn = document.getElementById('officer-account-content-filter-select-col');
                     const searchInput = document.getElementById('officer-account-content-search-input');
-                    const filterSubmit = document.getElementById('filterSubmit');
                     const tableBody = document.getElementById('officer-account-content-table-body');
 
-                    // Function to fetch data based on filter
-                    async function fetchFilteredData() {
-                        const organization = selectOrganization.value;
-                        const column = selectColumn.value;
-                        const search = searchInput.value;
+                    // Store fetched data in memory
+                    let allOfficerData = [];
 
-                        const params = new URLSearchParams({
-                            'organization': organization,
-                            'column': column,
-                            'search': search
-                        });
+                    // Function to populate the table with filtered data
+                    function populateTable(filteredData) {
+                        // Clear previous table data
+                        tableBody.innerHTML = '';
 
-                        try {
-                            const response = await fetch('officerAccountFetch.php?' + params.toString());
-                            const data = await response.json(); // Assuming the server returns JSON
-
-                            // Clear previous table data
-                            tableBody.innerHTML = '';
-
-                            if (data.length > 0) {
-                                data.forEach(row => {
-                                    const organizationName = row.organization_name || 'No Organization';
-                                    const tableRow = `
-                                        <tr class="officer-account-content-table-row">
-                                                <td class="officer-account-content-data-fullname">${row.user_firstname} ${row.user_lastname}</td>
-                                                <td class="officer-account-content-data-organization">${organizationName}</td>
-                                                <td class="officer-account-content-data-position">${row.officer_position}</td>
-                                                <td class="officer-account-content-data-btn-action">
-                                                    <form action="adminUserAccount.php" method="post" class="officer-account-content-data-form">
-                                                        <input type="hidden" name="user-id" value="${row.user_id}">
-                                                        <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
-                                                        <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
-                                                        <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
-                                                    </form>
-                                                </td>
-                                            
-                                        </tr>
-                                    `;
-                                    tableBody.innerHTML += tableRow;
-                                });
-                            } else {
-                                tableBody.innerHTML = '<tr><td colspan="4">No records found.</td></tr>';
-                            }
-                        } catch (error) {
-                            console.error('Error fetching data:', error);
+                        if (filteredData.length > 0) {
+                            filteredData.forEach(row => {
+                                const organizationName = row.organization_name || 'No Organization';
+                                const tableRow = `
+                                    <tr class="officer-account-content-table-row">
+                                        <td class="officer-account-content-data-fullname">${row.user_firstname} ${row.user_lastname}</td>
+                                        <td class="officer-account-content-data-organization">${organizationName}</td>
+                                        <td class="officer-account-content-data-position">${row.officer_position}</td>
+                                        <td class="officer-account-content-data-btn-action">
+                                            <form action="adminUserAccount.php" method="post" class="officer-account-content-data-form">
+                                                <input type="hidden" name="user-id" value="${row.user_id}">
+                                                <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
+                                                <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
+                                                <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML += tableRow;
+                            });
+                        } else {
+                            tableBody.innerHTML = '<tr><td colspan="4">No records found.</td></tr>';
                         }
                     }
 
-                    // Event listeners for filtering
-                    filterSubmit.addEventListener('click', fetchFilteredData);
+                    // Function to apply filters and search to the in-memory data
+                    function filterData() {
+                        const organization = selectOrganization.value.toLowerCase();
+                        const column = selectColumn.value.toLowerCase();
+                        const search = searchInput.value.toLowerCase();
 
-                    // Trigger search on input change
-                    searchInput.addEventListener('input', fetchFilteredData);
-                    selectOrganization.addEventListener('change', fetchFilteredData);
-                    selectColumn.addEventListener('change', fetchFilteredData);
+                        let filteredData = allOfficerData;
 
-                    // Initial load on page load
-                    window.onload = fetchFilteredData;
+                        // Apply organization filter
+                        if (organization && organization !== 'all') {
+                            filteredData = filteredData.filter(row => row.organization_id.toLowerCase() === organization);
+                        }
+
+                        // Apply column filter
+                        if (column && column !== 'none') {
+                            filteredData = filteredData.filter(row => {
+                                if (column === 'name') {
+                                    return (
+                                        row.user_firstname.toLowerCase().includes(search) ||
+                                        row.user_lastname.toLowerCase().includes(search)
+                                    );
+                                }
+                                if (column === 'position') {
+                                    return row.officer_position.toLowerCase().includes(search);
+                                }
+                                return true;
+                            });
+                        } else {
+                            // General search across all columns
+                            filteredData = filteredData.filter(row => {
+                                return (
+                                    row.user_firstname.toLowerCase().includes(search) ||
+                                    row.user_lastname.toLowerCase().includes(search) ||
+                                    row.organization_name.toLowerCase().includes(search) ||
+                                    row.officer_position.toLowerCase().includes(search)
+                                );
+                            });
+                        }
+
+                        // Populate the table with filtered data
+                        populateTable(filteredData);
+                    }
+
+                    // Function to fetch all data from the backend once
+                    async function fetchAllData() {
+                        try {
+                            const response = await fetch('officerAccountFetch.php');
+                            const data = await response.json(); // Assuming the server returns JSON
+
+                            // Store the fetched data in memory
+                            allOfficerData = data;
+
+                            // Populate the table with all data initially
+                            populateTable(allOfficerData);
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                            tableBody.innerHTML = '<tr><td colspan="4">Error fetching data.</td></tr>';
+                        }
+                    }
+
+                    // Add event listeners for filtering
+                    searchInput.addEventListener('input', filterData);
+                    selectOrganization.addEventListener('change', filterData);
+                    selectColumn.addEventListener('change', filterData);
+
+                    // Fetch data initially on page load
+                    window.onload = fetchAllData;
+
                 </script>
 
 

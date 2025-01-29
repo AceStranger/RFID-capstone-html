@@ -99,7 +99,6 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                                 </select>
                                 
                                 <input type="text" name="department-content-search-input" id="department-content-search-input" placeholder="Search..." value="<?php echo htmlspecialchars(@$_GET['department-content-search-input']); ?>">
-                                <input type="submit" name="filterSubmit" id="filterSubmit" class="filter-button" value="Search">
                             </div>
                         </form>
                     </div>
@@ -130,14 +129,14 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             echo '
                                                 <tr class="department-content-table-row">
-                                                    <form action="adminDepartmentDataHandler.php" method="post">
-                                                        <input type="hidden" name="department-id" value="' . $row['department_id'] . '">
-                                                        <td class="department-content-data-department-name">' . htmlspecialchars($row['department_name']) . '</td>
-                                                        <td class="department-content-data-btn-action">
+                                                    <td class="department-content-data-department-name">' . htmlspecialchars($row['department_name']) . '</td>
+                                                    <td class="department-content-data-btn-action">
+                                                        <form action="adminDepartmentDataHandler.php" method="post" class="department-content-data-form">
+                                                            <input type="hidden" name="department-id" value="' . $row['department_id'] . '">
                                                             <button type="submit" name="eSubmit" class="user-edit">EDIT</button>
                                                             <button type="submit" name="dSubmit" class="user-delete">DELETE</button>
-                                                        </td>
-                                                    </form>
+                                                        </form>
+                                                    </td>
                                                 </tr>';
                                         }
                                     } else {
@@ -147,70 +146,160 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                                 </tbody>
                             </table>
                             <!-- Edit Department Modal -->
-<div class="edit-department-container" style="display: none;">
-    <h2>Edit Department</h2>
-    <form id="edit-department-form" class="edit-department-form">
-        <input type="hidden" name="department_id" id="edit-department-id">
-        <div class="form-group">
-            <label for="edit-department-name">Department Name</label>
-            <input type="text" name="department_name" id="edit-department-name" required placeholder="Enter department name">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="edit-department-btn">Save Changes</button>
-            <button type="button" id="close-edit-department-btn" class="close-edit-department-btn">Cancel</button>
-        </div>
-    </form>
-</div>
-<script>
-    // Show Edit Department Form with current data
-document.querySelectorAll('.user-edit').forEach(button => {
-    button.addEventListener('click', function (event) {
-        event.preventDefault();
-        
-        const row = this.closest('tr');
-        const departmentId = row.querySelector('input[name="department-id"]').value;
-        const departmentName = row.querySelector('.department-content-data-department-name').textContent.trim();
+                            <div class="edit-department-container" style="display: none;">
+                                <h2>Edit Department</h2>
+                                <form id="edit-department-form" class="edit-department-form">
+                                    <input type="hidden" name="department_id" id="edit-department-id">
+                                    <div class="form-group">
+                                        <label for="edit-department-name">Department Name</label>
+                                        <input type="text" name="department_name" id="edit-department-name" required placeholder="Enter department name">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="edit-department-btn">Save Changes</button>
+                                        <button type="button" id="close-edit-department-btn" class="close-edit-department-btn">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    // Fetch all departments on page load
+                                    fetchDepartments();
 
-        document.getElementById('edit-department-id').value = departmentId;
-        document.getElementById('edit-department-name').value = departmentName;
+                                    // Handle search/filter
+                                    const filterInput = document.getElementById('department-content-search-input'); // Ensure there's an input element for filtering
+                                    filterInput.addEventListener('input', function () {
+                                        const searchValue = filterInput.value.trim().toLowerCase();
+                                        filterDepartments(searchValue);
+                                    });
+                                });
 
-        document.querySelector('.edit-department-container').style.display = 'block';
-    });
-});
+                                // Store all department data
+                                let allDepartments = [];
 
-// Close Edit Department Form
-document.getElementById('close-edit-department-btn').addEventListener('click', function () {
-    document.querySelector('.edit-department-container').style.display = 'none';
-});
+                                // Fetch departments from the server
+                                function fetchDepartments() {
+                                    fetch('fetchDepartments.php')
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                allDepartments = data.departments; // Save all department data
+                                                displayDepartments(allDepartments); // Display all departments
+                                            } else {
+                                                alert('Failed to load departments.');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching departments:', error);
+                                        });
+                                }
 
-// Handle Edit Department Form Submission
-document.getElementById('edit-department-form').addEventListener('submit', function (event) {
-    event.preventDefault();
+                                // Display departments in the table
+                                function displayDepartments(departments) {
+                                    const tbody = document.querySelector('.department-content-table-body');
+                                    tbody.innerHTML = ''; // Clear the current rows
 
-    const formData = new FormData(this);
+                                    if (departments.length > 0) {
+                                        departments.forEach(department => {
+                                            const tr = document.createElement('tr');
+                                            tr.className = 'department-content-table-row';
+                                            tr.innerHTML = `
+                                                <td class="department-content-data-department-name">${department.department_name}</td>
+                                                <td class="department-content-data-btn-action">
+                                                    <button type="button" class="user-edit" data-id="${department.department_id}">EDIT</button>
+                                                    <button type="button" class="user-delete" data-id="${department.department_id}">DELETE</button>
+                                                </td>
+                                            `;
+                                            tbody.appendChild(tr);
+                                        });
 
-    fetch('adminDepartmentUpdateHandler.php', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Department updated successfully!');
-                location.reload(); // Reload the page to reflect changes
-            } else {
-                alert('Failed to update department: ' + data.message);
-            }
-        })
-        .catch(error => {
-            alert('An error occurred: ' + error.message);
-        });
-});
+                                        // Add event listeners for edit and delete buttons
+                                        document.querySelectorAll('.user-edit').forEach(button => {
+                                            button.addEventListener('click', handleEdit);
+                                        });
+                                        document.querySelectorAll('.user-delete').forEach(button => {
+                                            button.addEventListener('click', handleDelete);
+                                        });
+                                    } else {
+                                        tbody.innerHTML = '<tr><td colspan="2">No records found.</td></tr>';
+                                    }
+                                }
 
-</script>
+                                // Filter departments based on the search input
+                                function filterDepartments(searchValue) {
+                                    const filteredDepartments = allDepartments.filter(department =>
+                                        department.department_name.toLowerCase().includes(searchValue)
+                                    );
+                                    displayDepartments(filteredDepartments);
+                                }
+
+                                // Handle editing a department
+                                function handleEdit(event) {
+                                    const departmentId = event.target.getAttribute('data-id');
+                                    const departmentName = event.target.closest('tr').querySelector('.department-content-data-department-name').textContent.trim();
+
+                                    // Show edit form with current data
+                                    document.getElementById('edit-department-id').value = departmentId;
+                                    document.getElementById('edit-department-name').value = departmentName;
+                                    document.querySelector('.edit-department-container').style.display = 'block';
+                                }
+
+                                // Handle closing the edit form
+                                document.getElementById('close-edit-department-btn').addEventListener('click', function () {
+                                    document.querySelector('.edit-department-container').style.display = 'none';
+                                });
+
+                                // Handle edit department form submission
+                                document.getElementById('edit-department-form').addEventListener('submit', function (event) {
+                                    event.preventDefault();
+
+                                    const formData = new FormData(this);
+
+                                    fetch('adminDepartmentUpdateHandler.php', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            alert('Department updated successfully!');
+                                            fetchDepartments(); // Re-fetch and display updated list
+                                            document.querySelector('.edit-department-container').style.display = 'none';
+                                        } else {
+                                            alert('Failed to update department: ' + data.message);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        alert('An error occurred: ' + error.message);
+                                    });
+                                });
+
+                                // Handle deleting a department
+                                function handleDelete(event) {
+                                    const departmentId = event.target.getAttribute('data-id');
+                                    
+                                    if (confirm('Are you sure you want to delete this department?')) {
+                                        fetch('adminDepartmentDeleteHandler.php', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ department_id: departmentId })
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                alert('Department deleted successfully!');
+                                                fetchDepartments(); // Re-fetch and display updated list
+                                            } else {
+                                                alert('Failed to delete department: ' + data.message);
+                                            }
+                                        })
+                                        .catch(error => {
+                                            alert('An error occurred while deleting the department.');
+                                        });
+                                    }
+                                }
+                            </script>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>  

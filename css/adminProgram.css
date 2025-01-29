@@ -320,29 +320,43 @@ label {
     border-bottom: 1px solid #ccc;
     font-size: 14px;
 }
-
-.user-edit, .user-delete {
+.program-content-data-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.program-content-data-form > button {
+    width: 100%;
     padding: 5px 10px;
     font-size: 12px;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    text-shadow: 0 0 2px black;
 }
 
-.user-edit {
+
+.program-edit {
     background-color: #3a77ff;
 }
 
-.user-edit:hover {
+.program-edit:hover {
     background-color: #2a5fcd;
 }
 
-.user-delete {
+.program-delete {
     background-color: #ff6f61;
 }
 
-.user-delete:hover {
+.program-delete:hover {
     background-color: #ff3d2e;
 }
 

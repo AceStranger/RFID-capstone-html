@@ -104,7 +104,7 @@ function getParticipantsByYearAndSection($programName, $yearLevel, $section, $co
     $query = "
         SELECT s.* FROM student s
         JOIN program p ON s.program_id = p.program_id
-        WHERE p.program_name = ? AND s.year_level = ? AND s.section = ?
+        WHERE p.program_name = ? AND s.`year/grade_level` = ? AND s.section = ?
     ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('sss', $programName, $yearLevel, $section);

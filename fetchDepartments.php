@@ -1,17 +1,20 @@
 <?php
 include "dbh.php";
 
-// Fetch departments
-$sql = "SELECT department_id, department_name FROM department";
-$result = $conn->query($sql);
+// Fetch all department data
+$query = "SELECT department_id, department_name FROM department ORDER BY department_id ASC";
+$result = mysqli_query($conn, $query);
 
 $departments = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
         $departments[] = $row;
     }
+    echo json_encode(['success' => true, 'departments' => $departments]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'No departments found.']);
 }
 
-echo json_encode($departments);
-$conn->close();
+mysqli_close($conn);
 ?>

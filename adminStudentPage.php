@@ -88,76 +88,151 @@ $userInfo = $result->fetch_assoc();
                 </div>
 
                 <script>
-                    // Get the necessary DOM elements
+                    // DOM Elements
                     const selectProgram = document.getElementById('student-account-content-filter-select-program');
                     const selectColumn = document.getElementById('student-account-content-filter-select-col');
                     const searchInput = document.getElementById('student-account-content-search-input');
                     const filterSubmit = document.getElementById('filterSubmit');
                     const tableBody = document.getElementById('student-account-content-table-body');
 
-                    // Function to fetch filtered data from the server
-                    async function fetchFilteredData() {
-                        const program = selectProgram.value;
-                        const column = selectColumn.value;
-                        const search = searchInput.value;
+                    // Store fetched data in memory
+                    let allStudentData = [];
 
-                        const params = new URLSearchParams({
-                            'program': program,
-                            'column': column,
-                            'search': search
-                        });
+                    // Function to populate the table with filtered data
+                    function populateTable(filteredData) {
+                        // Clear previous table data
+                        tableBody.innerHTML = '';
 
-                        try {
-                            const response = await fetch('studentAccountFetch.php?' + params.toString());
-                            const data = await response.json();  // Assuming the server returns JSON
+                        if (filteredData.length > 0) {
+                            filteredData.forEach(row => {
+                                const programName = row.program_name || 'No program';
+                                const year = row['year/grade_level'] || 'N/A';
+                                const section = row.section || 'N/A';
+                                const fullName = `${row.user_firstname} ${row.user_middlename} ${row.user_lastname} ${row.user_suffixname}`;
 
-                            // Clear previous table data
-                            tableBody.innerHTML = '';
-
-                            if (data.length > 0) {
-                                data.forEach(row => {
-                                    const programName = row.program_name || 'No program';
-                                    const year = row['year/grade_level'] || 'N/A';
-                                    const section = row.section || 'N/A';
-                                    const fullName = `${row.user_firstname} ${row.user_middlename} ${row.user_lastname} ${row.user_suffixname}`;
-
-                                    const tableRow = `
-                                        <tr class="student-account-content-table-row">
-                                                <td class="student-account-content-data-school-id">${row.user_school_id}</td>
-                                                <td class="student-account-content-data-fullname">${fullName}</td>
-                                                <td class="student-account-content-data-program">${programName}</td>
-                                                <td class="student-account-content-data-year">${year}</td>
-                                                <td class="student-account-content-data-section">${section}</td>
-                                                <td class="student-account-content-data-btn-action">
-                                                    <form action="adminUserAccount.php" method="post" class="student-account-content-data-form">
-                                                        <input type="hidden" name="user-id" value="${row.user_id}">
-                                                        <input type="hidden" name="student-id" value="${row.student_id}">
-                                                        <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
-                                                        <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
-                                                        <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
-                                                    </form>
-                                                </td>
-                                            
-                                        </tr>
-                                    `;
-                                    tableBody.innerHTML += tableRow;
-                                });
-                            } else {
-                                tableBody.innerHTML = '<tr><td colspan="6">No records found.</td></tr>';
-                            }
-                        } catch (error) {
-                            console.error('Error fetching data:', error);
+                                const tableRow = `
+                                    <tr class="student-account-content-table-row">
+                                        <td class="student-account-content-data-school-id">${row.user_school_id}</td>
+                                        <td class="student-account-content-data-fullname">${fullName}</td>
+                                        <td class="student-account-content-data-program">${programName}</td>
+                                        <td class="student-account-content-data-year">${year}</td>
+                                        <td class="student-account-content-data-section">${section}</td>
+                                        <td class="student-account-content-data-btn-action">
+                                            <form action="adminUserAccount.php" method="post" class="student-account-content-data-form">
+                                                <input type="hidden" name="user-id" value="${row.user_id}">
+                                                <input type="hidden" name="student-id" value="${row.student_id}">
+                                                <button type="submit" name="pSubmit" class="user-account-action user-account-profile">PROFILE</button>
+                                                <button type="submit" name="eSubmit" class="user-account-action user-account-edit">EDIT</button>
+                                                <button type="submit" name="dSubmit" class="user-account-action user-account-delete" onclick="confirmDelete(event);">DELETE</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML += tableRow;
+                            });
+                        } else {
+                            tableBody.innerHTML = '<tr><td colspan="6">No records found.</td></tr>';
                         }
                     }
 
+                    // Function to apply filters and search to in-memory data
+                    function filterData() {
+                        const program = selectProgram.value.toLowerCase();
+                        const column = selectColumn.value.toLowerCase();
+                        const search = searchInput.value.toLowerCase();
+
+                        let filteredData = allStudentData;
+
+                        // Filter by program
+                        if (program && program !== 'all') {
+                            filteredData = filteredData.filter(row => row.program_id.toLowerCase() === program);
+                        }
+
+                        // Filter by column
+                        if (column && column !== 'none') {
+                            filteredData = filteredData.filter(row => {
+                                if (column === 'school id') {
+                                    return row.user_school_id.toLowerCase().includes(search);
+                                }
+                                if (column === 'full name') {
+                                    const fullName = [  
+                                        row.user_firstname || '',
+                                        row.user_middlename || '',
+                                        row.user_lastname || '',
+                                        row.user_suffixname || ''
+                                    ]
+                                    .filter(Boolean)
+                                    .join(' ')
+                                    .toLowerCase();
+                                    
+                                    return fullName.includes(search);
+                                }
+                                if (column === 'year/gradelevel') {
+                                    return row['year/grade_level'].toLowerCase().includes(search);
+                                }
+                                if (column === 'section') {
+                                    return row.section.toLowerCase().includes(search);
+                                }
+                                return true;
+                            });
+                        } else {
+                            // General search across all columns
+                            filteredData = filteredData.filter(row => {
+                                return (
+                                    row.user_school_id.toLowerCase().includes(search) ||
+                                    row.user_firstname.toLowerCase().includes(search) ||
+                                    row.user_middlename.toLowerCase().includes(search) ||
+                                    row.user_lastname.toLowerCase().includes(search) ||
+                                    row.user_suffixname.toLowerCase().includes(search) ||
+                                    row.program_name.toLowerCase().includes(search) ||
+                                    row['year/grade_level'].toLowerCase().includes(search) ||
+                                    row.section.toLowerCase().includes(search)
+                                );
+                            });
+                        }
+
+                        // Populate the table with filtered data
+                        populateTable(filteredData);
+                    }
+
+                    // Function to fetch all data from the backend once
+                    async function fetchAllData() {
+                        try {
+                            const response = await fetch('studentAccountFetch.php');
+                            const data = await response.json();
+
+                            // Store the fetched data in memory
+                            allStudentData = data;
+
+                            // Populate the table with all data initially
+                            populateTable(allStudentData);
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                            tableBody.innerHTML = '<tr><td colspan="6">Error fetching data.</td></tr>';
+                        }
+                    }
+
+                    // Debounce function to limit search input calls
+                    function debounce(func, delay) {
+                        let timeout;
+                        return function (...args) {
+                            clearTimeout(timeout);
+                            timeout = setTimeout(() => func.apply(this, args), delay);
+                        };
+                    }
+
+                    // Debounced version of filterData
+                    const debouncedFilterData = debounce(filterData, 300);
+
                     // Event listeners for filtering
-                    filterSubmit.addEventListener('click', fetchFilteredData);
-                    searchInput.addEventListener('input', fetchFilteredData);
-                    selectProgram.addEventListener('change', fetchFilteredData);
-                    selectColumn.addEventListener('change', fetchFilteredData);
+                    searchInput.addEventListener('input', debouncedFilterData);
+                    selectProgram.addEventListener('change', filterData);
+                    selectColumn.addEventListener('change', filterData);
+                    filterSubmit.addEventListener('click', filterData);
 
                     // Initial fetch on page load
-                    window.onload = fetchFilteredData;
+                    window.onload = fetchAllData;
+
                 </script>
 
 

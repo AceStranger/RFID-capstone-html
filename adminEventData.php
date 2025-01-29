@@ -143,33 +143,55 @@ if (
                 
                 <div class="event-data-content-main-content">
                     <div class="event-data-content-info-content">
-                    <?php
+                        <?php
 
-$inputAvailability = $request === "view-event" ? "disabled" : "";
+                            $inputAvailability = $request === "view-event" ? "disabled" : "";
 
-// Define buttons based on the request type
-$btn = '';
-if(str_contains($officerAssignDuty, "Manage Event Registration")) {
+                            // Define buttons based on the request type
+                            $btn = '';
+                            if(str_contains($officerAssignDuty, "Manage Event Registration")) {
 
-    if ($request === "view-event") {
-        $btn = '
-            <div class="event-data-content-btn">
-                <button type="submit" name="eSubmit" class="event-data-btn-edit">EDIT</button>
-                <button type="submit" name="dSubmit" class="user-delete">DELETE</button>
-            </div>';
-    } elseif ($request === "edit-event") {
-        $btn = '
-            <div class="event-data-content-btn">
-                <button type="submit" name="uSubmit" class="user-update">UPDATE</button>
-                <button type="submit" name="cancelSubmit" class="user-cancel">CANCEL</button>
-            </div>';
-    }
-}
+                                if ($request === "view-event") {
+                                    $btn = '
+                                        <div class="event-data-content-btn">
+                                            <button type="submit" name="eSubmit" class="event-data-btn-edit">EDIT</button>
+                                            <button type="submit" name="dSubmit" class="user-delete">DELETE</button>
+                                            <script>
+                                                document.addEventListener("click", function (event) {
+                                                    if (event.target.classList.contains("user-delete")) {
+                                                        event.preventDefault(); // Prevent form submission immediately
+                                                        
+                                                        const confirmation = confirm("Are you sure you want to delete this event?");
+                                                        
+                                                        if (confirmation) {
+                                                            // Find the form that contains the delete button
+                                                            const form = event.target.closest("form");
+
+                                                            // Create a hidden input to pass the value of dSubmit if not already present
+                                                            if (form && !form.querySelector("input[name=dSubmit]")) {
+                                                                const input = document.createElement("input");
+                                                                input.type = "hidden";
+                                                                input.name = "dSubmit";
+                                                                input.value = "1"; // Set the value for dSubmit
+                                                                form.appendChild(input);
+                                                            }
+                                                            form.submit();
+                                                        }
+                                                    }
+                                                });
 
 
-
-
-?>
+                                            </script>
+                                        </div>';
+                                } elseif ($request === "edit-event") {
+                                    $btn = '
+                                        <div class="event-data-content-btn">
+                                            <button type="submit" name="uSubmit" class="user-update">UPDATE</button>
+                                            <button type="submit" name="cancelSubmit" class="user-cancel">CANCEL</button>
+                                        </div>';
+                                }
+                            }
+                        ?>
                         <form action='adminEventDataHandler.php' method='POST' class='event-data-content-info-form-content'>
                             <div class='event-data-content-info-col'>
                                 <input type='hidden' name='event-id' value='<?php echo $eventID; ?>'>

@@ -1,26 +1,27 @@
 button {
     cursor: pointer;
 }
+
+
 .activity-log-content{
-    margin-left: 350px;
+    /* margin-left: 350px; */
     width: 100%;    
-    height: 100%;
-    background-color: rgb(242, 242, 242);
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    position: relative;
 }
-
 .activity-log-content-top-part {
     width: 95%;
+    min-height: 100px;
     height: 100px;
     display: flex;
-    flex-direction: column; 
-    justify-content: center;
-    align-items: flex-start;
-    background-color: rgb(235, 235, 235);
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffffe6;
     border-radius: 10px;
     margin-block-start: 16px;
     padding-inline: 16px;
@@ -30,129 +31,84 @@ button {
     margin-inline: 20px;
     font-size: 20px;
 }
-.activity-log-content-btn {
-    margin-inline: 10px;
-    font-size: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.btn {
-    padding-inline: 20px;
-    padding-block: 5px;
-    margin-inline: 10px;
-    font-size: 14px;
-    border-radius: 10px;
-    border: 1px solid black;
-}
 
 
 .activity-log-content-activity-log-account-content {
     width: 95%;
+    min-height: calc(100vh - 170px);
     height: 95%;
     display: flex;
-    flex-direction: column;  
+    flex-direction: column;
     align-items: flex-start;
-    background-color: rgb(235, 235, 235);
+    background-color: #ffffffe6;
     border-radius: 10px;
     margin-block-end: 16px;
-    padding-inline: 16px;
-    overflow-y: hidden;
-}
-.activity-log-account-content-top-part {
-    width: 100%;
-    height: 90px;
-    padding-top: 16px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-}
-#activity-log-account-content-search-input {
-    width: 300px;
-    padding-inline: 10px;
-    padding-block: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-    border: 1px solid black;
-}
-#activity-log-account-content-search-input::placeholder {
-    font-size: 14px;
+    padding: 16px;
+    overflow: hidden;
+    gap: 16px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
 }
 .activity-log-account-content-main-content {
     width: 100%;
     height: 100%;
-    padding-top: 16px;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.activity-log-account-content-head-data {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: rgb(225, 225, 225);
-    width: 100%;
-    height: 30px;
 
-}
-.activity-log-account-content-header-row-name {
-    width: 150px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    margin-left: 16px;
-}
-.activity-log-account-content-header-row-place {
-    width: 150px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-.activity-log-account-content-header-row-status {
-    width: 100px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-.activity-log-account-content-header-row-date {
-    width: 100px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-.activity-log-account-content-header-row-time {
-    width: 150px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-.activity-log-account-content-header-row-organizer {
-    width: 150px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-.activity-log-account-content-header-row-change {
-    width: 150px;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.activity-log-account-content-table-data {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: rgb(241, 241, 241);
+.activity-log-table {
     width: 100%;
-    height: 30px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
 }
-.activity-log-account-content-table-data:nth-child(odd) {
-    background-color: rgb(225, 225, 225);
+
+.activity-log-table th,
+.activity-log-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
 }
-.user-account-edit {
-    width: 50px;
-    height: 20px;
+
+.activity-log-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
 }
-.user-account-remove {
-    width: 80px;
-    height: 20px;
+
+.activity-log-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.activity-log-table tr:hover {
+    background-color: #e9ecef;
+}
+
+.activity-log-content-top-part {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-log-content-head-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.activity-log-content-btn .btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.activity-log-content-btn .btn:hover {
+    background-color: #218838;
 }

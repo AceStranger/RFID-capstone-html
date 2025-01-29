@@ -219,8 +219,11 @@ $userInfo = $result->fetch_assoc();
                                     <option value="organization_name">Organization Name</option>
                                     <option value="organization_responsibility">Responsibility</option>
                                 </select>
-                                <input type="text" name="organization-content-search-input" id="organization-content-search-input" placeholder="Search..." value="<?php echo htmlspecialchars(@$_GET['organization-content-search-input']); ?>">
-                                <input type="submit" name="filterSubmit" id="filterSubmit" class="filter-button" value="Search">
+                                <input type="text" 
+                                name="organization-content-search-input" 
+                                id="organization-content-search-input" 
+                                placeholder="Search..." 
+                                value="">
                             </div>
                         </form>
                     </div>
@@ -236,66 +239,103 @@ $userInfo = $result->fetch_assoc();
                                     </tr>
                                 </thead>
                                 <tbody class="organization-content-table-body">
-                                    <?php 
-
-                                        // Query to fetch event data
-                                        $organizationQuery = "SELECT * FROM organization";
-                                        
-                                        $result = mysqli_query($conn, $organizationQuery);
-
-                                        // Check if there are results
-                                        // if (mysqli_num_rows($result) > 0) {
-                                        //     while ($row = mysqli_fetch_assoc($result)) {
-
-                                        //         echo '
-                                        //             <tr class="organization-content-table-row">
-                                        //                 <form action="adminOrganizationDataHandler.php" method="post">
-                                        //                     <input type="hidden" name="organization-id" value="'. $row['organization_id'] .'">
-                                        //                     <td class="organization-content-data-organization-name">'. htmlspecialchars($row['organization_name']) .'</td>
-                                        //                     <td class="organization-content-data-responsibility">'. htmlspecialchars($row['organization_responsibility']) .'</td>
-                                        //                     <td class="organization-content-data-btn-actions">
-                                        //                         <button type="submit" name="vSubmit" class="user-view">VIEW</button>
-                                        //                         <button type="submit" name="dSubmit" class="user-delete">DELETE</button>
-                                        //                     </td>
-                                        //                 </form>
-                                        //             </tr>';
-                                        //     }
-                                        // } else {
-                                        //     echo '<tr><td colspan="8">No records found.</td></tr>';
-                                        // }
-                                    ?>
-                                    <?php if (mysqli_num_rows($result) > 0):?>
-                                        <?php while ($row = $result->fetch_assoc()): ?>
-                                            <tr class="organization-content-table-row">
-                                                <form action="adminOrganizationDataHandler.php" method="post">
-                                                    <input type="hidden" name="organization-id" value="<?php echo $row['organization_id'];?>">
-                                                    <td class="organization-content-data-organization-name"><?php echo htmlspecialchars($row['organization_name']); ?></td>
-                                                    <td class="organization-content-data-responsibility"><?php echo htmlspecialchars($row['organization_responsibility']); ?></td>
-                                                    <td class="organization-content-data-btn-actions">
-                                                        <button type="submit" name="vSubmit" class="organization-view">VIEW</button>
-                                                        <button type="submit" name="eSubmit" class="organization-edit">EDIT</button>
-                                                        <button type="submit" name="dSubmit" class="organization-delete">DELETE</button>
-                                                    </td>
-                                                </form>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    <?php else: ?>
-                                        <tr><td colspan="8">No records found.</td></tr>
-                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const selectCol = document.getElementById('organization-content-filter-select-col');
+                            const searchInput = document.getElementById('organization-content-search-input');
+                            const tableBody = document.querySelector('.organization-content-table-body');
 
+                            // Mapping between dropdown values and organization table keys
+                            const columnKeyMap = {
+                                "Organization Name": "organization_name",
+                                "Responsibility": "organization_responsibility",
+                            };
+
+                            let allOrganizationData = [];
+
+                            // Function to fetch all organization data
+                            async function fetchOrganizationData() {
+                                try {
+                                    const response = await fetch('organizationDataFetch.php'); // Ensure this points to your PHP endpoint
+                                    const data = await response.json();
+
+                                    allOrganizationData = data;
+                                    renderTableData(allOrganizationData);
+                                } catch (error) {
+                                    console.error('Error fetching organization data:', error);
+                                    tableBody.innerHTML = '<tr><td colspan="3">Failed to fetch data. Please try again later.</td></tr>';
+                                }
+                            }
+
+                            // Function to render table data
+                            function renderTableData(data) {
+                                tableBody.innerHTML = '';
+
+                                if (data.length > 0) {
+                                    data.forEach(row => {
+                                        const tableRow = `
+                                            <tr class="organization-content-table-row">
+                                                <td class="organization-content-data-organization-name">${row.organization_name}</td>
+                                                <td class="organization-content-data-responsibility">${row.organization_responsibility}</td>
+                                                <td class="organization-content-data-btn-actions">
+                                                    <form action="adminOrganizationDataHandler.php" method="post" class="organization-content-data-form">
+                                                        <input type="hidden" name="organization-id" value="${row.organization_id}">
+                                                        <button type="submit" name="vSubmit" class="organization-view">VIEW</button>
+                                                        <button type="submit" name="eSubmit" class="organization-edit">EDIT</button>
+                                                        <button type="submit" name="dSubmit" class="organization-delete" onclick="return confirm('Are you sure you want to delete this organization?');">DELETE</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        `;
+                                        tableBody.innerHTML += tableRow;
+                                    });
+                                } else {
+                                    tableBody.innerHTML = '<tr><td colspan="3">No records found.</td></tr>';
+                                }
+                            }
+
+                            // Function to apply filters
+                            function applyFilters() {
+                                const col = selectCol.value; // Selected column
+                                const search = searchInput.value.trim().toLowerCase(); // Search input value
+
+                                // Filter data
+                                const filteredData = allOrganizationData.filter(row => {
+                                    let matchesSearch = true;
+
+                                    if (col && search) {
+                                        // Directly use the col value to fetch data
+                                        const colValue = row[col] || '';
+                                        matchesSearch = colValue.toLowerCase().includes(search);
+                                    } else if (search) {
+                                        // Search across all fields if no column is selected
+                                        matchesSearch = Object.values(row).some(value =>
+                                            value && value.toString().toLowerCase().includes(search)
+                                        );
+                                    }
+
+
+                                    return matchesSearch;
+                                });
+
+                                renderTableData(filteredData);
+                            }
+
+                            // Event listeners for filtering
+                            selectCol.addEventListener('change', applyFilters);
+                            searchInput.addEventListener('input', applyFilters);
+
+                            // Fetch and display data on page load
+                            fetchOrganizationData();
+                        });
+                    </script>
                 </div>
-
             </div>
-            
         </div>  
     </div>
-    
-
-    <script>
-    </script>
 </body>
 </html>

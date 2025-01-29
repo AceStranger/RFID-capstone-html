@@ -75,7 +75,7 @@ if (mysqli_num_rows($departmentResult) > 0) {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="program-level">Program Level</label>
+                            <label for="program_level">Program Level</label>
                             <select name="program_level" id="program_level" placeholder="Enter program level" required>
                                 <option value="" disabled>Select Program Level</option>
                                 <option value="Primary">Primary</option>
@@ -84,7 +84,7 @@ if (mysqli_num_rows($departmentResult) > 0) {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="year-grade-level">Year's/Grade's Level</label>
+                            <label for="year_grade_level">Year's/Grade's Level</label>
                             <textarea name="year_grade_level" id="year_grade_level" required placeholder="Enter year/grade level, Separate them by comma `,`. (E.g. `1st YEAR, 2nd YEAR`)"></textarea>
                         </div>
                         <div class="form-group">
@@ -147,7 +147,11 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                 <option value="program_name" selected>Program Name</option>
                                 <option value="department_name">Department Name</option>
                             </select>
-                            <input type="text" name="program-content-search-input" id="program-content-search-input" placeholder="Search...">
+                            <input type="text" 
+                            name="program-content-search-input" 
+                            id="program-content-search-input" 
+                            placeholder="Search..."
+                            value="">
                         </div>
                     </div>
 
@@ -165,7 +169,6 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                     </tr>
                                 </thead>
                                 <tbody class="program-content-table-body">
-                                    
                                 </tbody>
                             </table>
                             <!-- Edit Program Modal -->
@@ -215,23 +218,19 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                 </form>
                                 <div id="edit-program-message"></div>
                             </div>
-
                             <script>
                                 // Function to fetch and display program data
-                                async function fetchProgramData(filterColumn = '', searchInput = '') {
-                                   
+                                async function fetchProgramData(filterColumn = document.getElementById('program-content-filter-select-col').value, searchInput = '') {
                                     try {
                                         const response = await fetch('filterPrograms.php', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify({ filterColumn, searchInput })
                                         });
-
                                         const data = await response.json();
 
                                         const tbody = document.querySelector('.program-content-table-body');
                                         tbody.innerHTML = ''; // Clear existing rows
-
                                         if (data.length > 0) {
                                             data.forEach(row => {
                                                 const tr = document.createElement('tr');
@@ -245,8 +244,10 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                                     <td class="program-content-data-program-year-grade-level">${row.program_year_grade_level}</td>
                                                     <td class="program-content-data-section">${row.section}</td>
                                                     <td class="program-content-data-btn">
-                                                        <button type="submit" name="eSubmit" class="user-edit">EDIT</button>
-                                                        <button type="button" class="user-delete">DELETE</button>
+                                                        <form method="post" class="program-content-data-form">
+                                                            <button type="button" class="program-edit">EDIT</button>
+                                                            <button type="button" class="program-delete">DELETE</button>
+                                                        </form>
                                                     </td>
                                                 `;
                                                 tbody.appendChild(tr);
@@ -280,42 +281,57 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                     });
                                 });
 
-
-
-
-
-
-
-
                                 // Show Edit Program Form
-                                document.querySelectorAll('.user-edit').forEach(button => {
-                                    button.addEventListener('click', function (event) {
-                                        event.preventDefault();
-                                        const row = this.closest('tr');
+                                document.addEventListener('click', function(event) {
+                                    if (event.target.classList.contains('program-edit')) {
+                                        event.preventDefault(); // Prevent form submission
+                                        const row = event.target.closest('tr');
                                         document.querySelector('.edit-program-container').style.display = 'flex';
                                         document.getElementById('edit-program-id').value = row.getAttribute('data-program-id');
                                         document.getElementById('edit-program-name').value = row.querySelector('.program-content-data-program-name').textContent.trim();
                                         document.getElementById('edit-program-level').value = row.querySelector('.program-content-data-program-level').textContent.trim();
                                         document.getElementById('edit-year-grade-level').value = row.querySelector('.program-content-data-program-year-grade-level').textContent.trim();
                                         document.getElementById('edit-section').value = row.querySelector('.program-content-data-section').textContent.trim();
-                                    });
+                                    }
+
+                                    if (event.target.classList.contains('program-delete')) {
+                                        event.preventDefault(); // Prevent form submission
+                                        const row = event.target.closest('tr');
+                                        const programId = row.getAttribute('data-program-id');
+
+                                        if (confirm('Are you sure you want to delete this program?')) {
+                                            deleteProgram(programId, row);
+                                        }
+                                    }
                                 });
 
-                                // Close Edit Program Form
-                                document.getElementById('close-edit-program-btn').addEventListener('click', function () {
-                                    document.querySelector('.edit-program-container').style.display = 'none';
-                                });
+                                // Handle Delete Program
+                                async function deleteProgram(programId, row) {
+                                    try {
+                                        const response = await fetch('deleteProgramHandler.php', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ program_id: programId })
+                                        });
+
+                                        const result = await response.json();
+                                        if (result.success) {
+                                            alert('Program deleted successfully!');
+                                            row.remove(); // Remove row from the table
+                                        } else {
+                                            alert('Failed to delete program: ' + result.message);
+                                        }
+                                    } catch (error) {
+                                        console.error('Error:', error);
+                                        alert('An error occurred while deleting the program.');
+                                    }
+                                }
 
                                 // Handle Edit Program Form Submission
                                 document.getElementById('edit-program-form').addEventListener('submit', async function (event) {
                                     event.preventDefault();
 
                                     const formData = new FormData(this);
-                                    console.log("formData", document.getElementById('edit-program-id').value);
-                                    console.log("formData", document.getElementById('edit-program-name').value);
-                                    console.log("formData", document.getElementById('edit-program-level').value);
-                                    console.log("formData", document.getElementById('edit-year-grade-level').value);
-                                    console.log("formData", document.getElementById('edit-section').value);
                                     
                                     try {
                                         const response = await fetch('adminProgramUpdateHandler.php', {
@@ -337,37 +353,12 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                     }
                                 });
 
-                                document.querySelectorAll('.user-delete-btn').forEach(button => {
-                                    button.addEventListener('click', async function () {
-                                        const row = this.closest('tr');
-                                        const programId = row.getAttribute('data-program-id');
-
-                                        if (confirm('Are you sure you want to delete this program?')) {
-                                            try {
-                                                const response = await fetch('deleteProgramHandler.php', {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({ program_id: programId })
-                                                });
-
-                                                const result = await response.json();
-                                                if (result.success) {
-                                                    alert('Program deleted successfully!');
-                                                    row.remove(); // Remove row from the table
-                                                } else {
-                                                    alert('Failed to delete program: ' + result.message);
-                                                }
-                                            } catch (error) {
-                                                console.error('Error:', error);
-                                                alert('An error occurred while deleting the program.');
-                                            }
-                                        }
-                                    });
+                                // Close Edit Program Form
+                                document.getElementById('close-edit-program-btn').addEventListener('click', function () {
+                                    document.querySelector('.edit-program-container').style.display = 'none';
                                 });
-
-
                             </script>
-
+                            
                         </div>
                     </div>
                 </div>

@@ -71,7 +71,8 @@ div {
     min-height: 500px;
     height: 80%;
     display: flex;
-    flex-direction: column;  
+    flex-direction: column;
+    justify-content: center;  
     align-items: center;
     background-color: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -83,8 +84,8 @@ div {
 
 .form-content-container {
     width: 100%;
-    max-width: 80%;
-    height: 500px;
+    max-width: 100%;
+    height: calc(100vh - 200px);
     display: flex;
     flex-direction: column;  
     justify-content: flex-start;

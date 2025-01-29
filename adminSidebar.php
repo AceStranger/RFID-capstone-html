@@ -19,7 +19,7 @@ $sidebarItems = [
     'organizationsData' => "<div class='sidebar-content-item sidebar-organizationData'><div class='sidebar-link-text'>ORGANIZATION</div></div>",
     'sanctions' => "<div class='sidebar-content-item sidebar-sanction'><div class='sidebar-link-text'>SANCTIONS</div></div>",
     'report' => "<div class='sidebar-content-item sidebar-report'><div class='sidebar-link-text'>REPORT</div></div>",
-    'activityLog' => "<div class='sidebar-content-item sidebar-activity-log'><div class='sidebar-link-text'>ACTIVITY LOG</div></div>",
+    'activityLog' => "<div class='sidebar-content-item sidebar-activityLog'><div class='sidebar-link-text'>ACTIVITY LOG</div></div>",
     'logout' => "<div class='sidebar-content-item sidebar-logout'><div class='sidebar-link-text'>LOG OUT</div></div>",
 ];
 

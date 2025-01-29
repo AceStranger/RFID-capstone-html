@@ -342,8 +342,17 @@ document.getElementById('add-new-user').addEventListener('submit', function (e) 
 async function fetchDepartments() {
     try {
         const response = await fetch('fetchDepartments.php');
-        const departments = await response.json();
-        populateSelect('department', departments, 'department_id', 'department_name');
+        const data = await response.json(); // Parse the JSON response
+        
+        if (data.success) {
+            const departments = data.departments; // Access the 'departments' array
+            console.log(departments);
+            
+            // Populate the dropdowns
+            populateSelect('department', departments, 'department_id', 'department_name');
+        } else {
+            console.error('No departments found.');
+        }
     } catch (error) {
         console.error('Failed to fetch departments:', error);
     }
@@ -622,7 +631,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function fetchDepartments() {
         fetch('fetchDepartments.php')
             .then(response => response.json())
-            .then(departments => {
+            .then(data => {
+                const departments = data.departments;
                 const departmentSelects = document.querySelectorAll('[id="department"]');
                 departmentSelects.forEach(departmentSelect => {
                     departmentSelect.innerHTML = '<option value="" disabled selected>Select Department</option>';

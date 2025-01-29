@@ -89,7 +89,6 @@ $userInfo = $result->fetch_assoc();
                         // Fetch data based on filter
                         const selectDepartment = document.getElementById('dean-account-content-filter-select');
                         const searchInput = document.getElementById('dean-account-content-search-input');
-                        const filterSubmit = document.getElementById('filterSubmit');
                         const tableBody = document.getElementById('dean-account-content-table-body');
 
                         // Function to fetch data with filters
@@ -118,9 +117,9 @@ $userInfo = $result->fetch_assoc();
                                                 <td class="dean-account-content-data-btn-action">
                                                     <form action="adminUserAccount.php" method="post" class="users-account-content-data-form">
                                                         <input type="hidden" name="user-id" value="${row.user_id}">
-                                                        <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
-                                                        <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
-                                                        <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
+                                                        <button type="submit" name="pSubmit" class="user-account-action user-account-profile">PROFILE</button>
+                                                        <button type="submit" name="eSubmit" class="user-account-action user-account-edit">EDIT</button>
+                                                        <button type="submit" name="dSubmit" class="user-account-action user-account-delete" onclick="confirmDelete(event);">DELETE</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -134,10 +133,6 @@ $userInfo = $result->fetch_assoc();
                                 console.error('Error fetching data:', error);
                             }
                         }
-
-                        // Event listeners for filtering
-                        filterSubmit.addEventListener('click', fetchFilteredData);
-
                         // Trigger search on input change
                         searchInput.addEventListener('input', fetchFilteredData);
                         selectDepartment.addEventListener('change', fetchFilteredData);

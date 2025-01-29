@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = mysqli_real_escape_string($conn, $_POST['section'] ?? '');
 
     // Validate required fields
-    if (empty($program_name) || empty($department_name) || empty($program_level) || empty($year_grade_level) || empty($section)) {
+    if (empty($program_name) || empty($program_level) || empty($year_grade_level) || empty($section)) {
         $response['success'] = false;
         $response['message'] = 'All fields are required.';
         echo json_encode($response);

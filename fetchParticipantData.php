@@ -13,6 +13,7 @@ if (isset($data['event_id'])) {
 
     $participants = [];
     $attendance = [];
+    $students = [];      // Placeholder for actual logic
     // Check if $event_participant contains commas and process accordingly
     $event_participants = [];
     if (str_contains($event_participant, ",")) {
@@ -23,13 +24,11 @@ if (isset($data['event_id'])) {
         $event_participants[] = $event_participant;
     }
     
-    error_log("Processing event participant: " . print_r( "all asd", true));
     foreach ($event_participants as $event_participant) {
-        $part = explode("-", $event_participant);
+        $part = array_map('trim', explode("-", $event_participant));
         $programLevels = ["College", "college", "Secondary", "secondary", "Primary", "primary"];
 
         if (str_contains($part[0], "all") || str_contains($part[0], "All")) {
-            error_log("Processing event participant: " . print_r( "All true", true));
 
             if (in_array($part[1], $programLevels)) {
                 error_log("Processing event participant: " . print_r( "programLevels true", true));
@@ -46,14 +45,18 @@ if (isset($data['event_id'])) {
                     $program_name = $row['program_name'];
 
                     // Query students by program_id
-                    $sqlStudents = "SELECT * FROM student WHERE program_id = ?";
+                    $sqlStudents = "SELECT * FROM student WHERE program_id = ?  ORDER BY `student`.`year/grade_level` ASC";
                     $stmtStudents = $conn->prepare($sqlStudents);
                     $stmtStudents->bind_param("i", $program_id);
                     $stmtStudents->execute();
                     $resultStudents = $stmtStudents->get_result();
 
                     while ($student = $resultStudents->fetch_assoc()) {
-                        $participants[$level][$program_name][$student['year/grade_level']][] = $student;
+                        // Fetch student details using user_id
+                        $studentDetails = fetchStudentName($student['user_id'], $conn);
+                        // Add the student details to the $students array
+                        $students[] = $studentDetails;
+                        $participants[$level][$program_name][$student['year/grade_level']][$student['section']][] = $student;
                     }
                 }
             } else {
@@ -70,13 +73,17 @@ if (isset($data['event_id'])) {
                     $program_id = $row['program_id'];
 
                     // Query students by program_id
-                    $sqlStudents = "SELECT * FROM student WHERE program_id = ?";
+                    $sqlStudents = "SELECT * FROM student WHERE program_id = ?  ORDER BY `student`.`year/grade_level` ASC";
                     $stmtStudents = $conn->prepare($sqlStudents);
                     $stmtStudents->bind_param("i", $program_id);
                     $stmtStudents->execute();
                     $resultStudents = $stmtStudents->get_result();
 
                     while ($student = $resultStudents->fetch_assoc()) {
+                        // Fetch student details using user_id
+                        $studentDetails = fetchStudentName($student['user_id'], $conn);
+                        // Add the student details to the $students array
+                        $students[] = $studentDetails;
                         $participants[$programName][$student['year/grade_level']][$student['section']][] = $student;
                     }
                 }
@@ -98,7 +105,7 @@ if (isset($data['event_id'])) {
                 $program_id = $row['program_id'];
 
                 // Query students by program_id, year/grade_level, and optionally section
-                $sqlStudents = "SELECT * FROM student WHERE program_id = ? AND `year/grade_level` = ?";
+                $sqlStudents = "SELECT * FROM student WHERE program_id = ? AND `year/grade_level` = ?  ORDER BY `student`.`year/grade_level` ASC";
                 if ($section) {
                     $sqlStudents .= " AND section = ?";
                 }
@@ -112,7 +119,14 @@ if (isset($data['event_id'])) {
                 $resultStudents = $stmtStudents->get_result();
 
                 while ($student = $resultStudents->fetch_assoc()) {
+                    // Fetch student details using user_id
+                    $studentDetails = fetchStudentName($student['user_id'], $conn);
+                    // Add the student details to the $students array
+                    $students[] = $studentDetails;
+                
+                    // Add the student to the participants array
                     $participants[$programName][$yearGradeLevel][$section][] = $student;
+                
                 }
             }
         }
@@ -134,12 +148,53 @@ if (isset($data['event_id'])) {
         'success' => true,
         'event_participant' => [
             'participant' => $participants,
-            'attendance' => $attendance
+            'attendance' => $attendance,
+            'students' => $students 
         ]
     ]);
     // Close the database connection
     $conn->close();
 } else {
     echo json_encode(['success' => false, 'message' => 'No event_id provided']);
+}
+// Function to fetch student name from the user table (using user_id)
+function fetchStudentName($user_id, $conn) {
+    $firstname = "";
+    $middlename = "";
+    $lastname = "";
+    $suffixname = "";
+    // Query to select first name, middle name, last name, and suffix
+    $query = "SELECT  user_firstname, user_middlename, user_lastname, user_suffixname FROM user WHERE user_id = ?";
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Bind result variables for all selected columns
+        $stmt->bind_result($firstname, $middlename, $lastname, $suffixname);
+
+        if ($stmt->fetch()) {
+            // Return an object with all student details if record is found
+            return (object) [
+                'user_id' => $user_id,
+                'full_name' => $firstname . ' ' . $middlename . ' ' . $lastname . ' ' . $suffixname,
+                'firstname' => $firstname,
+                'middlename' => $middlename,
+                'lastname' => $lastname,
+                'suffixname' => $suffixname
+            ];
+        } else {
+            // Return an object with default values if no record found
+            return (object) [
+                'user_id' => $user_id,
+                'full_name' => 'Unknown Student',
+                'firstname' => 'Unknown',
+                'middlename' => '',
+                'lastname' => 'Student',
+                'suffixname' => ''
+            ];
+        }
+
+        $stmt->close();
+    }
 }
 ?>

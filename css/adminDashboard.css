@@ -30,7 +30,7 @@
 .dasboard-content-main-content > h2 {
     font-size: 24px;
     padding: 16px;
-    color: #333; /* Dark gray for better readability */
+    color: #333; 
     font-weight: bold;
 }
 .main-content-posted-event {

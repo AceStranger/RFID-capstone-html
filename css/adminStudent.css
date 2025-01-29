@@ -9,7 +9,6 @@ button {
     padding-inline: 5px;
     padding-block: 2px;
     border-radius: 3px;
-    border: 1px solid rgb(59, 59, 59);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,7 +174,6 @@ label {
 
 
 .student-account-content-main-content {
-
     height: calc(100vh - 250px);
     width: 100%;
     overflow-y: auto;
@@ -264,16 +262,18 @@ tr.student-account-content-table-row td {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 5px;
 }
 
 .user-account-action {
+    width: 100%;
     padding: 5px 10px;
     font-size: 12px;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    text-shadow: 0 0 2px black;
 }
 
 .user-account-profile {

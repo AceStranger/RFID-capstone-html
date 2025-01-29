@@ -1,4 +1,5 @@
 <?php
+include "logActivity.php";
     session_start();
 
     function updateStudent($conn, $useraccountid, $studentData) {
@@ -145,6 +146,16 @@
                 $stmt->close();
 
                 $conn->commit();
+
+
+                // Log the activity for deleting a user
+                $action_type = 'Delete User';
+                $entity = 'User';
+                $entity_id = $userId;
+                $user_id =  $_SESSION['user_ID'];
+                $description = "User with ID '$userId' and role(s) '$userAccRole' deleted by admin.";
+                logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);
+
                 $_SESSION['message'] = "User profile and associated role-specific data successfully deleted.";
                 
                 header("Location: adminUserPage.php");
@@ -173,6 +184,16 @@
                 if (str_contains($userAccRole, "student")) {
                     try {
                         updateStudent($conn, $useraccountid, $studentData);
+
+                        // Log the student role update
+                        logActivity(
+                            'Update Role',
+                            'Student',
+                            $useraccountid,
+                            $_SESSION['user_ID'],  // Admin user who is updating
+                            "Updated student role with program: {$studentData['student_program']}, year: {$studentData['student_year_grade_level']}, section: {$studentData['student_section']}",
+                            $conn
+                        );
                     } catch (Exception $e) {
                         setError("Error updating student: " . $e->getMessage());
                     }
@@ -187,6 +208,16 @@
                 if (str_contains($userAccRole, "officer")) {
                     try {
                         updateOfficer($conn, $useraccountid, $officerData);
+
+                        // Log the officer role update
+                        logActivity(
+                            'Update Role',
+                            'Officer',
+                            $useraccountid,
+                            $_SESSION['user_ID'],  // Admin user who is updating
+                            "Updated officer role with organization: {$officerData['officer_organization_name']}, position: {$officerData['officer_position']}",
+                            $conn
+                        );
                     } catch (Exception $e) {
                         setError("Error updating officer: " . $e->getMessage());
                     }
@@ -200,6 +231,16 @@
                 if (str_contains($userAccRole, "dean")) {
                     try {
                         updateDean($conn, $useraccountid, $deanData);
+                        
+                        // Log the dean role update
+                        logActivity(
+                            'Update Role',
+                            'Dean',
+                            $useraccountid,
+                            $_SESSION['user_ID'],  // Admin user who is updating
+                            "Updated dean role with department: {$deanData['dean_department']}",
+                            $conn
+                        );
                     } catch (Exception $e) {
                         setError("Error updating dean: " . $e->getMessage());
                     }
@@ -209,6 +250,53 @@
                 !empty($_POST['include-user-credentials'])) {
                 $username = isset($_POST['user-name']) ? $_POST['user-name'] : '';
                 $password = isset($_POST['password']) ? $_POST['password'] : '';
+            
+                // Hash the password before updating it in the database
+                if (!empty($password)) {
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                } else {
+                    // If the password is empty, you might want to skip updating it or handle as necessary
+                    $hashedPassword = null; // Or handle the password update condition differently if required
+                }
+            
+                // Prepare the update query for the user credentials
+                if ($hashedPassword) {
+                    $userUpdateQuery = "
+                        UPDATE `user` 
+                        SET 
+                            `user_name` = ?, 
+                            `user_password` = ? 
+                        WHERE `user_id` = ?
+                    ";
+                    $stmt = $conn->prepare($userUpdateQuery);
+                    $stmt->bind_param("ssi", $username, $hashedPassword, $useraccountid);
+                } else {
+                    // If no password is provided, only update the username
+                    $userUpdateQuery = "
+                        UPDATE `user` 
+                        SET 
+                            `user_name` = ? 
+                        WHERE `user_id` = ?
+                    ";
+                    $stmt = $conn->prepare($userUpdateQuery);
+                    $stmt->bind_param("si", $username, $useraccountid);
+                }
+            
+                try {
+                    $stmt->execute();
+            
+                    // Log the update of user credentials
+                    logActivity(
+                        'Update Credentials',
+                        'User',
+                        $useraccountid,
+                        $_SESSION['user_ID'],  // Admin user who is updating
+                        "Updated user credentials with new username: $username",
+                        $conn
+                    );
+                } catch (Exception $e) {
+                    setError("Error updating user credentials: " . $e->getMessage());
+                }
             }
             if(array_key_exists('include-user-info', $_POST) && 
                 !empty($_POST['include-user-info'])) {
@@ -221,6 +309,7 @@
                 $usersPNumber = isset($_POST['user-pnumber']) ? mysqli_real_escape_string($conn,$_POST['user-pnumber']) : '';
                 $usersSchoolID = isset($_POST['user-school-id']) ? mysqli_real_escape_string($conn,$_POST['user-school-id']) : '';
                 $userpfpfilepath = isset($_POST['userpfpfilepath']) ? mysqli_real_escape_string($conn,$_POST['userpfpfilepath']) : '';
+                $userRole = isset($_POST['user-role']) ? mysqli_real_escape_string($conn,$_POST['user-role']) : '';
     
                 // Check if file was uploaded
                 if (isset($_FILES['user-picture']) && $_FILES['user-picture']['error'] === UPLOAD_ERR_OK) {
@@ -259,17 +348,28 @@
                         `user_lastname` = ?, 
                         `user_suffixname` = ?, 
                         `user_phone_number` = ?, 
+                        `user_role` = ?, 
                         `user_school_id` = ?
                     WHERE `user_id` = ?
                 ";
                 $stmt = $conn->prepare($userUpdateQuery);
                 $stmt->bind_param(
-                    "sssssssssi", 
+                    "ssssssssssi", 
                     $usersPFPfilePath, $usersGender, $usersAddress, $usersFName, $usersMName, 
-                    $usersLName, $usersSuffix, $usersPNumber, $usersSchoolID, $useraccountid
+                    $usersLName, $usersSuffix, $usersPNumber, $userRole, $usersSchoolID, $useraccountid
                 );
                 try {
                     $stmt->execute();
+
+                    // Log the user information update
+                    logActivity(
+                        'Update Info',
+                        'User',
+                        $useraccountid,
+                        $_SESSION['user_ID'],  // Admin user who is updating
+                        "Updated user information including gender, address, name, and phone number",
+                        $conn
+                    );
                 } catch (Exception $e) {
                     setError("Error updating user: " . $e->getMessage());
                 }

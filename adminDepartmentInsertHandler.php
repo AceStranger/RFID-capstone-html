@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Database connection
-require_once 'db_connection.php';
+require_once 'dbh.php';
 
 $response = [];
 

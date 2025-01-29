@@ -114,6 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // Log the activity for adding the user
+        $action_type = 'Add User';
+        $entity = 'User';
+        $entity_id = $userId;
+        $user_id = $_SESSION['user_ID']; // Assuming you have the logged-in user ID in session
+        $description = "User '$username' with role '$role' created by the user.";
+        logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);
+
         if ($roleSuccess) {
             echo json_encode(['success' => true, 'message' => 'User and role-specific fields created successfully!']);
         } else {

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         sanction: "adminSanctionPage.php",
         report: "adminReportPage.php",
         rfid: "adminRFIDPage.php",
-        activityLog: "adminDashboardPage.php",
+        activityLog: "adminActivityLogPage.php",
         logout: "LogOut.php"
     };
 

@@ -2,7 +2,7 @@
 
 include "dbh.php";
 include "updateEventStatus.php";
-
+include "logActivity.php";
 session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['vSubmit']) || isset($_POST['cancelSubmit'])) {
@@ -16,13 +16,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: adminEventData.php");
         exit();
     } elseif (isset($_POST['dSubmit'])) {
-        $_SESSION['event-id'] = $_POST['event-id'];
-        $_SESSION['request'] = 'delete-event';
-        header("Location: adminEventData.php");
-        exit();
-    }
-    // Check if "Add New Event" button was clicked
-    if (isset($_POST['add-new-event-submit'])) {
+        echo "post recieved ";
+        // Delete event logic
+        $eventID = mysqli_real_escape_string($conn, $_POST['event-id']);
+        // Delete event query
+        $deleteQuery = "DELETE FROM event WHERE event_id = '$eventID'";
+        
+        if (mysqli_query($conn, $deleteQuery)) {
+            // Log the activity
+            $action_type = 'Delete Event';
+            $entity = 'Event';
+            $entity_id = $eventID;
+            $user_id = $_SESSION['user_ID']; // Get the logged-in user ID
+            $description = "Event with ID '$eventID' deleted by the user.";
+            logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);
+
+            // Redirect back to the admin event page
+            header("Location: adminEventPage.php?status=success&message=Event deleted successfully");
+            exit();
+        } else {
+            // Handle query failure
+            header("Location: adminEventPage.php?status=error&message=Failed to delete event");
+            exit();
+        }
+    } elseif (isset($_POST['add-new-event-submit'])) {
 
         $organizationID = mysqli_real_escape_string($conn, $_POST['eventOrganizer']);
 
@@ -84,6 +101,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         )";
 
         if (mysqli_query($conn, $insertQuery)) {
+            // Log the activity
+            $action_type = 'Create Event';
+            $entity = 'Event';
+            $entity_id = mysqli_insert_id($conn);  // Get the ID of the newly inserted event
+            $user_id = $_SESSION['user_ID'];  // Get the logged-in user ID
+            $description = "New event '$eventName' created by the user.";
+            logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);
             header("Location: adminEventPage.php");
         } else {
             header("Location: adminEventPage.php"); 
@@ -117,6 +141,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE event_id = '$eventID'";
 
         if (mysqli_query($conn, $updateQuery)) {
+            // Log the activity
+            $action_type = 'Update Event';
+            $entity = 'Event';
+            $entity_id = $eventID;
+            $user_id = $_SESSION['user_ID'];  // Get the logged-in user ID
+            $description = "Event '$eventName' updated by the user.";
+            logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);  // Log the activity
+
             header("Location: adminEventPage.php");
             exit();
         } else {

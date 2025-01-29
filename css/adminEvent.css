@@ -79,7 +79,8 @@ button:active {
     padding-inline: 16px;
 }
 
-.event-content-form {
+
+.event-content-top-part-filter {
     margin-block: 20px;
     padding-block: 10px;
     width: 100%;
@@ -87,10 +88,6 @@ button:active {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-}
-
-.event-content-top-part-filter {
-    display: flex;
     flex-wrap: wrap;
     gap: 15px;
     align-items: center;
@@ -158,10 +155,19 @@ label {
 
 
 .event-content-main-content-container {
+    height: calc(100vh - 250px);
     width: 100%;
-    height: 100%;
-    padding-top: 16px;
     overflow: auto;
+    overflow-y: auto;
+    border-radius: 10px;
+    background: #ffffff;
+}
+.event-content-table-content-container {
+    height: calc(100vh - 250px); /* Set a height limit for the table container */
+    width: 100%;
+    overflow-y: auto; /* Enable scrolling within the table content */
+    border-radius: 10px; /* Maintain rounded corners */
+    background: #ffffff;
 }
 .event-content-table-content {
     width: 100%;
@@ -221,28 +227,14 @@ tr.event-content-table-row > td {
 .event-content-data-organizer {
     width: 10%;
 }
-.event-content-data-btn-view {
-    width: 8%;
-}
-.event-content-data-btn-delete {
-    width: 8%;
+.event-content-data-btn-action {
+    width: 16%;
 }
 .event-content-table-data:nth-child(odd) {
     background-color: rgb(225, 225, 225);
 }
-.user-view {
-    width: 60px;
-    height: 20px;
-    font-size: 14px;
-}
-.user-edit {
-    width: 60px;
-    height: 20px;
-    font-size: 14px;
-}
-.user-delete {
-    width: 85px;
-    height: 20px;
+.user-view, .user-delete {
+    width: 100%;
     font-size: 14px;
 }
 button:active {

@@ -68,8 +68,6 @@ $userInfo = $result->fetch_assoc();
                                 <div class="search-bar">
                                     <input type="text" name="users-account-content-search-input" id="users-account-content-search-input" autocomplete="off" placeholder="Search...">
                                 </div>
-
-                                <button type="button" id="filterSubmit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -96,84 +94,123 @@ $userInfo = $result->fetch_assoc();
                         </div>
                     </div>
                 </div>
-
                 <script>
                     // Fetch data based on filter
                     const selectRole = document.getElementById('users-account-content-filter-select-role');
                     const selectCol = document.getElementById('users-account-content-filter-select-col');
                     const searchInput = document.getElementById('users-account-content-search-input');
-                    const filterSubmit = document.getElementById('filterSubmit');
                     const tableBody = document.getElementById('users-account-content-table-body');
 
-                    // Function to fetch data with filters
-                    async function fetchFilteredData() {
-                        const role = selectRole.value;
+                    // Variables to store fetched data
+                    let allUserData = [];
+
+                    // Fetch all data once on page load
+                    async function fetchAllData() {
+                        try {
+                            const response = await fetch('userAccountFetch.php'); // Assuming this endpoint returns all user data
+                            allUserData = await response.json();
+                            applyFilters(); // Apply filters to the loaded data initially
+                        } catch (error) {
+                            console.error('Error fetching all data:', error);
+                        }
+                    }
+                    // Mapping between dropdown values and allUserData keys
+                    const columnKeyMap = {
+                        "School ID": "user_school_id",
+                        "First Name": "user_firstname",
+                        "Middle Name": "user_middlename",
+                        "Last Name": "user_lastname",
+                        "Suffix Name": "user_suffixname",
+                        "Phone Number": "user_phone_number",
+                    };
+
+                    function applyFilters() {
+                        const role = selectRole.value.toLowerCase();
                         const col = selectCol.value;
-                        const search = searchInput.value;
-                        const params = new URLSearchParams({
-                            'role': role,
-                            'col': col,
-                            'search': search
+                        const search = searchInput.value.trim().toLowerCase();
+
+                        // Filter data
+                        const filteredData = allUserData.filter(row => {
+                            const matchesRole = role === 'all' || row.user_role.toLowerCase() === role;
+
+                            let matchesSearch = true;
+                            if (col !== 'none' && search) {
+                                // Map dropdown value to actual key
+                                const key = columnKeyMap[col];
+                                const colValue = row[key] || '';
+                                matchesSearch = colValue.toLowerCase().includes(search);
+                            } else if (search) {
+                                // Search across all fields if "None" is selected in the dropdown
+                                matchesSearch = Object.values(row).some(value =>
+                                    value && value.toString().toLowerCase().includes(search)
+                                );
+                            }
+
+                            return matchesRole && matchesSearch;
                         });
 
-                        try {
-                            const response = await fetch('userAccountFetch.php?' + params.toString());
-                            const data = await response.json();  // Assuming the server returns JSON
+                        // Render the filtered data
+                        renderTableData(filteredData);
+                    }
 
-                            // Clear previous table data
-                            tableBody.innerHTML = '';
 
-                            if (data.length > 0) {
-                                data.forEach(row => {
-                                    const tableRow = `
-                                        <tr class="users-account-content-table-row">
-                                            <td class="users-account-content-data-school-id">${row.user_school_id}</td>
-                                            <td class="users-account-content-data-fname">${row.user_firstname}</td>
-                                            <td class="users-account-content-data-mname">${row.user_middlename}</td>
-                                            <td class="users-account-content-data-lname">${row.user_lastname}</td>
-                                            <td class="users-account-content-data-suffix">${row.user_suffixname}</td>
-                                            <td class="users-account-content-data-pnumber">${row.user_phone_number}</td>
-                                            <td class="users-account-content-data-role">${row.user_role}</td>
-                                            <td class="users-account-content-data-btn-actions">
-                                                <form action="adminUserAccount.php" method="post" class="users-account-content-data-form">
-                                                    <input type="hidden" name="user-id" value="${row.user_id}">
-                                                    <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
-                                                    <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
-                                                    <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    `;
+                    // Function to render table data
+                    function renderTableData(data) {
+                        tableBody.innerHTML = '';
 
-                                    tableBody.innerHTML += tableRow;
-                                });
-                            } else {
-                                tableBody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
-                            }
-                        } catch (error) {
-                            console.error('Error fetching data:', error);
+                        if (data.length > 0) {
+                            data.forEach(row => {
+                                const tableRow = `
+                                    <tr class="users-account-content-table-row">
+                                        <td class="users-account-content-data-school-id">${row.user_school_id}</td>
+                                        <td class="users-account-content-data-fname">${row.user_firstname}</td>
+                                        <td class="users-account-content-data-mname">${row.user_middlename}</td>
+                                        <td class="users-account-content-data-lname">${row.user_lastname}</td>
+                                        <td class="users-account-content-data-suffix">${row.user_suffixname}</td>
+                                        <td class="users-account-content-data-pnumber">${row.user_phone_number}</td>
+                                        <td class="users-account-content-data-role">${row.user_role}</td>
+                                        <td class="users-account-content-data-btn-actions">
+                                            <form action="adminUserAccount.php" method="post" class="users-account-content-data-form">
+                                                <input type="hidden" name="user-id" value="${row.user_id}">
+                                                <button type="submit" name="pSubmit" class="user-account-profile">PROFILE</button>
+                                                <button type="submit" name="eSubmit" class="user-account-edit">EDIT</button>
+                                                <button type="submit" name="dSubmit" class="user-account-delete" onclick="confirmDelete(event);">DELETE</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                `;
+
+                                tableBody.innerHTML += tableRow;
+                            });
+                        } else {
+                            tableBody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
                         }
                     }
 
-                    // Event listeners for filtering
-                    filterSubmit.addEventListener('click', fetchFilteredData);
+                    // Debounce function to limit rapid calls
+                    function debounce(func, delay) {
+                        let timer;
+                        return function (...args) {
+                            clearTimeout(timer);
+                            timer = setTimeout(() => func.apply(this, args), delay);
+                        };
+                    }
 
-                    // Trigger search on input change
-                    searchInput.addEventListener('input', fetchFilteredData);
-                    selectRole.addEventListener('change', fetchFilteredData);
-                    selectCol.addEventListener('change', fetchFilteredData);
+                    // Debounced applyFilters for search input
+                    const debouncedApplyFilters = debounce(applyFilters, 300);
 
-                    // Optional: Initial load on page load
-                    window.onload = fetchFilteredData;
+                    // Event listeners for filters
+                    searchInput.addEventListener('input', debouncedApplyFilters);
+                    selectRole.addEventListener('change', applyFilters);
+                    selectCol.addEventListener('change', applyFilters);
+
+                    // Initial data load on page load
+                    window.onload = fetchAllData;
+
                 </script>
-
-                
             </div>
-            
-        </div>  
-        
+        </div>
     </div>
-
     <script>
         function redirectToCreateUserPage() {
             window.location.href = 'adminCreateUserPage.php';

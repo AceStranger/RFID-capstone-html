@@ -63,6 +63,9 @@ h1.event-data-content-head-text {
     border: 1px solid black;
     text-transform: uppercase;
 }
+.event-data-content-btn > button {
+    width: 100px;
+}
 
 
 

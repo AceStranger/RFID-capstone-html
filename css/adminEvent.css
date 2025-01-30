@@ -186,60 +186,41 @@ thead.event-content-table-head > tr.event-content-table-row {
     height: 50px;
     color: rgb(244, 244, 244);
 }
-tr.event-content-table-row {
-    background-color: #85e49c7f;
-    width: 100%;
-    height: 30px;
-}
-tr.event-content-table-row:nth-child(odd) {
-    background-color: #c7ffd457;
+/* Styling for table body rows */
+tbody.event-content-table-body tr {
+    background-color: #f9fbfd; /* Soft white-blue */
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-tr.event-content-table-row > th {
+/* Alternate row styling */
+tbody.event-content-table-body tr:nth-child(odd) {
+    background-color: #e3f2fd; /* Light pastel blue */
+}
+
+/* Hover effect for interactivity */
+tbody.event-content-table-body tr:hover {
+    background-color: #c9e4ff; /* Slightly darker blue on hover */
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table cell styling */
+tbody.event-content-table-body td {
+    padding: 10px;
     font-size: 16px;
+    border: 1px solid rgba(200, 200, 200, 0.5);
+    border-bottom: 2px solid #dce6f1; /* Soft border effect */
 }
-tr.event-content-table-row > td {
-    padding-block: 3px;
-    padding-inline: 10px;
-    font-size: 16px;
-    border: 1px solid rgba(150, 150, 150, 0.8);
-    border-block: 10px solid transparent;
+
+
+tbody.event-content-table-body tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+tbody.event-content-table-body tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
 }
 
 
 
-
-.event-content-data-name {
-    width: 25%;
-}
-.event-content-data-place {
-    width: 15%;
-}
-.event-content-data-status {
-    width: 10%;
-}
-.event-content-data-date {
-    width: 12%;
-}
-.event-content-data-time {
-    width: 12%;
-}
-.event-content-data-organizer {
-    width: 10%;
-}
-.event-content-data-btn-action {
-    width: 16%;
-}
-.event-content-table-data:nth-child(odd) {
-    background-color: rgb(225, 225, 225);
-}
-.user-view, .user-delete {
-    width: 100%;
-    font-size: 14px;
-}
-button:active {
-    transform: scale(0.9);
-}
 
 
 

@@ -220,6 +220,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                             <table id="event-content-table-content" class="event-content-table-content">
                                 <thead class="event-content-table-head">
                                     <tr class="event-content-table-row">
+                                        <th class="event-content-data-event-id">ID</th>
                                         <th class="event-content-data-name">Name</th>
                                         <th class="event-content-data-place">Place</th>
                                         <th class="event-content-data-status">Status</th>
@@ -271,6 +272,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                     row.classList.add('event-content-table-row');
 
                     row.innerHTML = `
+                        <td class="event-content-data-event-id">${event.event_id}</td>
                         <td class="event-content-data-name">${event.event_name}</td>
                         <td class="event-content-data-place">${event.event_place}</td>
                         <td class="event-content-data-status">${event.event_status}</td>
@@ -508,7 +510,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                         yearTitleDiv.innerHTML = `All - ${program.program_name} - ${year}`;
                         yearDiv.appendChild(yearTitleDiv);
 
-                        yearTitleDiv.addEventListener('click', () => addParticipant(`All - ${program.program_name} - ${year}`)); // Add as participant
+                        yearTitleDiv.addEventListener('click', () => addParticipant(`${program.program_name} - ${year}`)); // Add as participant
                         programDiv.appendChild(yearDiv);
 
                         program.program_sections.forEach(section => {

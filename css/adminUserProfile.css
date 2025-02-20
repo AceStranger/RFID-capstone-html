@@ -234,8 +234,11 @@ select:disabled {
     border: 1px solid black;
     background-color: #ffffff;
 }
-.user-info-content-info-field > input#user-picture {
-    /* display: none; */
+.picture-input-field {
+    justify-content: space-around !important;
+}
+input#user-picture:disabled {
+    display: none !important;
 }
 .user-info-content-info-field > input#user-role {
     text-transform: capitalize;

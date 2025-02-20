@@ -101,16 +101,28 @@ function getParticipantsByProgramName($programName, $conn) {
 }
 
 function getParticipantsByYearAndSection($programName, $yearLevel, $section, $conn) {
-    $query = "
-        SELECT s.* FROM student s
-        JOIN program p ON s.program_id = p.program_id
-        WHERE p.program_name = ? AND s.`year/grade_level` = ? AND s.section = ?
-    ";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('sss', $programName, $yearLevel, $section);
+    if ($section === null || $section === '') {
+        $query = "
+            SELECT s.* FROM student s
+            JOIN program p ON s.program_id = p.program_id
+            WHERE p.program_name = ? AND s.`year/grade_level` = ?
+        ";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ss', $programName, $yearLevel);
+    } else {
+        $query = "
+            SELECT s.* FROM student s
+            JOIN program p ON s.program_id = p.program_id
+            WHERE p.program_name = ? AND s.`year/grade_level` = ? AND s.section = ?
+        ";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('sss', $programName, $yearLevel, $section);
+    }
+
     $stmt->execute();
     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
+
 
 function getParticipantsByProgramId($programId, $conn) {
     $query = "SELECT * FROM student WHERE program_id = ?";

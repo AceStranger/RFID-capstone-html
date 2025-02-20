@@ -33,35 +33,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
-    // // Update action
-    // if (isset($_POST['uSubmit'])) {
-    //     $officerId = $_POST['officer-id'];
-    //     $organizationId = $_POST['organization-id'];
-    //     $officerDuty = $_POST['officer-duty'] ?? null;
-    //     $officerResponsibility = $_POST['officer-responsibility'] ?? null;
-    //     $assignDuty = $_POST['officer-assign-duty'] ?? null;
+    // Update action
+    if (isset($_POST['uSubmit'])) {
+        $officerId = $_POST['officer-id'];
+        $organizationId = $_POST['organization-id'];
+        $officerDuty = $_POST['officer-duty'] ?? null;
+        $officerResponsibility = $_POST['officer-responsibility'] ?? null;
+        $assignDuty = $_POST['officer-assign-duty'] ?? null;
 
-    //     if ($officerDuty && $officerResponsibility && $assignDuty) {
-    //         $query = "UPDATE officer 
-    //                   SET officer_duty = ?, officer_responsibility = ?, officer_assign_duty = ?
-    //                   WHERE officer_id = ? AND organization_id = ?";
-    //         $stmt = $conn->prepare($query);
-    //         $stmt->bind_param("sssss", $officerDuty, $officerResponsibility, $assignDuty, $officerId, $organizationId);
+        if ($officerDuty && $officerResponsibility && $assignDuty) {
+            $query = "UPDATE officer 
+                      SET officer_duty = ?, officer_responsibility = ?, officer_assign_duty = ?
+                      WHERE officer_id = ? AND organization_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sssss", $officerDuty, $officerResponsibility, $assignDuty, $officerId, $organizationId);
 
-    //         if ($stmt->execute()) {
-    //             $_SESSION['success_message'] = "Officer details updated successfully.";
-    //         } else {
-    //             $_SESSION['error_message'] = "Failed to update officer details. Please try again.";
-    //         }
+            if ($stmt->execute()) {
+                $_SESSION['success_message'] = "Officer details updated successfully.";
+            } else {
+                $_SESSION['error_message'] = "Failed to update officer details. Please try again.";
+            }
 
-    //         $stmt->close();
-    //     } else {
-    //         $_SESSION['error_message'] = "All fields are required to update officer details.";
-    //     }
+            $stmt->close();
+        } else {
+            $_SESSION['error_message'] = "All fields are required to update officer details.";
+        }
 
-    //     header("Location: adminOfficerAssignPage.php");
-    //     exit();
-    // }
+        header("Location: adminOfficerAssignPage.php");
+        exit();
+    }
 }
 
 

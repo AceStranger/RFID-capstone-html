@@ -142,8 +142,8 @@ if (mysqli_num_rows($departmentResult) > 0) {
                 <div class="program-content-program-content">
                     <div class="program-content-top-part-filter">
                         <div class="program-content-search-input-container">
-                            <label for="program-content-filter-select-col">Filter By</label>
                             <select name="program-content-filter-select-col" id="program-content-filter-select-col" class="filter-select">
+                                <option value="" disabled >Filter By</option>
                                 <option value="program_name" selected>Program Name</option>
                                 <option value="department_name">Department Name</option>
                             </select>
@@ -160,6 +160,7 @@ if (mysqli_num_rows($departmentResult) > 0) {
                             <table class="program-content-table-content">
                                 <thead class="program-content-table-head">
                                     <tr class="program-content-table-row">
+                                        <th>ID</th>
                                         <th>Department</th>
                                         <th>Program / Course</th>
                                         <th>Program Level</th>
@@ -238,6 +239,7 @@ if (mysqli_num_rows($departmentResult) > 0) {
                                                 tr.setAttribute('data-program-id', row.program_id);
 
                                                 tr.innerHTML = `
+                                                    <td class="program-content-data-program-id">${row.program_id || ''}</td>
                                                     <td class="program-content-data-department-name">${row.department_name || ''}</td>
                                                     <td class="program-content-data-program-name">${row.program_name}</td>
                                                     <td class="program-content-data-program-level">${row.program_level}</td>

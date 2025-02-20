@@ -417,7 +417,10 @@ td.organization-content-data-btn-actions {
     align-items: center;
     gap: 5px;
 }
-.organization-content-data-form > button {
+
+
+
+.organization-view, .organization-edit, .organization-delete {
     width: 100%;
     padding: 5px 10px;
     font-size: 12px;
@@ -425,33 +428,29 @@ td.organization-content-data-btn-actions {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    -o-border-radius: 3px;
     text-shadow: 0 0 2px black;
+    word-break: auto-phrase;
 }
 
-
 .organization-view {
-    background-color: #3a77ff;
+    background-color: #007819;
 }
 
 .organization-view:hover {
-    background-color: #2a5fcd;
+    background-color: #005e14;
 }
 .organization-edit {
-    background-color: #ffba3a;
+    background-color: #2a5fcd;
 }
 
 .organization-edit:hover {
-    background-color: #cc942c;
+    background-color: #0056b3;
 }
 
 .organization-delete {
-    background-color: #ff6f61;
+    background-color: #dd2f2f;
 }
 
 .organization-delete:hover {
-    background-color: #ff3d2e;
+    background-color: #bd2727;
 }

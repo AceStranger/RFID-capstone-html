@@ -15,14 +15,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['request'] = 'edit-event';
         header("Location: adminEventData.php");
         exit();
-    } elseif (isset($_POST['dSubmit'])) {
+    } elseif (isset($_POST['dSubmit']) && isset($_POST['event-id'])) {
         echo "post recieved ";
         // Delete event logic
         $eventID = mysqli_real_escape_string($conn, $_POST['event-id']);
         // Delete event query
-        $deleteQuery = "DELETE FROM event WHERE event_id = '$eventID'";
-        
-        if (mysqli_query($conn, $deleteQuery)) {
+        $deleteQuery = "DELETE FROM event WHERE event_id = ?";
+        $stmt = $conn->prepare($deleteQuery);
+        $stmt->bind_param("i", $eventID);
+        if ($stmt->execute()) {
             // Log the activity
             $action_type = 'Delete Event';
             $entity = 'Event';
@@ -116,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (isset($_POST['add-new-event-submit-cancel'])) {
         header("Location: adminEventPage.php"); 
         exit();
-    } elseif (isset($_POST['uSubmit'])) {
+    }elseif (isset($_POST['uSubmit'])) {
         // Collect the form data for updating
         $eventID = mysqli_real_escape_string($conn, $_POST['event-id']);
         $eventName = mysqli_real_escape_string($conn, $_POST['eventName']);
@@ -127,19 +128,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $eventStatus = mysqli_real_escape_string($conn, $_POST['eventStatus']);
         $eventTimeStart = mysqli_real_escape_string($conn, $_POST['eventTimeStart']);
         $eventTimeEnd = mysqli_real_escape_string($conn, $_POST['eventTimeEnd']);
-
-        // Update query
-        $updateQuery = "UPDATE event SET
-            event_name = '$eventName',
-            event_participant = '$eventParticipant',
-            event_place = '$eventPlace',
-            event_date = '$eventDate',
-            event_status = '$eventStatus',
-            event_time_start = '$eventTimeStart',
-            event_time_end = '$eventTimeEnd',
-            penalty = '$penalty'
-            WHERE event_id = '$eventID'";
-
+    
+        // Initialize update fields
+        $updateFields = [
+            "event_name = '$eventName'",
+            "event_participant = '$eventParticipant'",
+            "event_place = '$eventPlace'",
+            "event_date = '$eventDate'",
+            "event_status = '$eventStatus'",
+            "event_time_start = '$eventTimeStart'",
+            "event_time_end = '$eventTimeEnd'",
+            "penalty = '$penalty'"
+        ];
+    
+        // Append attendance times only if they exist in the form submission
+        if (isset($_POST['attendance_duration_am_time_in_start'])) {
+            $amTimeInStart = mysqli_real_escape_string($conn, $_POST['attendance_duration_am_time_in_start']);
+            $updateFields[] = "attendance_duration_am_time_in_start = '$amTimeInStart'";
+        }
+        if (isset($_POST['attendance_duration_am_time_in_end'])) {
+            $amTimeInEnd = mysqli_real_escape_string($conn, $_POST['attendance_duration_am_time_in_end']);
+            $updateFields[] = "attendance_duration_am_time_in_end = '$amTimeInEnd'";
+        }
+        if (isset($_POST['attendance_duration_am_time_out_start'])) {
+            $amTimeOutStart = mysqli_real_escape_string($conn, $_POST['attendance_duration_am_time_out_start']);
+            $updateFields[] = "attendance_duration_am_time_out_start = '$amTimeOutStart'";
+        }
+        if (isset($_POST['attendance_duration_am_time_out_end'])) {
+            $amTimeOutEnd = mysqli_real_escape_string($conn, $_POST['attendance_duration_am_time_out_end']);
+            $updateFields[] = "attendance_duration_am_time_out_end = '$amTimeOutEnd'";
+        }
+        if (isset($_POST['attendance_duration_pm_time_in_start'])) {
+            $pmTimeInStart = mysqli_real_escape_string($conn, $_POST['attendance_duration_pm_time_in_start']);
+            $updateFields[] = "attendance_duration_pm_time_in_start = '$pmTimeInStart'";
+        }
+        if (isset($_POST['attendance_duration_pm_time_in_end'])) {
+            $pmTimeInEnd = mysqli_real_escape_string($conn, $_POST['attendance_duration_pm_time_in_end']);
+            $updateFields[] = "attendance_duration_pm_time_in_end = '$pmTimeInEnd'";
+        }
+        if (isset($_POST['attendance_duration_pm_time_out_start'])) {
+            $pmTimeOutStart = mysqli_real_escape_string($conn, $_POST['attendance_duration_pm_time_out_start']);
+            $updateFields[] = "attendance_duration_pm_time_out_start = '$pmTimeOutStart'";
+        }
+        if (isset($_POST['attendance_duration_pm_time_out_end'])) {
+            $pmTimeOutEnd = mysqli_real_escape_string($conn, $_POST['attendance_duration_pm_time_out_end']);
+            $updateFields[] = "attendance_duration_pm_time_out_end = '$pmTimeOutEnd'";
+        }
+    
+        // Construct update query dynamically
+        $updateQuery = "UPDATE event SET " . implode(", ", $updateFields) . " WHERE event_id = '$eventID'";
+    
         if (mysqli_query($conn, $updateQuery)) {
             // Log the activity
             $action_type = 'Update Event';
@@ -148,13 +186,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_id = $_SESSION['user_ID'];  // Get the logged-in user ID
             $description = "Event '$eventName' updated by the user.";
             logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn);  // Log the activity
-
+    
             header("Location: adminEventPage.php");
             exit();
         } else {
-            echo "Error updating event: " . mysqli_error($conn);
+            error_log ("Error updating event: " . mysqli_error($conn));
+
         }
     }
+    
 }
 
 ?>

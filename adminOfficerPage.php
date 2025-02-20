@@ -144,6 +144,9 @@ $userInfo = $result->fetch_assoc();
                                     );
                                 }
                                 if (column === 'position') {
+                                    console.log(search);
+                                    console.log(row.officer_position.toLowerCase());
+                                    
                                     return row.officer_position.toLowerCase().includes(search);
                                 }
                                 return true;

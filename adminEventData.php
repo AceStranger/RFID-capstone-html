@@ -1,114 +1,112 @@
-<?php
-session_start();
-include "dbh.php";
-date_default_timezone_set('Asia/Manila');
-include "updateEventStatus.php";
-updateEventStatus($conn);
-if(@!isset($_SESSION['user_ID']) || $_SESSION['user_ID'] === null) {
-    header("Location: LogInPage.html");
-    exit();
-}
-$user_ID = @$_SESSION['user_ID'];
-$query = "SELECT * FROM user WHERE user_id = $user_ID";
-$result = mysqli_query($conn, $query);
-$userInfo = $result->fetch_assoc();
-
-$officerInfo="";
-$officerDuty="";
-$officerResponsibility="";
-$officerAssignDuty = "";
-
-if(str_contains($userInfo['user_role'], "officer")) {
-    $query = "SELECT * FROM officer WHERE user_id = $user_ID LIMIT 1";
+    <?php
+    session_start();
+    include "dbh.php";
+    date_default_timezone_set('Asia/Manila');
+    include "updateEventStatus.php";
+    updateEventStatus($conn);
+    if(@!isset($_SESSION['user_ID']) || $_SESSION['user_ID'] === null) {
+        header("Location: LogInPage.html");
+        exit();
+    }
+    $user_ID = @$_SESSION['user_ID'];
+    $query = "SELECT * FROM user WHERE user_id = $user_ID";
     $result = mysqli_query($conn, $query);
-    $officerInfo = $result->fetch_assoc();
-    $officerDuty = strtoupper($officerInfo['officer_duty']);
-    $officerResponsibility = $officerInfo['officer_responsibility'];
-    $officerAssignDuty = $officerInfo['officer_assign_duty'];
-}
+    $userInfo = $result->fetch_assoc();
+
+    $officerInfo="";
+    $officerDuty="";
+    $officerResponsibility="";
+    $officerAssignDuty = "";
+
+    if(str_contains($userInfo['user_role'], "officer")) {
+        $query = "SELECT * FROM officer WHERE user_id = $user_ID LIMIT 1";
+        $result = mysqli_query($conn, $query);
+        $officerInfo = $result->fetch_assoc();
+        $officerDuty = strtoupper($officerInfo['officer_duty']);
+        $officerResponsibility = $officerInfo['officer_responsibility'];
+        $officerAssignDuty = $officerInfo['officer_assign_duty'];
+    }
 
 
 
-if (isset($_SESSION['event-id']) && isset($_SESSION['request'])) {
-    $eventID = $_SESSION['event-id'];
-    $request = $_SESSION['request'];
-} else {
-    die("Event ID or request type is missing.");
-}
+    if (isset($_SESSION['event-id']) && isset($_SESSION['request'])) {
+        $eventID = $_SESSION['event-id'];
+        $request = $_SESSION['request'];
+    } else {
+        die("Event ID or request type is missing.");
+    }
 
-$query = "SELECT * FROM event WHERE event_id = $eventID";
-$result = mysqli_query($conn, $query);
-$eventInfo = $result->fetch_assoc();
+    $query = "SELECT * FROM event WHERE event_id = $eventID";
+    $result = mysqli_query($conn, $query);
+    $eventInfo = $result->fetch_assoc();
 
-$eventName = htmlspecialchars($eventInfo["event_name"]);
-$eventDate = htmlspecialchars($eventInfo["event_date"]);
-$eventTimeStart = htmlspecialchars(string: $eventInfo["event_time_start"]);
-$eventTimeEnd = htmlspecialchars($eventInfo["event_time_end"]);
-$eventPlace = htmlspecialchars($eventInfo["event_place"]);
-$eventStatus = htmlspecialchars($eventInfo["event_status"]);
-$eventOrganizer = htmlspecialchars($eventInfo["event_organizer"]);
-$eventParticipant = htmlspecialchars($eventInfo["event_participant"]);
-$eventPenalty = htmlspecialchars($eventInfo["penalty"]);
-$eventTimeDuration = htmlspecialchars($eventInfo["event_time_duration"]);
+    $eventName = htmlspecialchars($eventInfo["event_name"]);
+    $eventDate = htmlspecialchars($eventInfo["event_date"]);
+    $eventTimeStart = htmlspecialchars(string: $eventInfo["event_time_start"]);
+    $eventTimeEnd = htmlspecialchars($eventInfo["event_time_end"]);
+    $eventPlace = htmlspecialchars($eventInfo["event_place"]);
+    $eventStatus = htmlspecialchars($eventInfo["event_status"]);
+    $eventOrganizer = htmlspecialchars($eventInfo["event_organizer"]);
+    $eventParticipant = htmlspecialchars($eventInfo["event_participant"]);
+    $eventPenalty = htmlspecialchars($eventInfo["penalty"]);
+    $eventTimeDuration = htmlspecialchars($eventInfo["event_time_duration"]);
 
-// Determine the current time
-$currentTime = date('H:i:s');
+    // Determine the current time
+    $currentTime = date('H:i:s');
 
-// Default value for selected time
-$selectedTime = 'None';
+    // Default value for selected time
+    $selectedTime = 'None';
+    // Retrieve and sanitize event time ranges
+    $amTimeInStart = htmlspecialchars($eventInfo["attendance_duration_am_time_in_start"]);
+    $amTimeInEnd = htmlspecialchars($eventInfo["attendance_duration_am_time_in_end"]);
+    $amTimeOutStart = htmlspecialchars($eventInfo["attendance_duration_am_time_out_start"]);
+    $amTimeOutEnd = htmlspecialchars($eventInfo["attendance_duration_am_time_out_end"]);
+    $pmTimeInStart = htmlspecialchars($eventInfo["attendance_duration_pm_time_in_start"]);
+    $pmTimeInEnd = htmlspecialchars($eventInfo["attendance_duration_pm_time_in_end"]);
+    $pmTimeOutStart = htmlspecialchars($eventInfo["attendance_duration_pm_time_out_start"]);
+    $pmTimeOutEnd = htmlspecialchars($eventInfo["attendance_duration_pm_time_out_end"]);
 
-// Retrieve and sanitize event time ranges
-$amTimeInStart = htmlspecialchars($eventInfo["attendance_duration_am_time_in_start"]);
-$amTimeInEnd = htmlspecialchars($eventInfo["attendance_duration_am_time_in_end"]);
-$amTimeOutStart = htmlspecialchars($eventInfo["attendance_duration_am_time_out_start"]);
-$amTimeOutEnd = htmlspecialchars($eventInfo["attendance_duration_am_time_out_end"]);
-$pmTimeInStart = htmlspecialchars($eventInfo["attendance_duration_pm_time_in_start"]);
-$pmTimeInEnd = htmlspecialchars($eventInfo["attendance_duration_pm_time_in_end"]);
-$pmTimeOutStart = htmlspecialchars($eventInfo["attendance_duration_pm_time_out_start"]);
-$pmTimeOutEnd = htmlspecialchars($eventInfo["attendance_duration_pm_time_out_end"]);
+    // Ensure all times are in the same format (HH:MM:SS)
+    $currentTime = date('H:i:s', strtotime($currentTime));
 
-// Ensure all times are in the same format (HH:MM:SS)
-$currentTime = date('H:i:s', strtotime($currentTime));
-
-// Check time ranges for AM
-if ($currentTime >= $amTimeInStart && $currentTime <= $amTimeInEnd) {
-    $selectedTime = 'amTimeIn';
-} elseif ($currentTime >= $amTimeOutStart && $currentTime <= $amTimeOutEnd) {
-    $selectedTime = 'amTimeOut';
-}
-// Check time ranges for PM
-elseif ($currentTime >= $pmTimeInStart && $currentTime <= $pmTimeInEnd) {
-    $selectedTime = 'pmTimeIn';
-} elseif ($currentTime >= $pmTimeOutStart && $currentTime <= $pmTimeOutEnd) {
-    $selectedTime = 'pmTimeOut';
-}
-
-
-$startBtn = '';
+    // Check time ranges for AM
+    if ($currentTime >= $amTimeInStart && $currentTime <= $amTimeInEnd) {
+        $selectedTime = 'amTimeIn';
+    } elseif ($currentTime >= $amTimeOutStart && $currentTime <= $amTimeOutEnd) {
+        $selectedTime = 'amTimeOut';
+    }
+    // Check time ranges for PM
+    elseif ($currentTime >= $pmTimeInStart && $currentTime <= $pmTimeInEnd) {
+        $selectedTime = 'pmTimeIn';
+    } elseif ($currentTime >= $pmTimeOutStart && $currentTime <= $pmTimeOutEnd) {
+        $selectedTime = 'pmTimeOut';
+    }
 
 
-$query = "SELECT organization_name FROM organization WHERE organization_id = $eventOrganizer";
-$result = mysqli_query($conn, $query);
-$organizationInfo = $result->fetch_assoc();
-$organizationName = $organizationInfo["organization_name"];
+    $startBtn = '';
 
 
-$currentDate = date('Y-m-d');
-$currentTime = date('H:i:s');
+    $query = "SELECT organization_name FROM organization WHERE organization_id = $eventOrganizer";
+    $result = mysqli_query($conn, $query);
+    $organizationInfo = $result->fetch_assoc();
+    $organizationName = $organizationInfo["organization_name"];
 
-if (
-    $officerAssignDuty === "Manage Event Attendance" &&
-    $currentDate === $eventDate && (
-        ($currentTime >= $amTimeInStart && $currentTime <= $amTimeInEnd) ||
-        ($currentTime >= $amTimeOutStart && $currentTime <= $amTimeOutEnd) ||
-        ($currentTime >= $pmTimeInStart && $currentTime <= $pmTimeInEnd) ||
-        ($currentTime >= $pmTimeOutStart && $currentTime <= $pmTimeOutEnd)
-    )
-) {
-    $startBtn = '
-        <button type="button" id="event-start" name="event-start" class="event-start">START</button>
-    ';
-}
+
+    $currentDate = date('Y-m-d');
+    $currentTime = date('H:i:s');
+    if (
+        $officerAssignDuty === "Manage Event Attendance" &&
+        $currentDate === $eventDate && (
+            ($currentTime >= $amTimeInStart && $currentTime <= $amTimeInEnd) ||
+            ($currentTime >= $amTimeOutStart && $currentTime <= $amTimeOutEnd) ||
+            ($currentTime >= $pmTimeInStart && $currentTime <= $pmTimeInEnd) ||
+            ($currentTime >= $pmTimeOutStart && $currentTime <= $pmTimeOutEnd)
+        )
+    ) {
+        $startBtn = '
+            <button type="button" id="event-start" name="event-start" class="event-start">START</button>
+        ';
+    }
 
 
 ?>
@@ -191,13 +189,42 @@ if (
                                         </div>';
                                 }
                             }
+                            $show_am = false;
+                            $show_pm = false;
+                            $show_am_out = false;
+                            $show_pm_out = false;
+                            $eventTimeDuration = html_entity_decode($eventTimeDuration, ENT_QUOTES, 'UTF-8');
+                            // Determine which attendance duration fields should be displayed
+                            if (!empty($eventTimeDuration)) {
+                                if (in_array($eventTimeDuration, ['Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out', 'Whole Day - AM Time In & PM Time Out'])) {
+                                    $show_am = true;
+                                    $show_am_out = $eventTimeDuration === 'Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out';
+                                    $show_pm = $eventTimeDuration === 'Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out';
+                                    $show_pm_out = true;
+                                } elseif (str_contains($eventTimeDuration, 'Half Day - AM Time In & AM Time')) {
+                                    $show_am = true;
+                                    $show_am_out = true;
+                                } elseif ($eventTimeDuration === 'Half Day - PM Time In & PM Time Out') {
+                                    $show_pm = true;
+                                    $show_pm_out = true;
+                                }
+                            }
                         ?>
+
                         <form action='adminEventDataHandler.php' method='POST' class='event-data-content-info-form-content'>
                             <div class='event-data-content-info-col'>
                                 <input type='hidden' name='event-id' value='<?php echo $eventID; ?>'>
                                 <div class='event-data-content-info-row'>
                                     <label for='eventName'>Event Name:</label>
                                     <input type='text' name='eventName' id='eventName' value='<?php echo $eventName; ?>' <?php echo $inputAvailability; ?>>
+                                </div>
+                                <div class='event-data-content-info-row'>
+                                    <label for='eventPlace'>Event Location:</label>
+                                    <input type='text' name='eventPlace' id='eventPlace' value='<?php echo $eventPlace; ?>' <?php echo $inputAvailability; ?>>
+                                </div>
+                                <div class='event-data-content-info-row'>
+                                    <label for='eventDate'>Date:</label>
+                                    <input type='date' name='eventDate' id='eventDate' value='<?php echo $eventDate; ?>' <?php echo $inputAvailability; ?>>
                                 </div>
                                 <div class='event-data-content-info-row'>
                                     <label for='eventOrganizer'>Event Organizer:</label>
@@ -213,15 +240,8 @@ if (
                                 </div>
                                 <?php echo $btn; ?>
                             </div>
+
                             <div class='event-data-content-info-col'>
-                                <div class='event-data-content-info-row'>
-                                    <label for='eventPlace'>Event Location:</label>
-                                    <input type='text' name='eventPlace' id='eventPlace' value='<?php echo $eventPlace; ?>' <?php echo $inputAvailability; ?>>
-                                </div>
-                                <div class='event-data-content-info-row'>
-                                    <label for='eventDate'>Date:</label>
-                                    <input type='date' name='eventDate' id='eventDate' value='<?php echo $eventDate; ?>' <?php echo $inputAvailability; ?>>
-                                </div>
                                 <div class='event-data-content-info-row'>
                                     <label for='eventStatus'>Status:</label>
                                     <select name='eventStatus' id='eventStatus' disabled>
@@ -230,7 +250,6 @@ if (
                                         <option value="2" <?php echo ($eventStatus == 2) ? 'selected' : ''; ?>>End</option>
                                     </select>
                                 </div>
-
                                 <div class='event-data-content-info-row'>
                                     <label for='eventTimeStart'>Time In:</label>
                                     <input type='time' name='eventTimeStart' id='eventTimeStart' value='<?php echo $eventTimeStart; ?>' <?php echo $inputAvailability; ?>>
@@ -239,8 +258,53 @@ if (
                                     <label for='eventTimeEnd'>Time Out:</label>
                                     <input type='time' name='eventTimeEnd' id='eventTimeEnd' value='<?php echo $eventTimeEnd; ?>' <?php echo $inputAvailability; ?>>
                                 </div>
+                                <?php if ($show_am): ?>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_am_time_in_start'>AM Time In Start:</label>
+                                        <input type='time' name='attendance_duration_am_time_in_start' id='attendance_duration_am_time_in_start' value='<?php echo $amTimeInStart; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_am_time_in_end'>AM Time In End:</label>
+                                        <input type='time' name='attendance_duration_am_time_in_end' id='attendance_duration_am_time_in_end' value='<?php echo $amTimeInEnd; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($show_am_out): ?>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_am_time_out_start'>AM Time Out Start:</label>
+                                        <input type='time' name='attendance_duration_am_time_out_start' id='attendance_duration_am_time_out_start' value='<?php echo $amTimeOutStart; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_am_time_out_end'>AM Time Out End:</label>
+                                        <input type='time' name='attendance_duration_am_time_out_end' id='attendance_duration_am_time_out_end' value='<?php echo $amTimeOutEnd; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($show_pm): ?>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_pm_time_in_start'>PM Time In Start:</label>
+                                        <input type='time' name='attendance_duration_pm_time_in_start' id='attendance_duration_pm_time_in_start' value='<?php echo $pmTimeInStart; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_pm_time_in_end'>PM Time In End:</label>
+                                        <input type='time' name='attendance_duration_pm_time_in_end' id='attendance_duration_pm_time_in_end' value='<?php echo $pmTimeInEnd; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($show_pm_out): ?>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_pm_time_out_start'>PM Time Out Start:</label>
+                                        <input type='time' name='attendance_duration_pm_time_out_start' id='attendance_duration_pm_time_out_start' value='<?php echo $pmTimeOutStart; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                    <div class='event-data-content-info-row'>
+                                        <label for='attendance_duration_pm_time_out_end'>PM Time Out End:</label>
+                                        <input type='time' name='attendance_duration_pm_time_out_end' id='attendance_duration_pm_time_out_end' value='<?php echo $pmTimeOutEnd; ?>' <?php echo $inputAvailability; ?>>
+                                    </div>
+                                <?php endif; ?>
+
                             </div>
                         </form>
+
 
                     </div>
 
@@ -255,23 +319,23 @@ if (
                                     <div class='scanned-content-info-row'>
                                         <div class='scanned-content-info-row'>
                                             <label for='user-school-id'>School ID:</label>
-                                            <input type='text' name='user-school-id' id='user-school-id' value='' placeholder='Enter User Info'>
+                                            <input readonly type='text' name='user-school-id' id='user-school-id' value='' placeholder='Enter User Info'>
                                         </div>
                                         <div class='scanned-content-info-row'>
                                             <label for='user-name'>Name:</label>
                                             <input type='hidden' name='user-id' id='user-id' value=''>
-                                            <input type='text' name='user-name' id='user-name' value='' placeholder='Enter User Info'>
+                                            <input readonly type='text' name='user-name' id='user-name' value='' placeholder='Enter User Info'>
                                         </div> 
                                     </div>
                                     <div class='scanned-content-info-row'>
                                         <div class='scanned-content-info-row'>
-                                            <label for='user-profile-image'>Profile Picture:</label>
+                                            <label>Profile Picture:</label>
                                             <img id='user-profile-image' src='' alt='User Profile'>
                                         </div>
                                         <!-- Time Select Dropdown -->
                                         <div class='scanned-content-info-row'>
                                             <label for='timeSelect'>Select Time:</label>
-                                            <select name='timeSelect' id='timeSelect' required>
+                                            <select name='timeSelect' id='timeSelect' disabled>
                                                 <option value='None' <?php echo ($selectedTime == 'None' ? 'selected' : ''); ?>>None</option>
                                                 <option value='amTimeIn' <?php echo ($selectedTime == 'amTimeIn' ? 'selected' : ''); ?>>AM Time In Start</option>
                                                 <option value='amTimeOut' <?php echo ($selectedTime == 'amTimeOut' ? 'selected' : ''); ?>>AM Time In End</option>
@@ -281,12 +345,12 @@ if (
                                         </div>
                                     </div>
                                     <div class='scanned-content-info-row'>
-                                        <label for='response'>Response:</label>
+                                        <label for='response-input'>Response:</label>
                                         <textarea id='response-input' placeholder='Response will be displayed here' readonly></textarea>
                                     </div>
                                     <!-- Submit Button -->
                                     <div class='scanned-content-btn'>
-                                        <button type='button' name='scanRFID' id='scan-rfid' class='scan-rfid'>Scan RFID</button>
+                                        <!-- <button type='button' name='scanRFID' id='scan-rfid' class='scan-rfid'>Scan RFID</button> -->
                                         <button type='button' name='stop-attendance' id='stop-attendance' class='stop-attendance'>Stop Attendance</button>
                                     </div>
                                 </div>
@@ -321,14 +385,13 @@ if (
     // Ensure the 'scanned-content-container' element exists before using it
     const scannedContainer = document.querySelector('.scanned-content-container');
     const eventStartBtn = document.getElementById("event-start");
-    const eventStartScan = document.getElementById("scan-rfid");
+    // const eventStartScan = document.getElementById("scan-rfid");
     const eventStartBtnClose = document.getElementById("stop-attendance");
 
-    if(eventStartScan) {
-        eventStartScan.addEventListener("click", function () {
-            scanRFID();
-        });
-    }
+    // if(eventStartScan) {
+    //     eventStartScan.addEventListener("click", function () {
+    //     });
+    // }
     if(eventStartBtnClose) {
         eventStartBtnClose.addEventListener("click", function () {
             // Toggle the display of the scannedContainer
@@ -347,6 +410,7 @@ if (
                 scannedContainer.style.display = "none";
             } else {
                 scannedContainer.style.display = "flex";
+                scanRFID();
             }
         });
 
@@ -356,68 +420,68 @@ if (
     // }
 
     async function scanRFID() {
-    let port;
-    try {
-        // Request a port and open a connection
-        port = await navigator.serial.requestPort();
-        await port.open({ baudRate: 9600 });
+        let port;
+        try {
+            // Request a port and open a connection
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
 
-        const textDecoder = new TextDecoderStream();
-        const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
-        const reader = textDecoder.readable.getReader();
+            const textDecoder = new TextDecoderStream();
+            const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+            const reader = textDecoder.readable.getReader();
 
-        console.log("Connected to the serial port.");
+            console.log("Connected to the serial port.");
 
-        let buffer = "";
-        let lastUIDLine = ""; // To store the most recent "Card UID: ..." line
+            let buffer = "";
+            let lastUIDLine = ""; // To store the most recent "Card UID: ..." line
 
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) {
-                console.log("Stream closed.");
-                reader.releaseLock();
-                break;
-            }
-            if (value) {
-                buffer += value; // Append the new data to the buffer
-                const lines = buffer.split("\n"); // Split buffer by lines
-
-                for (let line of lines) {
-                    line = line.trim(); // Trim whitespace
-
-                    console.log("line:", line); // Debugging
-                    if (line.startsWith("Card UID:")) {
-                        lastUIDLine = line; // Save the UID line
-                    } else if (line === "Card reading end." && lastUIDLine) {
-                        // Extract the UID from the last "Card UID: ..." line
-                        const uid = lastUIDLine.replace("Card UID:", "").trim();
-                        console.log("UID Detected:", uid);
-
-                        // Update the RFID tag input field
-                        document.getElementById("rfid-tag").value = uid;
-
-                        // Call fetchUserData with the detected UID
-                        fetchUserData(uid);
-
-                        // Clear lastUIDLine to avoid re-processing
-                        lastUIDLine = "";
-                    }
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    console.log("Stream closed.");
+                    reader.releaseLock();
+                    break;
                 }
+                if (value) {
+                    buffer += value; // Append the new data to the buffer
+                    const lines = buffer.split("\n"); // Split buffer by lines
 
-                // Keep any incomplete line in the buffer for the next iteration
-                buffer = lines[lines.length - 1];
+                    for (let line of lines) {
+                        line = line.trim(); // Trim whitespace
+
+                        console.log("line:", line); // Debugging
+                        if (line.startsWith("Card UID:")) {
+                            lastUIDLine = line; // Save the UID line
+                        } else if (line === "Card reading end." && lastUIDLine) {
+                            // Extract the UID from the last "Card UID: ..." line
+                            const uid = lastUIDLine.replace("Card UID:", "").trim();
+                            console.log("UID Detected:", uid);
+
+                            // Update the RFID tag input field
+                            document.getElementById("rfid-tag").value = uid;
+
+                            // Call fetchUserData with the detected UID
+                            fetchUserData(uid);
+
+                            // Clear lastUIDLine to avoid re-processing
+                            lastUIDLine = "";
+                        }
+                    }
+
+                    // Keep any incomplete line in the buffer for the next iteration
+                    buffer = lines[lines.length - 1];
+                }
             }
-        }
-    } catch (error) {
-        console.error("Error during RFID scan:", error);
-    } finally {
-        // Ensure the port is closed
-        if (port && port.readable) {
-            await port.close();
-            console.log("Port closed safely.");
+        } catch (error) {
+            console.error("Error during RFID scan:", error);
+        } finally {
+            // Ensure the port is closed
+            if (port && port.readable) {
+                await port.close();
+                console.log("Port closed safely.");
+            }
         }
     }
-}
 
 
 
@@ -431,8 +495,7 @@ if (
                 console.log("Waiting for NFC tag...");
 
                 reader.onreading = (event) => {
-                    const uid = event.serialNumber; // Get the NFC tag's UID
-                    console.log("UID Detected:", uid);
+                    const uid = event.serialNumber;
 
                     // Update the RFID tag input field with the detected UID
                     document.getElementById("rfid-tag").value = uid;
@@ -517,7 +580,6 @@ if (
         })
         .then(response => response.text())
         .then(text => {
-            console.log("Response Text:", text);  // Check the exact response
             let data;
             try {
                 data = JSON.parse(text);  // Try to parse the response as JSON
@@ -545,11 +607,6 @@ if (
             }
         });
     }
-
-
-
-
-
 
     // Function to create a new attendance record
     function createAttendanceRecord(eventID, userID, timeSelect) {
@@ -587,8 +644,6 @@ if (
         });
     }
 
-
-
     // Function to update the attendance time
     function updateAttendanceTime(eventID, userID, timeSelect) {
         fetch('adminAttendanceHandler.php', {
@@ -624,16 +679,14 @@ if (
     }
 
 
-
-
-
-
     function updateAttendanceTable(data) {
         const tableBody = document.querySelector("#attendanceTable tbody");
 
         // Check if the row for the user already exists
         let row = tableBody.querySelector(`tr[data-user-id="${data.user.user_id}"]`);
         if (!row) {
+            console.log('Updated attendance:', data.attendance);  // Ensure this contains the correct data
+
             // Create a new row if it doesn't exist
             row = document.createElement("tr");
             row.setAttribute("data-user-id", data.user.user_id);
@@ -708,34 +761,36 @@ if (
 </script>
 
 
-<?php 
-
+<?php
     $sql = "SELECT
-        u.user_id,
-        CONCAT(u.user_firstname, ' ', u.user_middlename, ' ', u.user_lastname, ' ', u.user_suffixname) AS full_name,
-        p.program_name,
-        s.program_id,
-        s.`year/grade_level`, 
-        s.section,
-        a.attendance_id, a.attendance_date,
-        a.attendance_am_time_in, a.attendance_am_time_out,
-        a.attendance_pm_time_in, a.attendance_pm_time_out,
-        e.event_time_duration,
-        e.attendance_duration_am_time_in_start, e.attendance_duration_am_time_in_end,
-        e.attendance_duration_am_time_out_start, e.attendance_duration_am_time_out_end,
-        e.attendance_duration_pm_time_in_start, e.attendance_duration_pm_time_in_end,
-        e.attendance_duration_pm_time_out_start, e.attendance_duration_pm_time_out_end
-    FROM attendance a
-    JOIN user u ON a.user_id = u.user_id
-    JOIN student s ON a.user_id = s.user_id
-    JOIN program p ON s.program_id = p.program_id
-    JOIN event e ON a.event_id = e.event_id
-    WHERE e.event_id = '$eventID';
-    ";
+            u.user_id,
+            CONCAT(u.user_firstname, ' ', u.user_middlename, ' ', u.user_lastname, ' ', u.user_suffixname) AS full_name,
+            p.program_name,
+            s.program_id,
+            s.`year/grade_level`, 
+            s.section,
+            a.attendance_id, a.attendance_date,
+            a.attendance_am_time_in, a.attendance_am_time_out,
+            a.attendance_pm_time_in, a.attendance_pm_time_out,
+            e.event_time_duration,
+            e.attendance_duration_am_time_in_start, e.attendance_duration_am_time_in_end,
+            e.attendance_duration_am_time_out_start, e.attendance_duration_am_time_out_end,
+            e.attendance_duration_pm_time_in_start, e.attendance_duration_pm_time_in_end,
+            e.attendance_duration_pm_time_out_start, e.attendance_duration_pm_time_out_end
+            FROM attendance a
+            JOIN user u ON a.user_id = u.user_id
+            JOIN student s ON a.user_id = s.user_id
+            JOIN program p ON s.program_id = p.program_id
+            JOIN event e ON a.event_id = e.event_id
+            WHERE e.event_id = '$eventID';
+        ";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
+    
+    // Fetch all rows into an array
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
 
     $show_am = false;
     $show_pm = false;
@@ -743,13 +798,12 @@ if (
     $show_pm_out = false;
 
     // Determine columns to display based on event_time_duration
-    $event_time_duration = '';
-    if ($row = $result->fetch_assoc()) {
-        $event_time_duration = $row['event_time_duration'];
+    if (!empty($rows)) {
+        $event_time_duration = $rows[0]['event_time_duration'];
         if (in_array($event_time_duration, ['Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out', 'Whole Day - AM Time In & PM Time Out'])) {
             $show_am = true;
             $show_am_out = $event_time_duration === 'Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out';
-            $show_pm = true;
+            $show_pm = $event_time_duration === 'Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out';
             $show_pm_out = true;
         } elseif ($event_time_duration === 'Half Day - AM Time In & AM Time Out') {
             $show_am = true;
@@ -782,11 +836,7 @@ if (
         </tr>
     </thead>
     <tbody class="event-data-content-body">
-        <?php 
-        // Reset result set pointer
-        $stmt->data_seek(0); 
-        while ($row = $result->fetch_assoc()): 
-        ?>
+        <?php foreach ($rows as $row): ?>
             <tr class="event-data-content-row">
                 <td class="event-data-content-name"><?php echo htmlspecialchars($row['full_name']); ?></td>
                 <td class="event-data-content-program_name"><?php echo htmlspecialchars($row['program_name']); ?></td>
@@ -805,14 +855,14 @@ if (
                     <td class="event-data-content-pm-out"><?php echo getAttendanceStatus($row['attendance_pm_time_out'], $row['attendance_duration_pm_time_out_start'], $row['attendance_duration_pm_time_out_end']); ?></td>
                 <?php endif; ?>
             </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
 
 <?php
-// Close the connection
-$stmt->close();
-$conn->close();
+    // Close the connection
+    $stmt->close();
+    $conn->close();
 
 // Function to check the attendance status
 function getAttendanceStatus($attendance_time, $start_time, $end_time) {
@@ -832,7 +882,7 @@ function getAttendanceStatus($attendance_time, $start_time, $end_time) {
         return 'Late';
     }
 
-    return 'Check';
+    return 'Attended';
 }
 ?>
 

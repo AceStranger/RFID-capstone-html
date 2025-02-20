@@ -109,7 +109,7 @@ button:active {
 
 .report-content-main-content-container {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 100px);
     /* padding-top: 16px; */
     overflow: auto;
 }
@@ -191,6 +191,10 @@ select {
     font-size: 14px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
 }
 
 .report-content-search-input-container input[type="submit"] {
@@ -235,23 +239,77 @@ canvas {
 .report-content-content-container {
     display: grid;
     grid-template-areas:
-        "info info"
+        "chart info"
         "chart participants";
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: 125px calc(1fr + 125px);
+    grid-template-rows: auto 1fr;
     gap: 12px;
     align-items: start;
     height: 100%;
     width: 100%;
 }
 
+/* Main container styling */
 .report-content-content-info {
     grid-area: info;
-    background-color: #fff;
-    padding: 16px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: auto;
 }
+
+/* Event title styling */
+.event-name-info {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Event details styling */
+.event-date-info, .event-place-info {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Attendance dropdown label */
+label[for="attendance-select"] {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Dropdown styling */
+#attendance-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #2c3e50;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#attendance-select:hover {
+    border-color: #2980b9;
+}
+
+/* No event selected text */
+.no-event-selected {
+    color: #e74c3c;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
 
 .report-content-content-legends {
     grid-area: legends;
@@ -282,15 +340,13 @@ canvas {
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-height: 400px;
+    height: calc(100vh - 250px);
     overflow-y: hidden;  /* Prevent scrolling on the container */
 }
 
 .report-content-content-chart {
-    min-height: 100px;
-    max-height: 300px;
+    height: calc(100vh - 310px);
     text-align: center;
-    padding: 16px;
     overflow-y: auto;
     background-color: #fff;
     border-radius: 5px;
@@ -298,6 +354,10 @@ canvas {
 }
 .report-content-content-chart-container > h3 {
     padding: 16px;
+}
+#chartContainer {
+    width: 100%; 
+    height: calc(100vh - 310px);
 }
 
 

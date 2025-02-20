@@ -71,7 +71,6 @@ while ($programRow = $programResult->fetch_assoc()) {
 // Student's program and level
 $studentProgramName = $programMap[$userProgram]['name'];
 $studentProgramLevel = $programMap[$userProgram]['level'];
-
 $matchingOrganizations = [];
 while ($org = $organizationResult->fetch_assoc()) {
     $responsibility = $org['organization_responsibility'];
@@ -286,31 +285,31 @@ while ($org = $organizationResult->fetch_assoc()) {
     ?>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-    // Get all toggle buttons in the organization-event-content tables
-    const toggleButtons = document.querySelectorAll(
-        ".organization-event-content-event-btn"
-    );
+            // Get all toggle buttons in the organization-event-content tables
+            const toggleButtons = document.querySelectorAll(
+                ".organization-event-content-event-btn"
+            );
 
-    toggleButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            // Find the tbody within the same organization-event-content
-            const tableBody = this
-                .closest(".organization-event-content")
-                .querySelector(".organization-event-content-table-body");
+            toggleButtons.forEach((button) => {
+                button.addEventListener("click", function () {
+                    // Find the tbody within the same organization-event-content
+                    const tableBody = this
+                        .closest(".organization-event-content")
+                        .querySelector(".organization-event-content-table-body");
 
-            // Toggle the "close" class and the button text
-            if (tableBody.classList.contains("close")) {
-                tableBody.classList.remove("close");
-                tableBody.style.display = "table-row-group"; // Show the tbody
-                this.textContent = "▲"; // Change the button symbol
-            } else {
-                tableBody.classList.add("close");
-                tableBody.style.display = "none"; // Hide the tbody
-                this.textContent = "▼"; // Reset the button symbol
-            }
+                    // Toggle the "close" class and the button text
+                    if (tableBody.classList.contains("close")) {
+                        tableBody.classList.remove("close");
+                        tableBody.style.display = "table-row-group"; // Show the tbody
+                        this.textContent = "▲"; // Change the button symbol
+                    } else {
+                        tableBody.classList.add("close");
+                        tableBody.style.display = "none"; // Hide the tbody
+                        this.textContent = "▼"; // Reset the button symbol
+                    }
+                });
+            });
         });
-    });
-});
 
     </script>
     <script src="js\EventPage.js"></script>

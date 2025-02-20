@@ -201,13 +201,17 @@ input, select {
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
+    width: 100%;
 }
 
 .program-content-search-input-container {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
 #program-content-search-input, .filter-select {
@@ -328,7 +332,8 @@ label {
     align-items: center;
     gap: 5px;
 }
-.program-content-data-form > button {
+
+.program-edit, .program-delete {
     width: 100%;
     padding: 5px 10px;
     font-size: 12px;
@@ -336,29 +341,27 @@ label {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    -o-border-radius: 3px;
     text-shadow: 0 0 2px black;
+    word-break: auto-phrase;
 }
-
-
 .program-edit {
-    background-color: #3a77ff;
-}
-
-.program-edit:hover {
     background-color: #2a5fcd;
 }
 
+.program-edit:hover {
+    background-color: #0056b3;
+}
+
 .program-delete {
-    background-color: #ff6f61;
+    background-color: #dd2f2f;
 }
 
 .program-delete:hover {
-    background-color: #ff3d2e;
+    background-color: #bd2727;
 }
+
+
+
 
 
 .edit-program-container {

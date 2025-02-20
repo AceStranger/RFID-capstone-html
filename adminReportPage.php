@@ -20,9 +20,11 @@
     $officerAssignDuty = "";
     $organizationID = "";
     $eventsQuery = "";
+    $isRoleDean = false;
     
     if(str_contains($userInfo['user_role'], "officer")) {
         $query = "SELECT * FROM officer WHERE user_id = $user_ID LIMIT 1";
+        $isRoleDean = false;
         $result = mysqli_query($conn, $query);
         $officerInfo = $result->fetch_assoc();
         $officerDuty = strtoupper($officerInfo['officer_duty']);
@@ -35,6 +37,8 @@
             WHERE event_organizer = $organizationID
         ";
     } elseif (str_contains($userInfo['user_role'], "dean")){
+        $isRoleDean = true;
+        var_dump($isRoleDean);
         $query = "SELECT * FROM dean WHERE user_id = $user_ID LIMIT 1";
         $result = mysqli_query($conn, $query);
         $deanInfo = $result->fetch_assoc();
@@ -57,15 +61,13 @@
             WHERE event_participant RLIKE '\\b$programName\\b' 
             OR event_participant RLIKE '\\b$programLevel\\b'";
         
-        
-        
     }
 
     $isOfficerAssignDuty = false;
     if(str_contains($officerAssignDuty, "Manage Event Report")) {
         $isOfficerAssignDuty = true;
     } else {
-        $isOfficerAssignDuty = true;
+        $isOfficerAssignDuty = false;
     }
 ?>
 
@@ -112,6 +114,7 @@
                                 <input type="submit" value="Submit">
                             </div>
                         </form>
+                        
                     </div>
 
                     <div class="report-content-main-content-container">
@@ -131,12 +134,16 @@
                                         <form action="showParticipantList.php" method="post">
                                             <input type="hidden" name="event-id" id="event-id" value="">
                                             <input type="hidden" name="event-participants" id="event-participants" value="">
-                                            <input type="submit" name="showParticipant-btn" value="">
+                                            <input type="submit" name="showParticipant-btn" value="Show Participants Attendance">
                                         </form>
+                                    <?php endif;?>
+                                    
+                                    <?php if ($isRoleDean === true):?>
+                                        <input type="hidden" name="event-id" id="event-id" value="">
+                                        <input type="hidden" name="event-participants" id="event-participants" value="">
                                     <?php endif;?>
                                 </div>
                             </div>
-
                             <div class="report-content-content-participants-container">
                                 <div class="report-content-content-participants">
                                     <h3>Participants</h3>
@@ -148,7 +155,7 @@
                                 <h3>Chart</h3>
                                 <div class="report-content-content-chart">
                                     
-                                    <div id="chartContainer" style="width: 100%; height: 400px;"></div>
+                                    <div id="chartContainer"></div>
                                 </div>
                             </div>
                         </div>
@@ -178,9 +185,7 @@
 
                 // Check if elements exist on the page
                 const eventParticipants = document.getElementById("event-participants");
-                const showParticipantBtn = document.querySelector('input[name="showParticipant-btn"]');
-
-                if (eventParticipants && showParticipantBtn) {
+                if (eventParticipants) {
                     // Assign values if the elements are present
                     eventID.value = data.event.event_id;
                     eventParticipants.value = data.event.event_participant;
@@ -189,10 +194,9 @@
                     console.log("Elements exist. Values assigned.");
                 } else {
                     // Handle the case where elements do not exist
-                    console.warn("Either eventParticipants or showParticipantBtn is not present on the page.");
+                    console.warn("Either event participants is not present on the page.");
                 }
-
-                showParticipantBtn.value = "Show Participants Attendance"; 
+ 
                 displayEventData(data.event, data.attendance, data.participants, data.programs);
             } else {
                 console.error('Failed to fetch event data');
@@ -236,9 +240,9 @@ function displayEventData(eventDetails, attendanceData, participantGroups, progr
     const eventNameInfo = document.querySelector('.event-name-info');
     eventNameInfo.innerHTML = `Event: ${eventDetails.event_name}`;
     const eventDateInfo = document.querySelector('.event-date-info');
-    eventDateInfo.innerHTML = `Date: ${eventDetails.event_name}`;
+    eventDateInfo.innerHTML = `Date: ${eventDetails.event_date}`;
     const eventPlaceInfo = document.querySelector('.event-place-info');
-    eventPlaceInfo.innerHTML = `Location: ${eventDetails.event_name}`;
+    eventPlaceInfo.innerHTML = `Location: ${eventDetails.event_place}`;
     const attendanceSelect = document.getElementById('attendance-select');
     attendanceSelect.innerHTML = selectOptions;
 
@@ -480,23 +484,36 @@ function aggregateData(data, eventParticipant, programs, participants) {
 
 
 function renderNestedView(data, container) {
-    // Clear previous collapsible event listeners
-    container.removeEventListener('click', handleCollapsibleClick);
-    
+    container.removeEventListener('click', handleCollapsibleClick); // Clear previous listeners
+
     for (const key in data) {
         if (key === "total" || key === "attended" || key === "absent") continue;
 
         const levelData = data[key];
 
-        // Create a collapsible element
         const collapsible = document.createElement('div');
         const content = document.createElement('div');
         collapsible.setAttribute("class", "collapsible");
         collapsible.textContent = `${key} - Total: ${levelData.total}, Attended: ${levelData.attended}, Absent: ${levelData.absent}`;
+        collapsible.dataset.total = levelData.total;
+        collapsible.dataset.attended = levelData.attended;
+        collapsible.dataset.absent = levelData.absent;
+
+        collapsible.addEventListener('click', function (e) {
+            e.stopPropagation(); // Prevent parent collapsibles from triggering
+
+            // Toggle visibility
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content) content.classList.toggle('visible');
+
+            // Update chart based on clicked collapsible
+            updateChart(this.dataset.total, this.dataset.attended, this.dataset.absent);
+        });
+
         container.appendChild(collapsible);
         content.setAttribute("class", "content");
-        
-        // Recursive call for children
+
         if (levelData.children && Object.keys(levelData.children).length > 0) {
             const childContainer = document.createElement('div');
             renderNestedView(levelData.children, childContainer);
@@ -510,6 +527,7 @@ function renderNestedView(data, container) {
     // Use event delegation for collapsible items
     addCollapsibleListeners(container);
 }
+
 
 function addCollapsibleListeners(container) {
     container.addEventListener('click', handleCollapsibleClick);
@@ -548,7 +566,7 @@ function displayParticipants(data, eventParticipant, programs, participants) {
     const chartData = prepareAllCharts(aggregatedData, eventParticipant, programs, participants);
     console.log("asda", chartData);
     
-    displayAllCharts(chartData);
+    initializeChart(chartData);
     // Render the nested view
     renderNestedView(aggregatedData, participantContainer);
 }
@@ -605,57 +623,59 @@ function prepareAllCharts(aggregatedData) {
     return charts;
 }
 
-function displayAllCharts(charts) {
+let participantChart; 
+
+function initializeChart() {
     const chartContainer = document.getElementById('chartContainer');
     chartContainer.innerHTML = ""; // Clear previous content
 
-    charts.forEach((chart, index) => {
-        // Create a container for each chart
-        const chartWrapper = document.createElement('div');
-        chartWrapper.style.marginBottom = "40px";
+    const canvas = document.createElement('canvas');
+    canvas.id = 'participantChart';
+    chartContainer.appendChild(canvas);
 
-        // Add title
-        const title = document.createElement('h4');
-        title.textContent = chart.title;
-        chartWrapper.appendChild(title);
-
-        // Add canvas
-        const canvas = document.createElement('canvas');
-        canvas.id = `chart-${index}`;
-        chartWrapper.appendChild(canvas);
-
-        chartContainer.appendChild(chartWrapper);
-
-        // Render the chart
-        const ctx = canvas.getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: chart.data,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top'
-                    },
-                    title: {
-                        display: true,
-                        text: chart.title
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Participants'
-                        }
-                    }
+    const ctx = canvas.getContext('2d');
+    participantChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Total", "Attended", "Absent"],
+            datasets: [{
+                label: "Participants",
+                data: [0, 0, 0], // Initially empty
+                backgroundColor: [
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(54, 162, 235, 0.6)",
+                    "rgba(255, 99, 132, 0.6)"
+                ],
+                borderColor: [
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 99, 132, 1)"
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Participant Statistics' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Number of Participants' }
                 }
             }
-        });
+        }
     });
 }
 
+function updateChart(total, attended, absent) {
+    if (!participantChart) return;
+
+    participantChart.data.datasets[0].data = [total, attended, absent];
+    participantChart.update();
+}
 
 
 

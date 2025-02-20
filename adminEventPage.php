@@ -19,6 +19,8 @@ $officerInfo = $result->fetch_assoc();
 $organizationID = $officerInfo['organization_id'];
 $officerDuty = $officerInfo['officer_assign_duty'];
 
+$officerAssignDuty = json_encode($officerDuty);
+
 
 
 $query = "SELECT organization_responsibility FROM organization WHERE organization_id = $organizationID LIMIT 1";
@@ -79,7 +81,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                             </div>
                             <div class="form-content-row">
                                 <label for="event_date">Event Date:</label>
-                                <input type="date" name="event_date" id="event_date">
+                                <input type="date" name="event_date" id="event_date" required>
                             </div>
                         </div>
                         
@@ -97,9 +99,9 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                             </div>
                             <div class="form-content-row">
                                 <label>Event Time:</label>
-                                <input type="time" name="event-time-start" id="event-time-start">
+                                <input type="time" name="event-time-start" id="event-time-start" required>
                                 <div class="add-new-event-label">—</div>
-                                <input type="time" name="event-time-end" id="event-time-end">
+                                <input type="time" name="event-time-end" id="event-time-end" required>
 
                             </div>
                         </div>
@@ -181,7 +183,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                         </div>
                         <div class="form-content-btn">
                             <button type="submit" name="add-new-event-submit">Add New Event</button>
-                            <button type="submit" name="add-new-event-submit-cancel" id="add-new-event-btn-cancel" class="add-new-event-btn-cancel">Cancel</button>
+                            <button type="button" name="add-new-event-submit-cancel" id="add-new-event-btn-cancel" class="add-new-event-btn-cancel">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -251,6 +253,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
             const searchInput = document.getElementById('event-content-search-input');
             const statusFilter = document.getElementById('event-content-filter-select-status');
             const columnFilter = document.getElementById('event-content-filter-select-col');
+            
             let events;
             // Fetch all events from the backend
             async function fetchEvents() {
@@ -263,10 +266,16 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                 }
             }
             fetchEvents();
+            const officerDuty = "<?php echo json_decode($officerAssignDuty)?>";
+            
             // Display events in the table
             function displayEvents(events) {
                 eventTableBody.innerHTML = ''; // Clear the current table content
 
+                let deleteButton = '';
+                if (officerDuty.includes("Manage Event Registration")) {
+                    deleteButton = `<button type="Submit" class="user-delete" name="dSubmit" value="1">DELETE</button>`;
+                }
                 events.forEach(event => {
                     const row = document.createElement('tr');
                     row.classList.add('event-content-table-row');
@@ -283,7 +292,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                             <form action="adminEventDataHandler.php" method="post">
                                 <input type="hidden" name="event-id" value="${event.event_id}">
                                 <button type="Submit" class="user-view" name="vSubmit">VIEW</button>
-                                <button type="Submit" class="user-delete" name="dSubmit" value="1">DELETE</button>
+                                ${deleteButton}
                             </form>
                         </td>
                     `;
@@ -500,6 +509,14 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                     programDiv.innerHTML = `<strong>${program.program_name}</strong>`;
                     AllGroupDiv.appendChild(programDiv); // Append program name to the AllGroupDiv
 
+                    const programNameTitleDiv = document.createElement('div');
+                    programNameTitleDiv.classList.add('program-name-title');
+                    programNameTitleDiv.innerHTML = `All - ${program.program_name}`;
+                    programDiv.appendChild(programNameTitleDiv);
+
+                    programNameTitleDiv.addEventListener('click', () => addParticipant(`All - ${program.program_name}`)); // Add as participant
+                    AllGroupDiv.appendChild(programDiv);
+
                     program.program_year_grade_levels.forEach(year => {
                         const yearDiv = document.createElement('div');
                         yearDiv.classList.add('program-year');
@@ -507,7 +524,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                         // Wrap each year in a div for clarity
                         const yearTitleDiv = document.createElement('div');
                         yearTitleDiv.classList.add('program-year-title');
-                        yearTitleDiv.innerHTML = `All - ${program.program_name} - ${year}`;
+                        yearTitleDiv.innerHTML = `${program.program_name} - ${year}`;
                         yearDiv.appendChild(yearTitleDiv);
 
                         yearTitleDiv.addEventListener('click', () => addParticipant(`${program.program_name} - ${year}`)); // Add as participant

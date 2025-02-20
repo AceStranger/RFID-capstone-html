@@ -1,6 +1,7 @@
 <?php
-session_start();
 include "dbh.php";
+require_once 'logActivity.php'; 
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $department_id = filter_input(INPUT_POST, 'department_id', FILTER_SANITIZE_NUMBER_INT);
@@ -16,6 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("si", $department_name, $department_id);
 
     if ($stmt->execute()) {
+        // Log the activity after successfully updating the department
+        $action_type = 'Update Department';
+        $entity = 'Department';
+        $entity_id = $department_id;
+        $user_id = $_SESSION['user_ID']; // Assuming user ID is stored in session
+        $description = "Department '$department_name' with ID '$department_id' updated by user '$user_id'.";
+        logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn); // Log activity
+        
         echo json_encode(['success' => true]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to update department.']);

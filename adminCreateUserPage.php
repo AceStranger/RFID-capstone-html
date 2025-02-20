@@ -282,6 +282,7 @@ async function scanRFID() {
 
 
 
+let selectedRoles = [];
 // Submit the form with AJAX
 document.getElementById('add-new-user').addEventListener('submit', function (e) {
     console.log('Submit handler triggered');
@@ -380,9 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedRoleContainer = document.getElementById("selected-role-container");
     const roleInput = document.getElementById("role");
     const additionalFieldsContainer = document.getElementById("additional-fields");
-
-    let selectedRoles = []; // Store selected roles
-
+    
     // Toggle role list visibility
     showRoleListBtn.addEventListener("click", () => {
         roleListContainer.classList.toggle("hidden");

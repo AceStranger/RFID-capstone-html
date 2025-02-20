@@ -65,7 +65,7 @@ function togglePasswordVisibility() {
 function displayMessage(message, isSuccess) {
     const messageElement = document.getElementById("message");
     messageElement.textContent = message;
-    messageElement.style.color = isSuccess ? "green" : "red";
+    messageElement.style.color = isSuccess ? "#80f300" : "#c90000";
 }
 // Hash change event listener
 window.addEventListener('hashchange', function() {

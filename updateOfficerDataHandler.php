@@ -1,6 +1,7 @@
 <?php
 // Assuming you have a database connection already set up
 include 'dbh.php';
+include 'logActivity.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve the POST data
     $officerID = $_POST['officer-id'];

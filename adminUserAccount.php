@@ -1,7 +1,39 @@
 <?php
 include "logActivity.php";
     session_start();
-
+    // Check if a user role exists
+    function checkUserRoleExists($conn, $useraccountid, $role) {
+        $queries = [
+            'student' => "SELECT COUNT(*) FROM student WHERE user_id = ?",
+            'officer' => "SELECT COUNT(*) FROM officer WHERE user_id = ?",
+            'dean' => "SELECT COUNT(*) FROM dean WHERE user_id = ?"
+        ];
+        
+        if (isset($queries[$role])) {
+            $stmt = $conn->prepare($queries[$role]);
+            $stmt->bind_param("i", $useraccountid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $count = $result->fetch_row()[0];
+            return $count > 0;
+        }
+        return false;
+    }
+    // Create a user role account if not exists
+    function createUserRole($conn, $useraccountid, $role) {
+        $queries = [
+            'student' => "INSERT INTO student (user_id) VALUES (?)",
+            'officer' => "INSERT INTO officer (user_id) VALUES (?)",
+            'dean' => "INSERT INTO dean (user_id) VALUES (?)"
+        ];
+        
+        if (isset($queries[$role])) {
+            $stmt = $conn->prepare($queries[$role]);
+            $stmt->bind_param("i", $useraccountid);
+            $stmt->execute();
+        }
+    }
+    
     function updateStudent($conn, $useraccountid, $studentData) {
         $query = "UPDATE `student` 
             SET 
@@ -311,21 +343,45 @@ include "logActivity.php";
                 $userpfpfilepath = isset($_POST['userpfpfilepath']) ? mysqli_real_escape_string($conn,$_POST['userpfpfilepath']) : '';
                 $userRole = isset($_POST['user-role']) ? mysqli_real_escape_string($conn,$_POST['user-role']) : '';
     
+                // Split roles by comma and trim any extra spaces
+                $roles = array_map('trim', explode(",", $userAccRole));
+
+                foreach ($roles as $role) {
+                    // Check if the role exists, if not, create the role account
+                    if (!checkUserRoleExists($conn, $useraccountid, $role)) {
+                        createUserRole($conn, $useraccountid, $role);
+                        
+                        // Log the activity for creating the user role
+                        logActivity(
+                            'Create Role',
+                            ucfirst($role), // Capitalize the role for display
+                            $useraccountid,
+                            $_SESSION['user_ID'],  // Admin user who is creating the role
+                            "Created the '$role' role for the user.",
+                            $conn
+                        );
+                    }
+                }
                 // Check if file was uploaded
                 if (isset($_FILES['user-picture']) && $_FILES['user-picture']['error'] === UPLOAD_ERR_OK) {
                     $file = $_FILES['user-picture'];
-                    $uploadDir = "uploads/$usersSchoolID/"; // Directory path for this user
-    
-                    if (!file_exists($uploadDir)) {
-                        if (!mkdir($uploadDir, 0777, true)) {
-                            setError("Failed to create directory: $uploadDir");
+                    $usersSchoolID = trim($usersSchoolID);
+                    $uploadDir = "uploads/$usersSchoolID/";
+                    $absoluteUploadDir = realpath(".") . '/' . $uploadDir;
+                    error_log($absoluteUploadDir);
+
+                    if (!file_exists($absoluteUploadDir)) {
+                        if (!mkdir($absoluteUploadDir, 0777, true)) {
+                            error_log("Failed to create directory: " . $absoluteUploadDir);
+                            setError("Failed to create directory: $absoluteUploadDir");
                             exit();
                         }
                     }
+                    
     
                     $fileName = basename($file['name']);
                     $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                    $newFileName = uniqid("profile_", true) . ".$fileExtension"; // e.g., profile_123456789.jpg
+                    $newFileName = uniqid("profile_", true) . ".$fileExtension";
                     $usersPFPfilePath = $uploadDir . $newFileName;
     
                     if (!move_uploaded_file($file['tmp_name'], $usersPFPfilePath)) {

@@ -3,6 +3,8 @@
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include "dbh.php";
+    include "logActivity.php";
+    session_start();
 
     // Retrieve form data
     $role = $_POST['role'] ?? '';

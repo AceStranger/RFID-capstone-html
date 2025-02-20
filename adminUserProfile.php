@@ -16,7 +16,7 @@ $userInfo = $result->fetch_assoc();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User Profile</title>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/headerStyle.css"> 
@@ -24,7 +24,16 @@ $userInfo = $result->fetch_assoc();
     <link rel="stylesheet" href="css/adminSidebar.css">
     <link rel="stylesheet" href="css/adminUserProfile.css">
     <script src="js\adminSidebar.js"></script>
-    <script src="js\adminUser.js"></script>
+        <?php
+        
+            if (str_contains($userInfo['user_role'], "admin") ||
+                str_contains($userInfo['user_role'], "officer") ||
+                str_contains($userInfo['user_role'], "dean")){
+            } else {
+                echo `<script src="js\adminUser.js"></script>`;
+            }
+         ?>
+    <script defer src="js/usermenu.js"></script> 
 </head>
 <body>
     <div class="main-content-container">
@@ -35,7 +44,7 @@ $userInfo = $result->fetch_assoc();
                 str_contains($userInfo['user_role'], "dean")){
                 include_once"adminSidebar.php";
             } else {
-                include_once"header.php";
+                include_once "header.php";
             }
          ?>
         
@@ -109,6 +118,8 @@ $userInfo = $result->fetch_assoc();
                 <?php if (mysqli_num_rows($userAccQueryResult) > 0):?> 
                     <?php while($row = mysqli_fetch_assoc($userAccQueryResult)):?>
                         <?php 
+                            $username = $row['user_name'];
+                            $password = $row['user_password'];
                             $usersSchoolID = $row['user_school_id'];
                             $usersFname = $row['user_firstname'];
                             $usersMname = $row['user_middlename'];
@@ -153,14 +164,6 @@ $userInfo = $result->fetch_assoc();
                             $deanDepartmentID = '';
                             $departmentName = '';
                             
-                            // Check if there is a comma in the string
-                            if (strpos($usersRole, ",") !== false) {
-                                // If there's a comma, split the string into an array
-                                $userRoles = explode(",", $usersRole);
-                            } else {
-                                // If there's no comma, treat it as a single role
-                                $userRoles = [$usersRole]; // Create an array with a single element
-                            }
                             
                             if (str_contains($usersRole , "student")) {
                         
@@ -253,6 +256,24 @@ $userInfo = $result->fetch_assoc();
                             } 
                             if (str_contains($usersRole , "officer")) {
 
+                                // Fetch all available organizations
+                                $OrganizationQuery = "SELECT * FROM organization";
+                                $OrganizationQueryResult = mysqli_query($conn, $OrganizationQuery);
+                                $organizationOptions = "";
+
+                                if (mysqli_num_rows($OrganizationQueryResult) > 0) {
+                                    while ($Organizationrow = mysqli_fetch_assoc($OrganizationQueryResult)) {
+                                        $organizationID = $Organizationrow['organization_id'];
+                                        $organizationName = $Organizationrow['organization_name'];
+
+                                        // Check if the organization is the one the officer belongs to
+                                        $selected = ($officerOrganizationID == $organizationID) ? "selected" : "";
+
+                                        // Add the option to the dropdown
+                                        $organizationOptions .= "<option value='$organizationID' $selected>$organizationName</option>";
+                                    }
+                                }
+                                $officerUpdateCheckbox = "";
                                 $userOfficerQuery = "SELECT * FROM officer WHERE user_id = $useraccountid";
                                 $userOfficerQueryResult = mysqli_query($conn, $userOfficerQuery);
                                 if (mysqli_num_rows($userOfficerQueryResult) > 0) {
@@ -261,57 +282,73 @@ $userInfo = $result->fetch_assoc();
                                         $officerOrganizationID = $Officerrow['organization_id'];
                                         $officerPosition = $Officerrow['officer_position'];
 
-                                        // Fetch all available organizations
-                                        $OrganizationQuery = "SELECT * FROM organization";
-                                        $OrganizationQueryResult = mysqli_query($conn, $OrganizationQuery);
-                                        $organizationOptions = "";
-
-                                        if (mysqli_num_rows($OrganizationQueryResult) > 0) {
-                                            while ($Organizationrow = mysqli_fetch_assoc($OrganizationQueryResult)) {
-                                                $organizationID = $Organizationrow['organization_id'];
-                                                $organizationName = $Organizationrow['organization_name'];
-
-                                                // Check if the organization is the one the officer belongs to
-                                                $selected = ($officerOrganizationID == $organizationID) ? "selected" : "";
-
-                                                // Add the option to the dropdown
-                                                $organizationOptions .= "<option value='$organizationID' $selected>$organizationName</option>";
-                                            }
-                                        }
                                     }
-                                }
-                                $officerUpdateCheckbox = "";
-                                if (str_contains($userInfo['user_role'], "admin") && 
-                                $request === "edit-profile"){
-                                    $officerUpdateCheckbox = "
-                                        <div class='user-info-content-info-field user-info-content-input-field'>
-                                            <input $inputAvailability type='checkbox' id='update-officer-role' name='update-officer-role' value='1'>
-                                            <label for='update-officer-role'>Include Officer Information in Update</label>
-                                        </div>";
-                                }
-                                $officerInfo = "
-                                        <div class='user-profile-content-officer-info'>
-                                            <div class='user-info-content-container'>
-                                                <div class='user-info-content-col-1'>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='organization-name'>Organization Name:</label>
-                                                        <select $inputAvailability id='organization-name' name='organization-name'>
-                                                            $organizationOptions
-                                                        </select>
+                                    
+                                    if (str_contains($userInfo['user_role'], "admin") && 
+                                    $request === "edit-profile"){
+                                        $officerUpdateCheckbox = "
+                                            <div class='user-info-content-info-field user-info-content-input-field'>
+                                                <input $inputAvailability type='checkbox' id='update-officer-role' name='update-officer-role' value='1'>
+                                                <label for='update-officer-role'>Include Officer Information in Update</label>
+                                            </div>";
+                                    }
+                                    $officerInfo = "
+                                            <div class='user-profile-content-officer-info'>
+                                                <div class='user-info-content-container'>
+                                                    <div class='user-info-content-col-1'>
+                                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                                            <label for='organization-name'>Organization Name:</label>
+                                                            <select $inputAvailability id='organization-name' name='organization-name'>
+                                                                $organizationOptions
+                                                            </select>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class='user-info-content-col-2'>
-                                                    <div class='user-info-content-info-field user-info-content-input-field'>
-                                                        <label for='officer-position'>Officer's Position:</label>
-                                                        <input $inputAvailability type='text' id='officer-position' name='officer-position' value='$officerPosition'>
+                                                    <div class='user-info-content-col-2'>
+                                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                                            <label for='officer-position'>Officer's Position:</label>
+                                                            <input $inputAvailability type='text' id='officer-position' name='officer-position' value='$officerPosition'>
+                                                        </div>
+                                                        ". $officerUpdateCheckbox ."
                                                     </div>
-                                                    ". $officerUpdateCheckbox ."
                                                 </div>
                                             </div>
-                                        </div>
+                                    
+                                    ";
+                                }else {
+                                    if (str_contains($userInfo['user_role'], "admin") && 
+                                    $request === "edit-profile"){
+                                        $officerUpdateCheckbox = "
+                                            <div class='user-info-content-info-field user-info-content-input-field'>
+                                                <input $inputAvailability type='checkbox' id='update-officer-role' name='update-officer-role' value='1'>
+                                                <label for='update-officer-role'>Include Officer Information in Update</label>
+                                            </div>";
+                                    }
+                                    $officerInfo = "
+                                            <div class='user-profile-content-officer-info'>
+                                                <div class='user-info-content-container'>
+                                                    <div class='user-info-content-col-1'>
+                                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                                            <label for='organization-name'>Organization Name:</label>
+                                                            <select $inputAvailability id='organization-name' name='organization-name'>
+                                                                $organizationOptions
+                                                            </select>
+    
+                                                        </div>
+                                                    </div>
+                                                    <div class='user-info-content-col-2'>
+                                                        <div class='user-info-content-info-field user-info-content-input-field'>
+                                                            <label for='officer-position'>Officer's Position:</label>
+                                                            <input $inputAvailability type='text' id='officer-position' name='officer-position' value=''>
+                                                        </div>
+                                                        ". $officerUpdateCheckbox ."
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                    ";
+                                }
                                 
-                                ";
 
 
 
@@ -397,8 +434,6 @@ $userInfo = $result->fetch_assoc();
                                             <?php echo $btn;?>
                                         </div>
                                     </div>
-                            <?php else: ?>
-                                include_once"header.php";
                             <?php endif;?>
                             <div class='user-profile-content-info'>
                                 <div class='user-profile-content-info-content'>
@@ -407,7 +442,7 @@ $userInfo = $result->fetch_assoc();
                                             <div class='user-info-content-col-1'>
                                                 <div class="user-info-content-info-field user-info-content-input-field">
                                                     <label for="user-name">Username:</label>
-                                                    <input <?php echo $inputAvailability;?> type="text" name="user-name" id="user-name" value="<?php echo $userInfo["user_name"];?>">
+                                                    <input <?php echo $inputAvailability;?> type="text" name="user-name" id="user-name" value="<?php echo $username;?>">
                                                 </div>
                                                 <div class="user-info-content-info-field user-info-content-input-field">
                                                     <label for="password">Password:</label>
@@ -415,9 +450,28 @@ $userInfo = $result->fetch_assoc();
                                                     <?php if(str_contains($userInfo['user_role'], "admin") && 
                                                         $request === "edit-profile"):?>
                                                         <button type="button" id="reset-password-btn">Generate Password</button>
+                                                        
+                                                        <script>
+                                                            const resetPasswordBtn = document.getElementById("reset-password-btn");
+                                                            const passwordInput = document.getElementById("password");
+
+                                                            resetPasswordBtn.addEventListener("click", () => {
+                                                                const newPassword = generatePassword(10);
+                                                                passwordInput.value = newPassword;
+                                                            });
+
+                                                            function generatePassword(length) {
+                                                                const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                                                                let result = "";
+                                                                for (let i = 0; i < length; i++) {
+                                                                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                                                                }
+                                                                return result;
+                                                            }
+                                                        </script>
                                                     <?php endif;?>
                                                 </div>
-                                                <div class='user-info-content-info-field user-info-content-input-field'>
+                                                <div class='user-info-content-info-field picture-input-field user-info-content-input-field'>
                                                     <input type='hidden' name='userpfpfilepath' value='<?php echo $usersPFP;?>'>
                                                     <input <?php echo $inputAvailability;?> type='file' accept='image/jpeg, image/png, image/gif ' id='user-picture' name='user-picture' placehole='Choose Image'>
 
@@ -667,23 +721,5 @@ $userInfo = $result->fetch_assoc();
         </div>  
     </div>
     
-    <script>
-        const resetPasswordBtn = document.getElementById("reset-password-btn");
-        const passwordInput = document.getElementById("password");
-
-        resetPasswordBtn.addEventListener("click", () => {
-            const newPassword = generatePassword(10);
-            passwordInput.value = newPassword;
-        });
-
-        function generatePassword(length) {
-            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            let result = "";
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        }
-    </script>
 </body>
 </html>

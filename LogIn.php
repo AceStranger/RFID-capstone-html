@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = filter_input(INPUT_POST, 'log-in-content-input-password', FILTER_SANITIZE_STRING);
 
     if (empty($username) || empty($password)) {
-        http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Fill in All Fields']);
         exit;
     }
@@ -35,15 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($updateStmt->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Log-in successful']);
             } else {
-                http_response_code(500);
                 echo json_encode(['success' => false, 'message' => 'Error updating last login date']);
             }
         } else {
-            http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Incorrect password']);
         }
     } else {
-        http_response_code(404);
         echo json_encode(['success' => false, 'message' => 'Username or School ID not found']);
     }
 
@@ -51,6 +47,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close();
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request']);
-    http_response_code(405);
 }
 ?>

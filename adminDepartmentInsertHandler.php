@@ -3,6 +3,8 @@ header('Content-Type: application/json');
 
 // Database connection
 require_once 'dbh.php';
+require_once 'logActivity.php'; 
+session_start();
 
 $response = [];
 
@@ -34,6 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mysqli_query($conn, $insertQuery)) {
         $response['success'] = true;
         $response['message'] = 'Department added successfully!';
+        // Log the activity
+        $action_type = 'Add Department';
+        $entity = 'Department';
+        $entity_id = mysqli_insert_id($conn); // Get the last inserted department ID
+        $user_id = $_SESSION['user_ID']; // Assuming user ID is stored in session
+        $description = "Department '$department_name' added by user '$user_id'.";
+        logActivity($action_type, $entity, $entity_id, $user_id, $description, $conn); // Log activity
+        
     } else {
         $response['success'] = false;
         $response['message'] = 'Database error: ' . mysqli_error($conn);

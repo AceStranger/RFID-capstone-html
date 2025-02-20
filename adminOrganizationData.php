@@ -157,7 +157,7 @@ $request = isset($_SESSION['request']) ? $_SESSION['request'] : '';
                                                 if (                                            
                                                     (@$officerInfo['officer_duty'] === "Head of the Organization" || 
                                                     @$officerInfo['officer_duty'] === "Second-in-Command of the Organization") &&
-                                                    ($row['officer_duty'] !== "Second-in-Command of the Organization" && 
+                                                    ($row['officer_duty'] !== "Second-in-Command of the Organization" || 
                                                     $row['officer_duty'] !== "Head of the Organization")
                                                     ) : ?>
                                                     <td class="organization-data-content-btn-Actions">

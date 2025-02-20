@@ -92,13 +92,9 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                     <div class="department-content-top-part-filter">
                         <form action="" method="get" enctype="multipart/form-data" class="department-content-form" id="department-content-form">
                             <div class="department-content-search-input-container">
-                                <select name="department-content-filter-select-col" id="department-content-filter-select-col"  class="filter-select">
-                                    <option value="" disabled selected>Filter By</option>
-                                    <option value="program_name">Program Name</option>
-                                    <option value="department_name">Department Name</option>
-                                </select>
-                                
+                                <label for="department-content-search-input">Filter By Department Name:</label>
                                 <input type="text" name="department-content-search-input" id="department-content-search-input" placeholder="Search..." value="<?php echo htmlspecialchars(@$_GET['department-content-search-input']); ?>">
+
                             </div>
                         </form>
                     </div>
@@ -109,6 +105,7 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                             <table class="department-content-table-content">
                                 <thead class="department-content-table-head">
                                     <tr class="department-content-table-row">
+                                        <th class="department-content-data-department-id">ID</th>
                                         <th class="department-content-data-department-name">Department Name</th>
                                         <th class="department-content-data-btn-action">Actions</th>
                                     </tr>
@@ -203,6 +200,7 @@ document.getElementById('add-department-form').addEventListener('submit', functi
                                             const tr = document.createElement('tr');
                                             tr.className = 'department-content-table-row';
                                             tr.innerHTML = `
+                                                <td class="department-content-data-department-id">${department.department_id}</td>
                                                 <td class="department-content-data-department-name">${department.department_name}</td>
                                                 <td class="department-content-data-btn-action">
                                                     <button type="button" class="user-edit" data-id="${department.department_id}">EDIT</button>

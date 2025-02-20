@@ -598,14 +598,14 @@ $userInfo = $result->fetch_assoc();
                 years.forEach(year => {
                     const yearDiv = document.createElement('div');
                     yearDiv.classList.add('year-item');
-                    yearDiv.innerHTML = `<strong>All - ${programName} - ${year}</strong>`;
+                    yearDiv.innerHTML = `<strong>${programName} - ${year}</strong>`;
 
                     // Add "All - Program Name - Year" option
                     const allYearOption = document.createElement('div');
                     allYearOption.classList.add('responsibility-item');
-                    allYearOption.textContent = `All - ${programName} - ${year}`;
+                    allYearOption.textContent = `${programName} - ${year}`;
                     allYearOption.addEventListener('click', function () {
-                        addResponsibility(`All - ${programName} - ${year}`);
+                        addResponsibility(`${programName} - ${year}`);
                     });
                     yearDiv.appendChild(allYearOption);
 
@@ -655,7 +655,16 @@ $userInfo = $result->fetch_assoc();
                     programNameDiv.classList.add('program-item');
                     programNameDiv.innerHTML = `<strong>${programName}</strong>`;
                     programDiv.appendChild(programNameDiv);
-
+                    // Add "All - Program name" option
+                    const allProgramNameOption = document.createElement('div');
+                    allProgramNameOption.classList.add('responsibility-item');
+                    allProgramNameOption.textContent = `All - ${programName}`;
+                    allProgramNameOption.addEventListener('click', function () {
+                        addResponsibility(`All - ${programName}`);
+                    });
+                    programNameDiv.appendChild(allProgramNameOption);
+                    console.log("programName", programDiv);
+                    
                     // Display years for the program
                     const years = res.program_year_grade_levels;
                     console.log("Years array for program:", years);
@@ -663,14 +672,14 @@ $userInfo = $result->fetch_assoc();
                     years.forEach(year => {
                         const yearDiv = document.createElement('div');
                         yearDiv.classList.add('year-item');
-                        yearDiv.innerHTML = `<strong>All - ${programName} - ${year}</strong>`;
+                        yearDiv.innerHTML = `<strong>${programName} - ${year}</strong>`;
 
                         // Add "All - Program Level - Year" option
                         const allYearOption = document.createElement('div');
                         allYearOption.classList.add('responsibility-item');
-                        allYearOption.textContent = `All - ${programName} - ${year}`;
+                        allYearOption.textContent = `${programName} - ${year}`;
                         allYearOption.addEventListener('click', function () {
-                            addResponsibility(`All - ${programName} - ${year}`);
+                            addResponsibility(`${programName} - ${year}`);
                         });
                         yearDiv.appendChild(allYearOption);
 
@@ -707,57 +716,57 @@ $userInfo = $result->fetch_assoc();
                 addResponsibility(responsibilityInput.value);
             }
             // Add responsibility to the input field and selected list
-function addResponsibility(responsibility) {
-    const responsibilityInput = document.getElementById('officer-responsibility');
+            function addResponsibility(responsibility) {
+                const responsibilityInput = document.getElementById('officer-responsibility');
 
-    // Add responsibility to the input field, avoiding duplicates
-    if (!responsibilityInput.value.split(', ').includes(responsibility)) {
-        if (responsibilityInput.value) {
-            responsibilityInput.value += ', ' + responsibility;
-        } else {
-            responsibilityInput.value = responsibility;
-        }
-    }
+                // Add responsibility to the input field, avoiding duplicates
+                if (!responsibilityInput.value.split(', ').includes(responsibility)) {
+                    if (responsibilityInput.value) {
+                        responsibilityInput.value += ', ' + responsibility;
+                    } else {
+                        responsibilityInput.value = responsibility;
+                    }
+                }
 
-    console.log("Added responsibility: " + responsibility);
-    console.log("Updated input field value: " + responsibilityInput.value);
+                console.log("Added responsibility: " + responsibility);
+                console.log("Updated input field value: " + responsibilityInput.value);
 
-    // Add the responsibility to the selected list if not already present
-    const selectedResponsibilitiesContainer = document.getElementById('selected-responsibilities');
-    const existingItem = Array.from(selectedResponsibilitiesContainer.children).find(
-        item => item.textContent.startsWith(responsibility)
-    );
+                // Add the responsibility to the selected list if not already present
+                const selectedResponsibilitiesContainer = document.getElementById('selected-responsibilities');
+                const existingItem = Array.from(selectedResponsibilitiesContainer.children).find(
+                    item => item.textContent.startsWith(responsibility)
+                );
 
-    if (!existingItem) {
-        const selectedItem = document.createElement('div');
-        selectedItem.classList.add('selected-responsibility');
-        selectedItem.textContent = responsibility;
+                if (!existingItem) {
+                    const selectedItem = document.createElement('div');
+                    selectedItem.classList.add('selected-responsibility');
+                    selectedItem.textContent = responsibility;
 
-        // Create a minus button for removing the responsibility
-        const minusButton = document.createElement('button');
-        minusButton.textContent = ' -';
-        minusButton.classList.add('remove-responsibility');
+                    // Create a minus button for removing the responsibility
+                    const minusButton = document.createElement('button');
+                    minusButton.textContent = ' -';
+                    minusButton.classList.add('remove-responsibility');
 
-        // When the minus button is clicked, remove the responsibility
-        minusButton.addEventListener('click', function () {
-            selectedItem.remove();
-            // Remove responsibility from the input field
-            const responsibilities = responsibilityInput.value.split(', ').filter(item => item !== responsibility);
-            responsibilityInput.value = responsibilities.join(', ');
-            console.log("Removed responsibility: " + responsibility);
-            console.log("Updated input field value: " + responsibilityInput.value);
-        });
+                    // When the minus button is clicked, remove the responsibility
+                    minusButton.addEventListener('click', function () {
+                        selectedItem.remove();
+                        // Remove responsibility from the input field
+                        const responsibilities = responsibilityInput.value.split(', ').filter(item => item !== responsibility);
+                        responsibilityInput.value = responsibilities.join(', ');
+                        console.log("Removed responsibility: " + responsibility);
+                        console.log("Updated input field value: " + responsibilityInput.value);
+                    });
 
-        selectedItem.appendChild(minusButton);
-        selectedResponsibilitiesContainer.appendChild(selectedItem);
-    }
+                    selectedItem.appendChild(minusButton);
+                    selectedResponsibilitiesContainer.appendChild(selectedItem);
+                }
 
-    // Optionally hide the responsibility list after selection
-    const responsibilityList = document.getElementById('responsibility-list');
-    if (responsibilityList) {
-        responsibilityList.style.display = 'none';
-    }
-}
+                // Optionally hide the responsibility list after selection
+                const responsibilityList = document.getElementById('responsibility-list');
+                if (responsibilityList) {
+                    responsibilityList.style.display = 'none';
+                }
+            }
 
 
             // Assign the addResponsibility function to each responsibility item
@@ -797,44 +806,44 @@ function addResponsibility(responsibility) {
 
 
             const handleUpdate = async () => {
-    const form = document.getElementById("organization-data-content-info-form-content");
-    const formElements = form.querySelectorAll("input, select, textarea");
-    const showResponsibilityListBtn = document.getElementById("show-responsibility-list-btn");
+                const form = document.getElementById("organization-data-content-info-form-content");
+                const formElements = form.querySelectorAll("input, select, textarea");
+                const showResponsibilityListBtn = document.getElementById("show-responsibility-list-btn");
 
-    // Enable form elements before sending the data
-    formElements.forEach(element => element.disabled = false);
-    showResponsibilityListBtn.disabled = false;
+                // Enable form elements before sending the data
+                formElements.forEach(element => element.disabled = false);
+                showResponsibilityListBtn.disabled = false;
 
-    // Gather form data
-    const formData = new FormData(form);
+                // Gather form data
+                const formData = new FormData(form);
 
-    try {
-        const response = await fetch('updateOfficerDataHandler.php', {
-            method: 'POST',
-            body: formData
-        });
+                try {
+                    const response = await fetch('updateOfficerDataHandler.php', {
+                        method: 'POST',
+                        body: formData
+                    });
 
-        const data = await response.json();
+                    const data = await response.json();
 
-        if (data.success) {
-            alert(data.message);  // Show success message
+                    if (data.success) {
+                        alert(data.message);  // Show success message
 
-            // Restore the Edit button
-            buttonContainer.innerHTML = `
-                <button type="submit" name="eSubmit" class="officer-data-btn-edit">EDIT</button>
-            `;
+                        // Restore the Edit button
+                        buttonContainer.innerHTML = `
+                            <button type="submit" name="eSubmit" class="officer-data-btn-edit">EDIT</button>
+                        `;
 
-            // Disable form elements after update
-            formElements.forEach(element => element.disabled = true);
-            showResponsibilityListBtn.disabled = true;
-        } else {
-            alert(data.message);  // Show error message
-        }
-    } catch (error) {
-        console.error('Error:', error);  // Log any errors to the console
-        alert('An error occurred while updating the data.');
-    }
-};
+                        // Disable form elements after update
+                        formElements.forEach(element => element.disabled = true);
+                        showResponsibilityListBtn.disabled = true;
+                    } else {
+                        alert(data.message);  // Show error message
+                    }
+                } catch (error) {
+                    console.error('Error:', error);  // Log any errors to the console
+                    alert('An error occurred while updating the data.');
+                }
+            };
 
 
             const handleCancel = () => {

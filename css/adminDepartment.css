@@ -210,8 +210,11 @@ button:active {
 .department-content-search-input-container {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
-
+.department-content-search-input-container > label {
+    font-weight: 600;
+}
 #department-content-search-input, .filter-select {
     padding: 8px 10px;
     font-size: 14px;
@@ -332,7 +335,7 @@ td.department-content-data-btn-actions {
     align-items: center;
     gap: 5px;
 }
-.department-content-data-form > button {
+.user-edit, .user-delete {
     width: 100%;
     padding: 5px 10px;
     font-size: 12px;
@@ -340,37 +343,27 @@ td.department-content-data-btn-actions {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    -o-border-radius: 3px;
     text-shadow: 0 0 2px black;
+    word-break: auto-phrase;
+    margin-block: 2px;
 }
-
-.user-edit, .user-delete {
-    padding: 5px 10px;
-    font-size: 12px;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
 .user-edit {
-    background-color: #3a77ff;
-}
-
-.user-edit:hover {
     background-color: #2a5fcd;
 }
 
+.user-edit:hover {
+    background-color: #0056b3;
+}
+
 .user-delete {
-    background-color: #ff6f61;
+    background-color: #dd2f2f;
 }
 
 .user-delete:hover {
-    background-color: #ff3d2e;
+    background-color: #bd2727;
 }
+
+
 
 
 

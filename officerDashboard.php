@@ -9,7 +9,7 @@
         if (str_contains($userRole, "officer")){
             header("Location: adminDashboardPage.php");
         } else {
-            header("Location: LogInPage.html");
+            header("Location: officerLogInPage.html");
         }
     }
 

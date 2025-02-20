@@ -24,19 +24,14 @@ document.getElementById("form-admin").addEventListener("submit", async function 
             }),
         });
 
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
+        // Always try to parse the JSON response, regardless of the status code
         const result = await response.json();
 
-        // Handle server response
+        // Handle server response based on the JSON message
         if (result.success) {
             displayMessage(result.message, true);
-
-            // Redirect to another page or perform actions on successful login
             setTimeout(() => {
-                window.location.href = "adminDashboard.php"; // Replace with the desired page
+                window.location.href = "adminDashboard.php";
             }, 2000);
         } else {
             displayMessage(result.message, false);
@@ -46,6 +41,7 @@ document.getElementById("form-admin").addEventListener("submit", async function 
         console.error("Error:", error);
     }
 });
+
 
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById("log-in-content-input-password");
@@ -65,7 +61,7 @@ function togglePasswordVisibility() {
 function displayMessage(message, isSuccess) {
     const messageElement = document.getElementById("message");
     messageElement.textContent = message;
-    messageElement.style.color = isSuccess ? "green" : "red";
+    messageElement.style.color = isSuccess ? "#80f300" : "#c90000";
 }
 // Hash change event listener
 window.addEventListener('hashchange', function() {

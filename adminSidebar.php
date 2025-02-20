@@ -4,8 +4,14 @@ $user_ID = $_SESSION['user_ID'];
 $query = "SELECT * FROM user WHERE user_id = $user_ID";
 $result = mysqli_query($conn, $query);
 $userInfo = $result->fetch_assoc();
-$userPFP = $userInfo['user_img'];
+$userPFP = (!empty($userInfo['user_img'])) ? $userInfo['user_img'] : 'pictures\pfp avatar.png';
+$userRole = (!empty($userInfo['user_role'])) ? $userInfo['user_role'] : '';
+$userFirstname = (!empty(trim($userInfo['user_firstname']))) ? $userInfo['user_firstname'] : '';
+$userMiddlename = (!empty(trim($userInfo['user_middlename']))) ? $userInfo['user_middlename'] : '';
+$userLastname = (!empty(trim($userInfo['user_lastname']))) ? $userInfo['user_lastname'] : '';
+$userSuffixname = !empty(trim($userInfo['user_suffixname'])) ? ", " . $userInfo['user_suffixname'] : '';
 
+error_log("UserRole: ".$userRole);
 $sidebarItems = [
     'dashboard' => "<div class='sidebar-content-item sidebar-dashboard'><div class='sidebar-link-text'>DASHBOARD</div></div>",
     'users' => "<div class='sidebar-content-item sidebar-user'><div class='sidebar-link-text'>USERS</div></div>",
@@ -23,7 +29,7 @@ $sidebarItems = [
     'logout' => "<div class='sidebar-content-item sidebar-logout'><div class='sidebar-link-text'>LOG OUT</div></div>",
 ];
 
-if (str_contains($userInfo['user_role'], "officer")) {
+if (str_contains($userRole, "officer")) {
     $sidebarContent = implode('', $sidebarItems);
     $sidebarContent = "
         {$sidebarItems['dashboard']}
@@ -43,7 +49,7 @@ if (str_contains($userInfo['user_role'], "officer")) {
     //     {$sidebarItems['logout']}
     // ";
 }
-if (str_contains($userInfo['user_role'], "dean")) {
+if (str_contains($userRole, "dean")) {
     $sidebarContent = "
         {$sidebarItems['dashboard']}
         {$sidebarItems['report']}
@@ -51,7 +57,7 @@ if (str_contains($userInfo['user_role'], "dean")) {
         {$sidebarItems['logout']}
     ";
 }
-if (str_contains($userInfo['user_role'], "admin")) {
+if (str_contains($userRole, "admin")) {
     $sidebarContent = "
         {$sidebarItems['dashboard']}
         {$sidebarItems['users']}
@@ -79,9 +85,9 @@ if (str_contains($userInfo['user_role'], "admin")) {
             </div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">
-                    <?php echo "{$userInfo['user_firstname']} {$userInfo['user_middlename']} {$userInfo['user_lastname']}"; ?>
+                    <?php echo "{$userFirstname} {$userMiddlename} {$userLastname}{$userSuffixname}"; ?>
                 </div>
-                <div class="sidebar-user-role"><?php echo $userInfo['user_role']; ?></div>
+                <div class="sidebar-user-role"><?php echo $userRole; ?></div>
             </div>
         </div>
         <div class="sidebar-content-btn">

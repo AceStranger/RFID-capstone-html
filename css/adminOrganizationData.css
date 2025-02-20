@@ -161,12 +161,12 @@ h1.organization-data-content-head-text {
 
 /* Main content */
 .organization-data-content-main-content {
-    height: calc(100% - 350px);
+    height: calc(100vh - 300px);
     width: 100%;
 }
 
 .organization-data-content-table-content {
-    height: calc(100vh - 350px);
+    height: calc(100vh - 300px);
     width: 100%;
     overflow-y: auto;
     border-radius: 10px;
@@ -175,7 +175,7 @@ h1.organization-data-content-head-text {
 
 table.organization-data-content-table {
     width: 100%;
-    height: 100%;
+    height: auto;
     border-collapse: collapse;
 }
 

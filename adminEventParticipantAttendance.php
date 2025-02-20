@@ -73,7 +73,7 @@ $eventInfoObject = json_encode($eventInfo);
             const officerInfoObject = <?php echo $officerInfoObject;?>;
 
             document.getElementById('print-btn').addEventListener('click', () => {
-                const printWindow = window.open('', '_blank', 'width=800,height=600');
+                const printWindow = window.open(' ', '_blank', 'width=800,height=600');
                 const printSection = document.querySelector(".event-paticipant-attendance-data-contents");
                 const eventInfoContainer = document.querySelector(".event-info");
                 const programTables = document.querySelectorAll(".program-table");

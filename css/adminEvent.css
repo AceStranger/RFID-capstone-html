@@ -218,6 +218,25 @@ tbody.event-content-table-body tr:last-child td:first-child {
 tbody.event-content-table-body tr:last-child td:last-child {
     border-bottom-right-radius: 8px;
 }
+tbody.event-content-table-body td > form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+tbody.event-content-table-body td > 
+form > button {
+    width: 100%;
+    border: none;
+}
+
+tbody.event-content-table-body td > 
+form > button.user-view {
+    background-color: #4CAF50;
+}
+tbody.event-content-table-body td > 
+form > button.user-delete {
+    background-color: #f44336;
+}
 
 
 

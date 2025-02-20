@@ -265,7 +265,7 @@ tr.student-account-content-table-row td {
     gap: 5px;
 }
 
-.user-account-action {
+.user-account-profile, .user-account-edit, .user-account-delete {
     width: 100%;
     padding: 5px 10px;
     font-size: 12px;
@@ -274,27 +274,28 @@ tr.student-account-content-table-row td {
     border-radius: 3px;
     cursor: pointer;
     text-shadow: 0 0 2px black;
+    word-break: auto-phrase;
 }
 
 .user-account-profile {
-    background-color: #3a77ff;
+    background-color: #007819;
 }
 
 .user-account-profile:hover {
-    background-color: #2a5fcd;
+    background-color: #005e14;
 }
 .user-account-edit {
-    background-color: #ffba3a;
+    background-color: #2a5fcd;
 }
 
 .user-account-edit:hover {
-    background-color: #cc942c;
+    background-color: #0056b3;
 }
 
 .user-account-delete {
-    background-color: #ff6f61;
+    background-color: #dd2f2f;
 }
 
 .user-account-delete:hover {
-    background-color: #ff3d2e;
+    background-color: #bd2727;
 }

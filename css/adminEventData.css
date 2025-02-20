@@ -35,13 +35,19 @@ button:active {
     width: 95%;
     height: 100px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     background-color: #ffffffe6;
     border-radius: 10px;
     margin-block-start: 16px;
     padding-inline: 16px;
+}
+.event-data-content-top-part > button{
+    padding: 10px 15px;
+    background-color: #007ce7;
+    border: none;
+    color: white;
 }
 h1.event-data-content-head-text {
     margin-inline: 20px;
@@ -145,6 +151,27 @@ h1.event-data-content-head-text {
     
 }
 .event-data-content-info-row > input:disabled {
+    color: black;
+    background-color:transparent;
+    border: none;
+    border-bottom: 1px solid black;
+}
+.event-data-content-info-row > select {
+    padding-block: 5px;
+    padding-inline: 10px;
+    border: 1px solid black;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.event-data-content-info-row > select:enabled {
+    color: black;
+    background-color:rgb(250, 255, 255);
+    
+}
+.event-data-content-info-row > select:disabled {
     color: black;
     background-color:transparent;
     border: none;
@@ -257,7 +284,7 @@ tr.event-data-content-row > td {
 
 .scanned-content{
     width: 850px;
-    height: 500px;
+    height: 600px;
     padding: 16px;
     background-color: aliceblue;
     box-shadow: 5px 5px 8px black;
@@ -278,7 +305,7 @@ tr.event-data-content-row > td {
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
-    height: auto;
+    min-height: 400px;
     padding-inline: 16px;
     overflow: auto;
 }
@@ -314,8 +341,7 @@ tr.event-data-content-row > td {
     width: 200px;
 }
 #user-profile-image {
-    
-    width: 250px;
+    width: 200px;
     height: auto;
 }
 .scanned-content-btn  {
@@ -339,6 +365,7 @@ tr.event-data-content-row > td {
 .scanned-content-table {
     margin: 20px auto;
     max-width: 1200px;
+    width: 100%;
     overflow-x: auto; /* For horizontal scrolling on small screens */
     border: 1px solid #ddd;
     border-radius: 8px;

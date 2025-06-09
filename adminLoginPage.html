@@ -3,6 +3,7 @@
 <head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="pictures/NORMI Logo-white-bg.png">
     <title>Admin Log In</title>
     <link rel="stylesheet" href="css\LogInPage.css"> 
     <script src="js/jquery-3.7.1.js"></script>
@@ -18,10 +19,12 @@
     <div class="log-in-content">
         <form id="form-admin" class="form admin" action="LogIn.php" method="post">
             <div class="log-in-header" id="log-in-header">Log In</div>
-            <input type="text" name="log-in-content-input-username" id="log-in-content-input-username" 
-            placeholder="Enter Username or School ID" 
-            required>
-            <div class="password-toggle">
+            <div class="input-controller">
+                <input type="text" name="log-in-content-input-username" id="log-in-content-input-username" 
+                placeholder="Enter Username or School ID" 
+                required>
+            </div>
+            <div class="input-controller">
                 <input type="password" name="log-in-content-input-password" id="log-in-content-input-password"  placeholder="Password...">
                 <span class="toggle-password password-show" onclick="togglePasswordVisibility()"></span>
             </div>

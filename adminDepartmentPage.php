@@ -17,6 +17,7 @@ $userInfo = $result->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departments</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/adminBody.css">
@@ -35,58 +36,58 @@ $userInfo = $result->fetch_assoc();
                         <button type="button" id="add-new-department-btn-show" class="add-new-department-btn-show">+ Add New Department</button>
                     </div>
                 </div>
-<!-- Add New Department Form -->
-<div class="add-department-container" style="display: none;">
-    <h2>Add New Department</h2>
-    <form id="add-department-form" class="add-department-form">
-        <div class="form-group">
-            <label for="department-name">Department Name</label>
-            <input type="text" name="department_name" id="department-name" required placeholder="Enter department name">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="add-department-btn">Add Department</button>
-            <button type="button" id="close-add-department-btn" class="close-add-department-btn">X</button>
-        </div>
-    </form>
-</div>
-<script>
-    // Toggle display of the add department form
-    document.getElementById('add-new-department-btn-show').addEventListener('click', function () {
-        const addDepartmentContainer = document.querySelector('.add-department-container');
-        addDepartmentContainer.style.display ='block';
-    });
-    // Close Add Department Form
-    document.getElementById('close-add-department-btn').addEventListener('click', function () {
-        const addDepartmentContainer = document.querySelector('.add-department-container');
-        addDepartmentContainer.style.display = 'none';
-    });
+                <!-- Add New Department Form -->
+                <div class="add-department-container" style="display: none;">
+                    <h2>Add New Department</h2>
+                    <form id="add-department-form" class="add-department-form">
+                        <div class="form-group">
+                            <label for="department-name">Department Name</label>
+                            <input type="text" name="department_name" id="department-name" required placeholder="Enter department name">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="add-department-btn">Add Department</button>
+                            <button type="button" id="close-add-department-btn" class="close-add-department-btn">X</button>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    // Toggle display of the add department form
+                    document.getElementById('add-new-department-btn-show').addEventListener('click', function () {
+                        const addDepartmentContainer = document.querySelector('.add-department-container');
+                        addDepartmentContainer.style.display ='block';
+                    });
+                    // Close Add Department Form
+                    document.getElementById('close-add-department-btn').addEventListener('click', function () {
+                        const addDepartmentContainer = document.querySelector('.add-department-container');
+                        addDepartmentContainer.style.display = 'none';
+                    });
 
-// Handle form submission via AJAX
-document.getElementById('add-department-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent page reload
+                // Handle form submission via AJAX
+                document.getElementById('add-department-form').addEventListener('submit', function (event) {
+                    event.preventDefault(); // Prevent page reload
 
-    const formData = new FormData(event.target);
+                    const formData = new FormData(event.target);
 
-    fetch('adminDepartmentInsertHandler.php', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Department added successfully!');
-                document.querySelector('.add-department-container').style.display = 'none';
-                location.reload(); // Reload the page to fetch updated data
-            } else {
-                alert('Failed to add department: ' + data.message);
-            }
-        })
-        .catch(error => {
-            alert('An error occurred: ' + error.message);
-        });
-});
+                    fetch('adminDepartmentInsertHandler.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Department added successfully!');
+                                document.querySelector('.add-department-container').style.display = 'none';
+                                location.reload(); // Reload the page to fetch updated data
+                            } else {
+                                alert('Failed to add department: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            alert('An error occurred: ' + error.message);
+                        });
+                });
 
-</script>
+                </script>
                 <div class="department-content-department-content">
                     <!-- Filter Section -->
                     <div class="department-content-top-part-filter">

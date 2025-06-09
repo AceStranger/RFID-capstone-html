@@ -109,7 +109,7 @@ h1.event-data-content-head-text {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     /* flex-wrap: wrap; */
 }
 .event-data-content-info-col {

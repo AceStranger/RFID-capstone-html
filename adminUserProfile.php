@@ -17,22 +17,23 @@ $userInfo = $result->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/headerStyle.css"> 
     <link rel="stylesheet" href="css/adminBody.css">
     <link rel="stylesheet" href="css/adminSidebar.css">
     <link rel="stylesheet" href="css/adminUserProfile.css">
-    <script src="js\adminSidebar.js"></script>
-        <?php
-        
-            if (str_contains($userInfo['user_role'], "admin") ||
-                str_contains($userInfo['user_role'], "officer") ||
-                str_contains($userInfo['user_role'], "dean")){
-            } else {
-                echo `<script src="js\adminUser.js"></script>`;
-            }
-         ?>
+    <?php
+    
+        if (str_contains($userInfo['user_role'], "admin") ||
+            str_contains($userInfo['user_role'], "officer") ||
+            str_contains($userInfo['user_role'], "dean")){
+            echo '<script src="js/adminSidebar.js"></script>';
+        } else {
+            echo '<script src="js/user.js"></script>';
+        }
+        ?>
     <script defer src="js/usermenu.js"></script> 
 </head>
 <body>
@@ -59,14 +60,14 @@ $userInfo = $result->fetch_assoc();
                     $btn = "";
 
                     if ($request === "view-profile") {
-                        $inputAvailability = "disabled";
+                        $inputAvailability = "readonly";
                         $btn = '
                             <input type="submit" name="eSubmit" id="user-profile-btn-action-btn-edit" class="user-profile-btn-action-btn" value="Edit">
                             <input type="submit" name="dSubmit" id="user-profile-btn-action-btn-delete" class="user-profile-btn-action-btn" value="Delete">
 
                             ';
                     } elseif ($request === "edit-profile") {
-                        $inputAvailability = "";
+                        $inputAvailability = "enabled";
                         $btn = '
                             <input type="submit" name="uSubmit" id="user-profile-btn-action-btn-update" class="user-profile-btn-action-btn" value="Update">
                             <input type="submit" name="cSubmit" id="user-profile-btn-action-btn-cancel" class="user-profile-btn-action-btn" value="Cancel">
@@ -88,7 +89,7 @@ $userInfo = $result->fetch_assoc();
                             </script>
                             ';
                     } elseif ($request === "delete-profile") {
-                        $inputAvailability = "disabled";
+                        $inputAvailability = "readonly";
                         $btn = '
                             <input type="submit" name="dcSubmit" id="user-profile-btn-action-btn-delete" class="user-profile-btn-action-btn" value="Delete">
                             <input type="submit" name="cSubmit" id="user-profile-btn-action-btn-cancel" class="user-profile-btn-action-btn" value="Cancel">
@@ -229,7 +230,7 @@ $userInfo = $result->fetch_assoc();
                                             <div class='user-info-content-col-1'>
                                                 <div class='user-info-content-info-field user-info-content-input-field'>
                                                     <label for='student-department'>Department:</label>
-                                                    <input disabled type='text' id='student-department' name='student-department' value='$departmentName'>
+                                                    <input readonly type='text' id='student-department' name='student-department' value='$departmentName'>
                                                 </div>
                                                 <div class='user-info-content-info-field user-info-content-input-field'>
                                                     <label for='student-program'>Program:</label>
@@ -473,7 +474,7 @@ $userInfo = $result->fetch_assoc();
                                                 </div>
                                                 <div class='user-info-content-info-field picture-input-field user-info-content-input-field'>
                                                     <input type='hidden' name='userpfpfilepath' value='<?php echo $usersPFP;?>'>
-                                                    <input <?php echo $inputAvailability;?> type='file' accept='image/jpeg, image/png, image/gif ' id='user-picture' name='user-picture' placehole='Choose Image'>
+                                                    <input <?php echo $inputAvailability === "readonly" ? "disabled" : "enabled";?> type='file' accept='image/jpeg, image/png, image/gif ' id='user-picture' name='user-picture' placehole='Choose Image'>
 
                                                     <img src='<?php echo $usersPFP;?> ' alt='' id='user-profile-info-content-picture' class='user-profile-info-content-picture'>
                                                 </div>
@@ -540,7 +541,7 @@ $userInfo = $result->fetch_assoc();
                                                 </div>
                                                 <div class='user-info-content-info-field user-info-content-input-field'>
                                                     <label for='user-role'>Role:</label>
-                                                    <input <?php echo $inputAvailability;?> type='text' list='role-list' id='user-role' name='user-role' value='<?php echo $usersRole;?> '>
+                                                    <input readonly type='text' list='role-list' id='user-role' name='user-role' value='<?php echo $usersRole;?> '>
 
                                                     <datalist id='role-list'>
                                                         <option value='student'>
@@ -574,13 +575,13 @@ $userInfo = $result->fetch_assoc();
                                             <div class='user-info-content-col-1'>
                                                 <div class='user-info-content-info-field user-info-content-input-field'>
                                                     <label for='dean-last-login'>Last Login Date:</label>
-                                                    <input disabled type='datetime' id='dean-last-login' name='dean-last-login' value='<?php echo $usersLastLoginDate;?>'>
+                                                    <input readonly type='datetime' id='dean-last-login' name='dean-last-login' value='<?php echo $usersLastLoginDate;?>'>
                                                 </div>
                                             </div>
                                             <div class='user-info-content-col-2'>
                                                 <div class='user-info-content-info-field user-info-content-input-field'>
                                                     <label for='dean-date-created'>Date created at:</label>
-                                                    <input disabled type='datetime' id='dean-date-created' name='dean-date-created' value='<?php echo $usersCreatedAt;?>'>
+                                                    <input readonly type='datetime' id='dean-date-created' name='dean-date-created' value='<?php echo $usersCreatedAt;?>'>
                                                 </div>
                                             </div>
                                         </div>
@@ -640,56 +641,101 @@ $userInfo = $result->fetch_assoc();
                                                                                                             
                                                         while ($row = $result->fetch_assoc()) {
                                                             // Extract event details
-                                                            $event_name = $row['event_name'];
-                                                            $event_date = $row['event_date'];
-                                                            $event_organizer = $row['organization_name'];
-                                                            $attendance_am_time_in = $row['attendance_am_time_in'];
-                                                            $attendance_am_time_out = $row['attendance_am_time_out'];
-                                                            $attendance_pm_time_in = $row['attendance_pm_time_in'];
-                                                            $attendance_pm_time_out = $row['attendance_pm_time_out'];
-                                                            $event_time_duration = $row['event_time_duration'];
+                                                            $event_name = $row['event_name'] ?? null;
+                                                            $event_date = $row['event_date'] ?? null;
+                                                            $event_organizer = $row['organization_name'] ?? null;
                                                             
-                                                            // Set placeholders for time
-                                                            $am_time_in = "~";
-                                                            $am_time_out = "~";
-                                                            $pm_time_in = "~";
-                                                            $pm_time_out = "~";
+                                                            $attendance_am_time_in_raw = $row['attendance_am_time_in'] ?? null;
+                                                            $attendance_am_time_out_raw = $row['attendance_am_time_out'] ?? null;
+                                                            $attendance_pm_time_in_raw = $row['attendance_pm_time_in'] ?? null;
+                                                            $attendance_pm_time_out_raw = $row['attendance_pm_time_out'] ?? null;
+                                                            $event_time_duration_raw = $row['event_time_duration'] ?? null;
+                                                            $attendance_duration_am_time_in_start_raw = $row['attendance_duration_am_time_in_start'] ?? null;
+                                                            $attendance_duration_am_time_in_end_raw = $row['attendance_duration_am_time_in_end'] ?? null;
+                                                            $attendance_duration_am_time_out_start_raw = $row['attendance_duration_am_time_out_start'] ?? null;
+                                                            $attendance_duration_am_time_out_end_raw = $row['attendance_duration_am_time_out_end'] ?? null;
+                                                            $attendance_duration_pm_time_in_start_raw = $row['attendance_duration_pm_time_in_start'] ?? null;
+                                                            $attendance_duration_pm_time_in_end_raw = $row['attendance_duration_pm_time_in_end'] ?? null;
+                                                            $attendance_duration_pm_time_out_start_raw = $row['attendance_duration_pm_time_out_start'] ?? null;
+                                                            $attendance_duration_pm_time_out_end_raw = $row['attendance_duration_pm_time_out_end'] ?? null;
+
+                                                            // Convert times to Unix timestamps, ensuring they are valid.
+                                                            // If strtotime returns false (e.g., empty string, invalid format), set to null.
+                                                            $attendance_am_time_in = $attendance_am_time_in_raw ? strtotime($attendance_am_time_in_raw) : null;
+                                                            $attendance_am_time_out = $attendance_am_time_out_raw ? strtotime($attendance_am_time_out_raw) : null;
+                                                            $attendance_pm_time_in = $attendance_pm_time_in_raw ? strtotime($attendance_pm_time_in_raw) : null;
+                                                            $attendance_pm_time_out = $attendance_pm_time_out_raw ? strtotime($attendance_pm_time_out_raw) : null;
+                                                            $event_time_duration = $event_time_duration_raw; // This is a string, no strtotime needed
+
+                                                            $attendance_duration_am_time_in_start = $attendance_duration_am_time_in_start_raw ? strtotime($attendance_duration_am_time_in_start_raw) : null;
+                                                            $attendance_duration_am_time_in_end = $attendance_duration_am_time_in_end_raw ? strtotime($attendance_duration_am_time_in_end_raw) : null;
+                                                            $attendance_duration_am_time_out_start = $attendance_duration_am_time_out_start_raw ? strtotime($attendance_duration_am_time_out_start_raw) : null;
+                                                            $attendance_duration_am_time_out_end = $attendance_duration_am_time_out_end_raw ? strtotime($attendance_duration_am_time_out_end_raw) : null;
+                                                            $attendance_duration_pm_time_in_start = $attendance_duration_pm_time_in_start_raw ? strtotime($attendance_duration_pm_time_in_start_raw) : null;
+                                                            $attendance_duration_pm_time_in_end = $attendance_duration_pm_time_in_end_raw ? strtotime($attendance_duration_pm_time_in_end_raw) : null;
+                                                            $attendance_duration_pm_time_out_start = $attendance_duration_pm_time_out_start_raw ? strtotime($attendance_duration_pm_time_out_start_raw) : null;
+                                                            $attendance_duration_pm_time_out_end = $attendance_duration_pm_time_out_end_raw ? strtotime($attendance_duration_pm_time_out_end_raw) : null;
+
+                                                            // Set placeholders for time to display
+                                                            $am_time_in_display = "~";
+                                                            $am_time_out_display = "~";
+                                                            $pm_time_in_display = "~";
+                                                            $pm_time_out_display = "~";
 
                                                             // Check AM Time In and Out
                                                             if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
-                                                                if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
-                                                                    $am_time_in = $attendance_am_time_in;
+                                                                // Only check if the attendance time and duration boundaries are not null
+                                                                if ($attendance_am_time_in !== null && $attendance_duration_am_time_in_start !== null && $attendance_duration_am_time_in_end !== null) {
+                                                                    if ($attendance_am_time_in >= $attendance_duration_am_time_in_start && $attendance_am_time_in <= $attendance_duration_am_time_in_end) {
+                                                                        $am_time_in_display = date('H:i:s', $attendance_am_time_in);
+                                                                    }
                                                                 }
-                                                                if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
-                                                                    $am_time_out = $attendance_am_time_out;
+                                                                if ($attendance_am_time_out !== null && $attendance_duration_am_time_out_start !== null && $attendance_duration_am_time_out_end !== null) {
+                                                                    if ($attendance_am_time_out >= $attendance_duration_am_time_out_start && $attendance_am_time_out <= $attendance_duration_am_time_out_end) {
+                                                                        $am_time_out_display = date('H:i:s', $attendance_am_time_out);
+                                                                    }
                                                                 }
                                                             }
+
                                                             // Check PM Time In and Out
                                                             if ($event_time_duration == "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
-                                                                if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
-                                                                    $pm_time_in = $attendance_pm_time_in;
+                                                                if ($attendance_pm_time_in !== null && $attendance_duration_pm_time_in_start !== null && $attendance_duration_pm_time_in_end !== null) {
+                                                                    if ($attendance_pm_time_in >= $attendance_duration_pm_time_in_start && $attendance_pm_time_in <= $attendance_duration_pm_time_in_end) {
+                                                                        $pm_time_in_display = date('H:i:s', $attendance_pm_time_in);
+                                                                    }
                                                                 }
-                                                                if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
-                                                                    $pm_time_out = $attendance_pm_time_out;
+                                                                if ($attendance_pm_time_out !== null && $attendance_duration_pm_time_out_start !== null && $attendance_duration_pm_time_out_end !== null) {
+                                                                    if ($attendance_pm_time_out >= $attendance_duration_pm_time_out_start && $attendance_pm_time_out <= $attendance_duration_pm_time_out_end) {
+                                                                        $pm_time_out_display = date('H:i:s', $attendance_pm_time_out);
+                                                                    }
                                                                 }
                                                             }
 
-                                                            // For "Half Day" events:
+                                                            // For "Half Day - AM" events:
                                                             if ($event_time_duration == "Half Day - AM Time In & AM Time Out") {
-                                                                if (strtotime($attendance_am_time_in) >= strtotime($row['attendance_duration_am_time_in_start']) && strtotime($attendance_am_time_in) <= strtotime($row['attendance_duration_am_time_in_end'])) {
-                                                                    $am_time_in = $attendance_am_time_in;
+                                                                if ($attendance_am_time_in !== null && $attendance_duration_am_time_in_start !== null && $attendance_duration_am_time_in_end !== null) {
+                                                                    if ($attendance_am_time_in >= $attendance_duration_am_time_in_start && $attendance_am_time_in <= $attendance_duration_am_time_in_end) {
+                                                                        $am_time_in_display = date('H:i:s', $attendance_am_time_in);
+                                                                    }
                                                                 }
-                                                                if (strtotime($attendance_am_time_out) >= strtotime($row['attendance_duration_am_time_out_start']) && strtotime($attendance_am_time_out) <= strtotime($row['attendance_duration_am_time_out_end'])) {
-                                                                    $am_time_out = $attendance_am_time_out;
+                                                                if ($attendance_am_time_out !== null && $attendance_duration_am_time_out_start !== null && $attendance_duration_am_time_out_end !== null) {
+                                                                    if ($attendance_am_time_out >= $attendance_duration_am_time_out_start && $attendance_am_time_out <= $attendance_duration_am_time_out_end) {
+                                                                        $am_time_out_display = date('H:i:s', $attendance_am_time_out);
+                                                                    }
                                                                 }
                                                             }
 
+                                                            // For "Half Day - PM" events:
                                                             if ($event_time_duration == "Half Day - PM Time In & PM Time Out") {
-                                                                if (strtotime($attendance_pm_time_in) >= strtotime($row['attendance_duration_pm_time_in_start']) && strtotime($attendance_pm_time_in) <= strtotime($row['attendance_duration_pm_time_in_end'])) {
-                                                                    $pm_time_in = $attendance_pm_time_in;
+                                                                if ($attendance_pm_time_in !== null && $attendance_duration_pm_time_in_start !== null && $attendance_duration_pm_time_in_end !== null) {
+                                                                    if ($attendance_pm_time_in >= $attendance_duration_pm_time_in_start && $attendance_pm_time_in <= $attendance_duration_pm_time_in_end) {
+                                                                        $pm_time_in_display = date('H:i:s', $attendance_pm_time_in);
+                                                                    }
                                                                 }
-                                                                if (strtotime($attendance_pm_time_out) >= strtotime($row['attendance_duration_pm_time_out_start']) && strtotime($attendance_pm_time_out) <= strtotime($row['attendance_duration_pm_time_out_end'])) {
-                                                                    $pm_time_out = $attendance_pm_time_out;
+                                                                if ($attendance_pm_time_out !== null && $attendance_duration_pm_time_out_start !== null && $attendance_duration_pm_time_out_end !== null) {
+                                                                    if ($attendance_pm_time_out >= $attendance_duration_pm_time_out_start && $attendance_pm_time_out <= $attendance_duration_pm_time_out_end) {
+                                                                        $pm_time_out_display = date('H:i:s', $attendance_pm_time_out);
+                                                                    }
                                                                 }
                                                             }
 
@@ -699,10 +745,10 @@ $userInfo = $result->fetch_assoc();
                                                                 <td class='attendance-history-content-event-name'>$event_name</td>
                                                                 <td class='attendance-history-content-event-date'>$event_date</td>
                                                                 <td class='attendance-history-content-event-organizer'>$event_organizer</td>
-                                                                <td class='attendance-history-content-event-am-tin'>$am_time_in</td>
-                                                                <td class='attendance-history-content-event-am-tout'>$am_time_out</td>
-                                                                <td class='attendance-history-content-event-pm-tin'>$pm_time_in</td>
-                                                                <td class='attendance-history-content-event-pm-tout'>$pm_time_out</td>
+                                                                <td class='attendance-history-content-event-am-tin'>$am_time_in_display</td>
+                                                                <td class='attendance-history-content-event-am-tout'>$am_time_out_display</td>
+                                                                <td class='attendance-history-content-event-pm-tin'>$pm_time_in_display</td>
+                                                                <td class='attendance-history-content-event-pm-tout'>$pm_time_out_display</td>
                                                             </tr>";
                                                         }   
                                                     ?>

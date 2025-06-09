@@ -174,6 +174,7 @@ div {
 .user-info-content-info-field > input#password {
     width: 130px;
 }
+.user-info-content-info-field > input[type=file]:read-only,
 .user-info-content-info-field > input[type=file]:disabled {
     display: none;
 }
@@ -198,6 +199,7 @@ div {
     -ms-border-radius: 3px;
     -o-border-radius: 3px;
 }
+select:read-only,
 select:disabled {
     opacity: 1;
 }
@@ -219,26 +221,31 @@ select:disabled {
     -ms-border-radius: 3px;
     -o-border-radius: 3px;
 }
-.user-info-content-info-field > input:enabled {
-    color: black;
-    border: 1px solid black;
-    background-color: #ffffff;
-}
-.user-info-content-info-field > select:enabled {
-    color: black;
-    border: 1px solid black;
-    background-color: #ffffff;
-}
+.user-info-content-info-field > input:enabled,
+.user-info-content-info-field > select:enabled,
 .user-info-content-info-field > textarea:enabled {
+    display: inline-block;
     color: black;
     border: 1px solid black;
     background-color: #ffffff;
+}
+.user-info-content-info-field > input:read-only,
+.user-info-content-info-field > select:read-only,
+.user-info-content-info-field > textarea:read-only {
+    color: black;
+    border: none;
+    border-bottom: 1px solid #0000003d;
+    background-color: transparent;
 }
 .picture-input-field {
     justify-content: space-around !important;
 }
+input#user-picture:read-only,
 input#user-picture:disabled {
-    display: none !important;
+    display: none;
+}
+input#user-picture:enabled {
+    display: inline-block;
 }
 .user-info-content-info-field > input#user-role {
     text-transform: capitalize;

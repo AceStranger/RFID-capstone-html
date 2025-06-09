@@ -183,6 +183,7 @@ select {
 .report-content-search-input-container label {
     font-size: 14px;
     color: #555;
+    align-self: center;
 }
 
 .report-content-search-input-container select,

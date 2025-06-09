@@ -31,6 +31,7 @@ $request = isset($_SESSION['request']) ? $_SESSION['request'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organization</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/adminBody.css">
@@ -161,8 +162,8 @@ $request = isset($_SESSION['request']) ? $_SESSION['request'] : '';
                                                     $row['officer_duty'] !== "Head of the Organization")
                                                     ) : ?>
                                                     <td class="organization-data-content-btn-Actions">
-                                                        <button type="submit" name="vSubmit" >View</button>
-                                                        <button type="submit" name="eSubmit" >Edit</button>
+                                                        <button type="submit" name="vSubmit" id="btn-view" >View</button>
+                                                        <button type="submit" name="eSubmit" id="btn-edit" >Edit</button>
                                                     </td>
                                                 <?php else: ?>
                                                     <td class="organization-data-content-btn-Actions">

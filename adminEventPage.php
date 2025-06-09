@@ -49,6 +49,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/adminBody.css">
@@ -200,7 +201,7 @@ if(str_contains( $officerDuty, "Manage Event Registration")) {
                             <label for="event-content-filter-select-status">Filter By Status:</label>
                             <select name="event-content-filter-select-status" id="event-content-filter-select-status">
                                 <option value="" selected>All</option>
-                                <option value="upcoming">Upcoming</option>
+                                <option value="incoming">Incoming</option>
                                 <option value="ongoing">Ongoing</option>
                                 <option value="end">End</option>
                             </select>

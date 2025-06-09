@@ -1,14 +1,16 @@
 <?php
 include "dbh.php";
 $user_ID = $_SESSION['user_ID'];
-$query = "SELECT * FROM user WHERE user_id = $user_ID";
-$result = mysqli_query($conn, $query);
+$query = $conn->prepare("SELECT * FROM user WHERE user_id = ? LIMIT 1");
+$query->bind_param("i", $user_ID);
+$query->execute();
+$result = $query->get_result();
 $userInfo = $result->fetch_assoc();
 $userPFP = (!empty($userInfo['user_img'])) ? $userInfo['user_img'] : 'pictures\pfp avatar.png';
 $userRole = (!empty($userInfo['user_role'])) ? $userInfo['user_role'] : '';
-$userFirstname = (!empty(trim($userInfo['user_firstname']))) ? $userInfo['user_firstname'] : '';
-$userMiddlename = (!empty(trim($userInfo['user_middlename']))) ? $userInfo['user_middlename'] : '';
-$userLastname = (!empty(trim($userInfo['user_lastname']))) ? $userInfo['user_lastname'] : '';
+$userFirstname = (!empty(trim($userInfo['user_firstname']))) ? $userInfo['user_firstname'] . " "  : '';
+$userMiddlename = (!empty(trim($userInfo['user_middlename']))) ? $userInfo['user_middlename'] . " "  : '';
+$userLastname = (!empty(trim($userInfo['user_lastname']))) ? $userInfo['user_lastname'] . " "  : '';
 $userSuffixname = !empty(trim($userInfo['user_suffixname'])) ? ", " . $userInfo['user_suffixname'] : '';
 
 error_log("UserRole: ".$userRole);
@@ -73,8 +75,8 @@ if (str_contains($userRole, "admin")) {
 }
 ?>
 
-<button class="sidebar-toggle-btn" onclick="toggleSidebar()">></button>
-<div class="main-sidebar-content">
+<button class="sidebar-toggle-btn"><</button> 
+<div class="main-sidebar-content">  
     <div class="sidebar-content">
         <div class="sidebar-content-header">
             <div class="logo-container"><img src="..\pictures\NORMI Logo.png" alt="" class="logo"></div>
@@ -85,7 +87,7 @@ if (str_contains($userRole, "admin")) {
             </div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">
-                    <?php echo "{$userFirstname} {$userMiddlename} {$userLastname}{$userSuffixname}"; ?>
+                    <?php echo htmlspecialchars($userFirstname) . htmlspecialchars($userMiddlename) . htmlspecialchars($userLastname) . htmlspecialchars($userSuffixname); ?>
                 </div>
                 <div class="sidebar-user-role"><?php echo $userRole; ?></div>
             </div>
@@ -97,30 +99,3 @@ if (str_contains($userRole, "admin")) {
         </div>
     </div>
 </div>
-<script>
-    
-function toggleSidebar() {
-    const sidebar = document.querySelector('.main-sidebar-content');
-    const mainContentContainer = document.querySelector('.main-content-container');
-    const mainContent = document.querySelector('.main-content');
-    const toggleButton = document.querySelector('.sidebar-toggle-btn');
-
-    // Check if sidebar is visible or hidden
-    if (sidebar.style.width === '0px' || sidebar.style.width === '') {
-        sidebar.style.width = '300px';  // Default width
-        mainContentContainer.style.gridTemplateColumns = '300px 1fr';
-        toggleButton.textContent = '<';
-        toggleButton.style.top = "5px";
-        toggleButton.style.padding = "10px";
-    } else {
-        sidebar.style.width = '0px';  // Hide sidebar
-        mainContentContainer.style.gridTemplateColumns = '0px 1fr';   // Adjust grid when sidebar is hidden
-        toggleButton.textContent = '>';
-        toggleButton.style.top = "50%";
-        toggleButton.style.paddingInline = "1px";
-        toggleButton.style.paddingBlock = "10px";
-    }
-}
-
-
-</script>

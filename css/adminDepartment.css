@@ -270,7 +270,7 @@ button:active {
     position: sticky;
     top: 0;
     z-index: 1;
-    background: #3a77ff; /* Sticky background to prevent transparency */
+    background: #005e14; /* Sticky background to prevent transparency */
     color: white;
     padding: 10px;
     font-size: 14px;
@@ -312,13 +312,14 @@ button:active {
     word-break: break-word;
 }
 td.department-content-data-department-name {
-    min-width: 50%;
+    min-width: 70%;
     width: 400px;
 }
 
-td.department-content-data-responsibility {
-    min-width: 30%;
-    width: 300px;
+td.department-content-data-department-id {
+    min-width: 10%;
+    width: 20px;
+    text-align: center;
 }
 
 td.department-content-data-btn-actions {
@@ -347,24 +348,17 @@ td.department-content-data-btn-actions {
     word-break: auto-phrase;
     margin-block: 2px;
 }
-.user-edit {
-    background-color: #2a5fcd;
-}
 
-.user-edit:hover {
-    background-color: #0056b3;
-}
-
+.user-edit,
 .user-delete {
-    background-color: #dd2f2f;
+    background-color: #007819;
 }
 
+.user-edit:hover,
 .user-delete:hover {
-    background-color: #bd2727;
+    box-shadow: 0 0 2px black;
+    background-color: #00490f;
 }
-
-
-
 
 
 .edit-department-container {

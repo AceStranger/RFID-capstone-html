@@ -34,6 +34,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/headerStyle.css"> 
     <link rel="stylesheet" href="css/body.css"> 
     <link rel="stylesheet" href="css/root.css">
@@ -162,7 +163,8 @@ while ($org = $organizationResult->fetch_assoc()) {
                     .then((events) => {
                         const tableBody = document.querySelector(".organization-event-content-table-body");
                         tableBody.innerHTML = ""; // Clear the existing rows
-
+                        console.log("events", events);
+                        
                         events.forEach((event) => {
                             const participants = event.event_participant.split(",").map((p) => p.trim());
                             let shouldDisplay = false;
@@ -194,49 +196,67 @@ while ($org = $organizationResult->fetch_assoc()) {
                                     }
                                 }
                             });
-
                             // Handle the time values based on event_time_duration
                             let amTimeIn, amTimeOut, pmTimeIn, pmTimeOut;
+                            // console.log("Missing event:", attendance);
 
                             if (event.attendance) {
+                                // If attendance exists, use its values and check against duration ranges
+                                if (event.event_time_duration === "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
+                                    amTimeIn = (event.attendance.am_time_in && isTimeWithinRange(event.attendance.am_time_in, event.attendance_duration_am_time_in_start, event.attendance_duration_am_time_in_end)) ? event.attendance.am_time_in : "~";
+                                    amTimeOut = (event.attendance.am_time_out && isTimeWithinRange(event.attendance.am_time_out, event.attendance_duration_am_time_out_start, event.attendance_duration_am_time_out_end)) ? event.attendance.am_time_out : "~";
+                                    pmTimeIn = (event.attendance.pm_time_in && isTimeWithinRange(event.attendance.pm_time_in, event.attendance_duration_pm_time_in_start, event.attendance_duration_pm_time_in_end)) ? event.attendance.pm_time_in : "~";
+                                    pmTimeOut = (event.attendance.pm_time_out && isTimeWithinRange(event.attendance.pm_time_out, event.attendance_duration_pm_time_out_start, event.attendance_duration_pm_time_out_end)) ? event.attendance.pm_time_out : "~";
+                                } else if (event.event_time_duration === "Half Day - AM Time In & AM Time Out") {
+                                    amTimeIn = (event.attendance.am_time_in && isTimeWithinRange(event.attendance.am_time_in, event.attendance_duration_am_time_in_start, event.attendance_duration_am_time_in_end)) ? event.attendance.am_time_in : "~";
+                                    amTimeOut = (event.attendance.am_time_out && isTimeWithinRange(event.attendance.am_time_out, event.attendance_duration_am_time_out_start, event.attendance_duration_am_time_out_end)) ? event.attendance.am_time_out : "~";
+                                    pmTimeIn = "~";
+                                    pmTimeOut = "~";
+                                } else if (event.event_time_duration === "Half Day - PM Time In & PM Time Out") {
+                                    amTimeIn = "~";
+                                    amTimeOut = "~";
+                                    pmTimeIn = (event.attendance.pm_time_in && isTimeWithinRange(event.attendance.pm_time_in, event.attendance_duration_pm_time_in_start, event.attendance_duration_pm_time_in_end)) ? event.attendance.pm_time_in : "~";
+                                    pmTimeOut = (event.attendance.pm_time_out && isTimeWithinRange(event.attendance.pm_time_out, event.attendance_duration_pm_time_out_start, event.attendance_duration_pm_time_out_end)) ? event.attendance.pm_time_out : "~";
+                                } else if (event.event_time_duration === "Whole Day - AM Time In & PM Time Out"){
+                                    amTimeIn = (event.attendance.am_time_in && isTimeWithinRange(event.attendance.am_time_in, event.attendance_duration_am_time_in_start, event.attendance_duration_am_time_in_end)) ? event.attendance.am_time_in : "~";
+                                    pmTimeOut = (event.attendance.pm_time_out && isTimeWithinRange(event.attendance.pm_time_out, event.attendance_duration_pm_time_out_start, event.attendance_duration_pm_time_out_end)) ? event.attendance.pm_time_out : "~";
+                                    amTimeOut = "~";
+                                    pmTimeIn = "~";
+                                } else {
+                                    // Default to "~" if event_time_duration is not recognized
+                                    amTimeIn = "~";
+                                    amTimeOut = "~";
+                                    pmTimeIn = "~";
+                                    pmTimeOut = "~";
+                                }
+                            } else {
                                 // If attendance is empty, handle based on event status
                                 if (event.event_status === 2) {
                                     amTimeIn = "x";
                                     amTimeOut = "x";
                                     pmTimeIn = "x";
                                     pmTimeOut = "x";
-                                    console.log("event status is end or 0");
-                                    
                                 } else {
                                     amTimeIn = "~";
                                     amTimeOut = "~";
                                     pmTimeIn = "~";
                                     pmTimeOut = "~";
-                                    console.log("event status is end or 0 is false");
                                 }
-                            } else {
-                                console.log("event.attendance is empty");
-                                // If attendance exists, use its values
-                                amTimeIn = event.attendance.am_time_in;
-                                amTimeOut = event.attendance.am_time_out;
-                                pmTimeIn = event.attendance.pm_time_in;
-                                pmTimeOut = event.attendance.pm_time_out;
-
-                            }
-                            if (event.event_time_duration === "Whole Day - AM Time In & AM Time Out & PM Time In & PM Time Out") {
-                                // Do nothing, keep the values as they are
-                            } else if (event.event_time_duration === "Whole Day - AM Time In & PM Time Out") {
-                                amTimeOut = "~";
-                                pmTimeIn = "~";
-                            } else if (event.event_time_duration === "Half Day - AM Time In & AM Time Out") {
-                                pmTimeIn = "~";
-                                pmTimeOut = "~";
-                            } else if (event.event_time_duration === "Half Day - PM Time In & PM Time Out") {
-                                amTimeIn = "~";
-                                amTimeOut = "~";
                             }
 
-
+                            // Helper function to check if a time is within a range
+                            function isTimeWithinRange(time, startTime, endTime) {
+                                if (!time || !startTime || !endTime) {
+                                    console.log("Missing time values:", time, startTime, endTime);
+                                    return false;
+                                }
+                                const timeValue = new Date("1970-01-01T" + time + "Z").getTime();
+                                const startTimeValue = new Date("1970-01-01T" + startTime + "Z").getTime();
+                                const endTimeValue = new Date("1970-01-01T" + endTime + "Z").getTime();
+                                console.log("Time values:", timeValue, startTimeValue, endTimeValue); // Add this line
+                                return timeValue >= startTimeValue && timeValue <= endTimeValue;
+                            }
+                            
                             const statusText = getEventStatus(event.event_status);
 
                             // Display the event if conditions match

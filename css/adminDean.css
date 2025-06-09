@@ -183,7 +183,7 @@ table.dean-account-content-table {
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #3a77ff;
+    background: #005e14;
     color: white;
     padding: 10px;
     font-size: 14px;
@@ -249,25 +249,15 @@ tr.dean-account-content-table-row td {
     word-break: auto-phrase;
 }
 
-.user-account-profile {
+.user-account-profile,
+.user-account-edit,
+.user-account-delete {
     background-color: #007819;
 }
 
-.user-account-profile:hover {
-    background-color: #005e14;
-}
-.user-account-edit {
-    background-color: #2a5fcd;
-}
-
-.user-account-edit:hover {
-    background-color: #0056b3;
-}
-
-.user-account-delete {
-    background-color: #dd2f2f;
-}
-
+.user-account-profile:hover,
+.user-account-edit:hover,
 .user-account-delete:hover {
-    background-color: #bd2727;
+    box-shadow: 0 0 2px black;
+    background-color: #00490f;
 }

@@ -1,15 +1,15 @@
 
 .dashboard-content{
-    /* margin-left: 350px; */
-    width: 100%;    
-    height: 100vh;
+    /* width: 100%;    
+    height: 100vh; */
     /* background-color: rgb(242, 242, 242); */
 
-
+    overflow: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;    
+    width: 100%;
     
 }
 
@@ -198,3 +198,119 @@
     padding: 10px;
     overflow-y: auto;
 }
+/* Responsive layout for dashboard-content */
+@media screen and (max-width: 900px) {
+    .dashboard-content {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-block: 10px;
+      gap: 20px;
+    }
+    
+    /* Adjust the main content (Posted Events) */
+    .dasboard-content-main-content {
+      width: 100%;
+      /* max-width: 500px; */
+      height: auto; /* Allow height to adjust based on content */
+      padding: 16px;
+    }
+    
+    /* Adjust the aside content (Today's and Upcoming Events) */
+    .dashboard-content-aside-content {
+      width: 100%;
+      /* max-width: 500px; */
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px;
+    }
+    
+    /* Make each aside block take full width on smaller screens */
+    .aside-content-today-event-content,
+    .aside-content-upcoming-event-content {
+        width: 90%;
+        height: auto;
+    }
+  }
+  
+  /* Further adjustments for very small screens */
+  @media screen and (max-width: 600px) {
+    .dasboard-content-main-content {
+      padding: 12px;
+    }
+    
+    .dashboard-content-aside-content {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .aside-content-today-event-content,
+    .aside-content-upcoming-event-content {
+      padding: 12px;
+    }
+    
+    /* Reduce table font size for better fit */
+    .posted-event-table,
+    .today-event-table,
+    .upcoming-event-table {
+      font-size: 0.9rem;
+    }
+  }
+
+
+  /* Layout for when dashboard-content width is less than height but at least 75% of height */
+.dashboard-content.layout-condition1 {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding-block: 10px;
+  }
+  
+  .dashboard-content.layout-condition1 .dasboard-content-main-content,
+  .dashboard-content.layout-condition1 .dashboard-content-aside-content {
+    height: 45%;
+    width: 90%;
+  }
+  
+  .dashboard-content.layout-condition1 > .dashboard-content-aside-content {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 10px;
+    overflow: auto;
+  }
+  
+  .dashboard-content.layout-condition1 > .dashboard-content-aside-content > .aside-content-today-event-content,
+  .dashboard-content.layout-condition1 > .dashboard-content-aside-content > .aside-content-upcoming-event-content {
+    width: 45%;
+    height: 90%;
+  }
+  
+  /* Layout for when dashboard-content width is less than 75% of height */
+  .dashboard-content.layout-condition2 {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+    width: 100%;
+  }
+  
+  .dashboard-content.layout-condition2 .dasboard-content-main-content,
+  .dashboard-content.layout-condition2 .dashboard-content-aside-content {
+    height: 45%;
+    width: 90%;
+  }
+  
+  .dashboard-content.layout-condition2 > .dashboard-content-aside-content {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .dashboard-content.layout-condition2 > .dashboard-content-aside-content > .aside-content-today-event-content,
+  .dashboard-content.layout-condition2 > .dashboard-content-aside-content > .aside-content-upcoming-event-content {
+    width: 100%;
+    height: auto;
+  }
+  

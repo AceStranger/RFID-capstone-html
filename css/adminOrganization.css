@@ -350,7 +350,7 @@ button:active {
     position: sticky;
     top: 0;
     z-index: 1;
-    background: #3a77ff; /* Sticky background to prevent transparency */
+    background: #005e14; /* Sticky background to prevent transparency */
     color: white;
     padding: 10px;
     font-size: 14px;
@@ -432,25 +432,15 @@ td.organization-content-data-btn-actions {
     word-break: auto-phrase;
 }
 
-.organization-view {
+.organization-view,
+.organization-edit,
+.organization-delete {
     background-color: #007819;
 }
 
-.organization-view:hover {
-    background-color: #005e14;
-}
-.organization-edit {
-    background-color: #2a5fcd;
-}
-
-.organization-edit:hover {
-    background-color: #0056b3;
-}
-
-.organization-delete {
-    background-color: #dd2f2f;
-}
-
+.organization-view:hover,
+.organization-edit:hover,
 .organization-delete:hover {
-    background-color: #bd2727;
+    box-shadow: 0 0 2px black;
+    background-color: #00490f;
 }

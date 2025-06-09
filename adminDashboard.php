@@ -14,7 +14,7 @@ if (strpos($userRole, "admin") !== false) {
     header("Location: adminDashboardPage.php");
     exit();
 } else {
-    header("Location: adminLogIn.html?#message=User is not a Administrator"); // Ensure the correct file is used
+    header("Location: adminLoginPage.html?#message=User is not a Administrator"); // Ensure the correct file is used
     exit();
 }
 ?>

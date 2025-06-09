@@ -28,6 +28,7 @@ if (mysqli_num_rows($departmentResult) > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programs</title>
+    <?php include "titleIcon.php" ;?>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/adminBody.css">

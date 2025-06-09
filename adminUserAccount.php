@@ -342,28 +342,63 @@ include "logActivity.php";
                 $usersSchoolID = isset($_POST['user-school-id']) ? mysqli_real_escape_string($conn,$_POST['user-school-id']) : '';
                 $userpfpfilepath = isset($_POST['userpfpfilepath']) ? mysqli_real_escape_string($conn,$_POST['userpfpfilepath']) : '';
                 $userRole = isset($_POST['user-role']) ? mysqli_real_escape_string($conn,$_POST['user-role']) : '';
-    
-                // Split roles by comma and trim any extra spaces
-                $roles = array_map('trim', explode(",", $userAccRole));
+                
+                // Initialize an array to hold the roles to process
+                $rolesToProcess = [];
 
-                foreach ($roles as $role) {
-                    // Check if the role exists, if not, create the role account
-                    if (!checkUserRoleExists($conn, $useraccountid, $role)) {
-                        createUserRole($conn, $useraccountid, $role);
-                        
-                        // Log the activity for creating the user role
-                        logActivity(
-                            'Create Role',
-                            ucfirst($role), // Capitalize the role for display
-                            $useraccountid,
-                            $_SESSION['user_ID'],  // Admin user who is creating the role
-                            "Created the '$role' role for the user.",
-                            $conn
-                        );
+                // Check if $userRole has a comma
+                if (strpos($userRole, ',') !== false) {
+                    // If it has a comma, split it into an array
+                    $splitRoles = explode(",", $userRole);
+                    // Trim whitespace from each role and filter out any empty strings
+                    $rolesToProcess = array_filter(array_map('trim', $splitRoles), 'strlen');
+                } else {
+                    // If it doesn't have a comma, treat it as a single role
+                    $trimmedRole = trim($userRole);
+                    if (!empty($trimmedRole)) {
+                        $rolesToProcess[] = $trimmedRole;
                     }
                 }
-                // Check if file was uploaded
+                // Process each role found
+                foreach ($rolesToProcess as $role) {
+                    // Ensure the role is not an empty string after trimming
+                    if (!empty($role)) {
+                        // Check if the role exists for the user; if not, create it
+                        if (!checkUserRoleExists($conn, $useraccountid, $role)) {
+                            createUserRole($conn, $useraccountid, $role);
+                            
+                            // Log the activity for creating the user role
+                            logActivity(
+                                'Create Role',
+                                ucfirst($role), // Capitalize the role for display
+                                $useraccountid,
+                                $_SESSION['user_ID'],  // Admin user who is creating the role
+                                "Created the '$role' role for the user.",
+                                $conn
+                            );
+                        }
+                    }
+                }
+
+
+                // Initialize the profile picture path with the existing one
+                $usersPFPfilePath = $userpfpfilepath;
+
+                // Check if a new file was uploaded
                 if (isset($_FILES['user-picture']) && $_FILES['user-picture']['error'] === UPLOAD_ERR_OK) {
+
+                    // First, get the old picture's path from the database to delete it later
+                    $oldImagePathQuery = "SELECT `user_img` FROM `user` WHERE `user_id` = ?";
+                    $stmt_old_img = $conn->prepare($oldImagePathQuery);
+                    $stmt_old_img->bind_param("i", $useraccountid);
+                    $stmt_old_img->execute();
+                    $result_old_img = $stmt_old_img->get_result();
+                    if ($row_old_img = $result_old_img->fetch_assoc()) {
+                        $oldPfpPath = $row_old_img['user_img'];
+                    }
+                    $stmt_old_img->close();
+
+
                     $file = $_FILES['user-picture'];
                     $usersSchoolID = trim($usersSchoolID);
                     $uploadDir = "uploads/$usersSchoolID/";
@@ -384,9 +419,15 @@ include "logActivity.php";
                     $newFileName = uniqid("profile_", true) . ".$fileExtension";
                     $usersPFPfilePath = $uploadDir . $newFileName;
     
-                    if (!move_uploaded_file($file['tmp_name'], $usersPFPfilePath)) {
+                    if (move_uploaded_file($file['tmp_name'], $usersPFPfilePath)) {
+                        // If a new picture is uploaded successfully, delete the old one
+                        if (!empty($oldPfpPath) && file_exists($oldPfpPath)) {
+                            unlink($oldPfpPath);
+                        }
+                    } else {
                         setError("Error uploading the file.");
-                        exit();
+                        // If the new file upload fails, revert to the old file path
+                        $usersPFPfilePath = $userpfpfilepath;
                     }
                 } else {
                     // If no file was uploaded, leave $usersPFPfilePath as ''

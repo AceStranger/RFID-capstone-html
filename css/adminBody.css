@@ -1,33 +1,32 @@
 html {
     background-color: #005e14;
+    height: 100%;
+    width: 100%;
 }
 * {
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
 }
 body {  
-    width: 100%;
     height: 100%;
+    width: 100%;
     position: relative;
     font-family: monospace;
     /* background-color: #EAEAEA; */
-    background-color: #dadada;
+    /* background-color: #dadada; */
+
     font-size: 1rem;
 }
 .main-content-container {
-    height: 100vh;
-    width: 100%; 
     display: grid;
-    grid-template-areas: "sidebar main";
-    grid-template-columns: 300px 1fr;  /* Default width for the sidebar */
+    grid-template-areas: 
+        "sidebar main";
+    grid-template-columns: 250px 1fr;
     grid-template-rows: 1fr;
-    position: relative;
-}
-
-/* Optional: Add transition for smooth adjustment */
-.main-content-container {
+    height: 100%;
+    width: 100%;
     transition: grid-template-columns 0.3s ease;
 }
 
@@ -38,21 +37,17 @@ body {
 ***/
 .main-sidebar-content{
     height: 100%;
-    width: 350px;
+    width: 100%;
     background-color: #005e14;
     position: relative;
     transition: width 0.3s ease;
     font-family: monospace;
     color: white;
     overflow-y: auto;
-    -webkit-transition: width 0.3s ease;
-    -moz-transition: width 0.3s ease;
-    -ms-transition: width 0.3s ease;
-    -o-transition: width 0.3s ease;
 }
 .sidebar-toggle-btn {
     position: absolute;
-    top: 5px;
+    top: 20px;
     left: 0px;
     font-size: 30px;
     font-family: monospace;
@@ -60,31 +55,21 @@ body {
     color: #fff;
     border: none;
     cursor: pointer;
-    z-index: 10;
+    z-index: 19;
     display: block;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 5px 0px black;
+    padding: 10px 5px;
+    box-shadow: 2px 0px 5px 0px black;
     border-radius: 0px 5px 5px 0px;
-    -webkit-border-radius: 0px 5px 5px 0px;
-    -moz-border-radius: 0px 5px 5px 0px;
-    -ms-border-radius: 0px 5px 5px 0px;
-    -o-border-radius: 0px 5px 5px 0px;
-    transition: top 0.3s ease;
-    -webkit-transition: top  0.3s ease;;
-    -moz-transition: top  0.3s ease;;
-    -ms-transition: top  0.3s ease;;
-    -o-transition: top  0.3s ease;;
+    transition: all 0.3s ease;
 }
 .sidebar-toggle-btn:hover {
-    color: #333;
+    color: #ffffff;
 }
 
 
 /* Sidebar Styles */
 .main-sidebar-content {
-    height: 100%;
-    width: 300px;  /* Default width */
+    /*Defaultwidth*/
     background-color: #005e14;
     position: relative;
     transition: width 0.3s ease;
@@ -135,13 +120,16 @@ body {
 .sidebar-user-avatar{
     width: 50px;
     height: 50px;
+    min-width: 50px;
+    min-height: 50px;
     background-color: aliceblue;
     border-radius: 50%;
     margin-left: 16px;
+    overflow: hidden;
 }
 .sidebar-user-avatar > img {
-    height: 100%;
-    width: auto;
+    height: auto;
+    width: 100%;
     border-radius: 50%;
 }
 .sidebar-user-info{
@@ -193,19 +181,11 @@ body {
 }
 
 
-@media screen and (max-width: 450px) {
-    .dashboard-sidebar-content{
-        left: -350px;
-    }
-}
-
-
 
 
 
 .main-content{
-    height: 100%;
-    width: 100%; 
+    /* min-width: 550px; */
     /* background-color: #f6f6f6; */
     background-color: #007819;
 /* 
@@ -214,9 +194,46 @@ body {
     display: grid;
     grid-template: 'main';
     position: relative;
+    overflow: hidden;
+    justify-items: center;
 }
 a{
     text-decoration: none;
     color: black;
     font-size: 1rem;
 }
+
+/* @media screen and (max-width: 1024px) {
+    .main-content-container {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-content-container {
+        grid-template-columns: 200px 1fr;
+    }
+} */
+
+@media screen and (max-width: 600px) {
+    /* .main-content-container {
+        grid-template-rows: auto 1fr;
+    } */
+    /* .main-sidebar-content {
+        position: fixed;
+        left: -100%;
+        transition: left 0.3s ease;
+        z-index: 10;
+    } */
+    .main-sidebar-content.active {
+        left: 0;
+    }
+    .main-content {
+        width: 100%;
+    }
+}
+
+.sidebar-toggle-btn {
+    display: block;
+}
+

@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $department_id = filter_input(INPUT_POST, 'department_id', FILTER_SANITIZE_NUMBER_INT);
     $department_name = filter_input(INPUT_POST, 'department_name', FILTER_SANITIZE_STRING);
 
-    if (!$department_id || !$department_name) {
+    if ((!$department_id && $department_id < 0) || !$department_name) {
         echo json_encode(['success' => false, 'message' => 'Invalid input.']);
         exit;
     }

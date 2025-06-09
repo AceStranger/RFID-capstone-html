@@ -149,19 +149,21 @@ input, select {
     width: auto;
     padding: 10px;
     font-size: 16px;
-    background: #007BFF;
+    background-color: #007819;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 .form-group button:hover {
-    background: #0056b3;
+    box-shadow: 0 0 2px black;
+    background-color: #00490f;
 }
 .close-add-program-btn {
     width: 40px !important;
     background-color: transparent !important;
     border: none !important;
+    outline: none;
     color: #ccc !important;
     cursor: pointer !important;
     font-size: 1.5rem !important;
@@ -171,6 +173,9 @@ input, select {
     top: 10px;
 }
 .close-add-program-btn:hover {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
     color: #ea0f0f !important;
 }
 
@@ -272,7 +277,7 @@ label {
     position: sticky;
     top: 0;
     z-index: 1;
-    background: #3a77ff; /* Sticky background to prevent transparency */
+    background: #005e14; /* Sticky background to prevent transparency */
     color: white;
     padding: 10px;
     font-size: 14px;
@@ -344,22 +349,17 @@ label {
     text-shadow: 0 0 2px black;
     word-break: auto-phrase;
 }
-.program-edit {
-    background-color: #2a5fcd;
-}
 
-.program-edit:hover {
-    background-color: #0056b3;
-}
-
+.program-edit,
 .program-delete {
-    background-color: #dd2f2f;
+    background-color: #007819;
 }
 
+.program-edit:hover,
 .program-delete:hover {
-    background-color: #bd2727;
+    box-shadow: 0 0 2px black;
+    background-color: #00490f;
 }
-
 
 
 

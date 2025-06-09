@@ -1,2 +1,2 @@
 
-<link rel="icon" href="pictures/NORMI Logo-white-bg.png" type="image/png"> 
+<link rel="icon" type="image/x-icon" href="pictures/NORMI Logo-white-bg.png">
